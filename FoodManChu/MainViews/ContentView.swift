@@ -10,15 +10,14 @@ import SwiftUI
 struct ContentView: View {
     // changing font of navbar
     init() {
-        UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "TypoRoundBoldDemo", size: 35)!)]
+        UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "TypoRoundBoldDemo", size: 38)!)]
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "TypoRoundBoldDemo", size: 18)!)]
     }
     
     // MARK: - Properties
     let screenSize = UIScreen.main.bounds
     
-    // 10 columns, this spacing is between columns
-    let gridItems = Array(repeating: GridItem(.flexible(minimum: 50, maximum: 200)), count: 2)
+    let gridItems = Array(repeating: GridItem(.flexible(minimum: 80, maximum: 200), spacing: 0), count: 1)
     
     @State private var addingNewCategory = false
     @State var menuOpen: Bool = false
@@ -27,33 +26,43 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             NavigationView {
-                ScrollView {
-                    // this spacing is between rows
-                    LazyVGrid(columns: gridItems, alignment: .center, spacing: 40, content: {
-                        ForEach(0..<11) { i in
-                            NavigationLink(destination: RecipeDetailView()) {
-                                Image(systemName: "cloud")
-                                    .frame(width: screenSize.width / 2 - 40, height: screenSize.height / 3)
-                                    .background(Color(.red))
-                                    .cornerRadius(30)
+                ZStack(alignment: .bottomTrailing) {
+                    // Scrolling Categories
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
+                            ForEach(0..<10) { i in
+                                NavigationLink(destination: RecipeView()) {
+                                    Image(systemName: "cloud)")
+                                        .frame(width: screenSize.width - 30, height: 200)
+                                        .background(Color(i % 2 == 0 ? .blue : .red))
+                                        .cornerRadius(30)
+                                }
                             }
-                        }
-                    })
-                        .padding([.vertical, .horizontal], 20)
-                }
-                    .navigationBarTitle("Categories")
-                    .navigationBarItems(
-                        leading: Button(action: { self.openMenu() }) {
+                        })
+                            .padding(.top, 15)
+                            .navigationBarTitle("Categories")
+                            .navigationBarItems(leading:
+                                Button(action: { self.openMenu() }) {
                                     Image(systemName: "line.horizontal.3")
                                         .font(.system(.title, design: .rounded))
                                         .foregroundColor(Color.primary)
-                                 },
-                        trailing: Button(action: { self.addingNewCategory.toggle() }) {
-                                    Image(systemName: "plus")
-                                        .font(.system(.title, design: .rounded))
-                                        .foregroundColor(Color.primary)
-                                  }
-                    )
+                                }
+                            )
+                    }
+                    
+                    // Add New Category Button
+                    Button(action: { self.addingNewCategory.toggle() }) {
+                        Image(systemName: "plus")
+                            .frame(width: screenSize.width * 0.1, height: screenSize.width * 0.1)
+                            .font(.system(.largeTitle, design: .rounded))
+                            .padding()
+                            .background(Color.green)
+                            .clipShape(Circle())
+                    }
+                        .padding(.bottom, 20)
+                        .padding(.trailing, 15)
+                        .shadow(color: Color.black.opacity(0.75), radius: 15, x: 5, y: 5)
+                }
             }
                 .offset(x: menuOpen ? 250 : 0)
                 .animation(.default, value: menuOpen)

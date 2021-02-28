@@ -11,7 +11,7 @@
 		4C63008625EB3B060054AFE7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63008525EB3B060054AFE7 /* ContentView.swift */; };
 		4C63008825EB3B060054AFE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C63008725EB3B060054AFE7 /* Assets.xcassets */; };
 		4C63008B25EB3B060054AFE7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C63008A25EB3B060054AFE7 /* Preview Assets.xcassets */; };
-		4C63009425EB46E40054AFE7 /* RecipeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63009325EB46E40054AFE7 /* RecipeDetailView.swift */; };
+		4C63009425EB46E40054AFE7 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63009325EB46E40054AFE7 /* RecipeView.swift */; };
 		4C63009F25EB49620054AFE7 /* Typo_Round_Italic_Demo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C63009725EB49620054AFE7 /* Typo_Round_Italic_Demo.otf */; };
 		4C6300A025EB49620054AFE7 /* Typo_Round_Regular_Demo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C63009825EB49620054AFE7 /* Typo_Round_Regular_Demo.otf */; };
 		4C6300A125EB49620054AFE7 /* Typo_Round_Light_Italic_Demo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C63009925EB49620054AFE7 /* Typo_Round_Light_Italic_Demo.otf */; };
@@ -33,7 +33,7 @@
 		4C63008725EB3B060054AFE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4C63008A25EB3B060054AFE7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4C63008C25EB3B060054AFE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4C63009325EB46E40054AFE7 /* RecipeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailView.swift; sourceTree = "<group>"; };
+		4C63009325EB46E40054AFE7 /* RecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeView.swift; sourceTree = "<group>"; };
 		4C63009725EB49620054AFE7 /* Typo_Round_Italic_Demo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Typo_Round_Italic_Demo.otf; sourceTree = "<group>"; };
 		4C63009825EB49620054AFE7 /* Typo_Round_Regular_Demo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Typo_Round_Regular_Demo.otf; sourceTree = "<group>"; };
 		4C63009925EB49620054AFE7 /* Typo_Round_Light_Italic_Demo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Typo_Round_Light_Italic_Demo.otf; sourceTree = "<group>"; };
@@ -116,8 +116,8 @@
 			isa = PBXGroup;
 			children = (
 				4C63008525EB3B060054AFE7 /* ContentView.swift */,
+				4C63009325EB46E40054AFE7 /* RecipeView.swift */,
 				4C6300A825EB4F690054AFE7 /* AddCategoryView.swift */,
-				4C63009325EB46E40054AFE7 /* RecipeDetailView.swift */,
 			);
 			path = MainViews;
 			sourceTree = "<group>";
@@ -218,7 +218,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C63008625EB3B060054AFE7 /* ContentView.swift in Sources */,
-				4C63009425EB46E40054AFE7 /* RecipeDetailView.swift in Sources */,
+				4C63009425EB46E40054AFE7 /* RecipeView.swift in Sources */,
 				4C6300A925EB4F690054AFE7 /* AddCategoryView.swift in Sources */,
 				4C6300B625EB671A0054AFE7 /* Menu.swift in Sources */,
 				4C6300B225EB65130054AFE7 /* MenuContent.swift in Sources */,
