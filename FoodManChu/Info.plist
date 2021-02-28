@@ -2,6 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Typo_Round_Bold_Demo.otf</string>
+		<string>Typo_Round_Bold_Italic_Demo.otf</string>
+		<string>Typo_Round_Italic_Demo.otfc</string>
+		<string>Typo_Round_Light_Demo.otf</string>
+		<string>Typo_Round_Light_Italic_Demo.otf</string>
+		<string>Typo_Round_Regular_Demo.otf</string>
+		<string>Typo_Round_Thin_Demo.otf</string>
+		<string>Typo_Round_Thin_Italic_Demo.otf</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
