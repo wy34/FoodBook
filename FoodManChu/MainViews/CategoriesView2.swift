@@ -25,7 +25,7 @@ struct CategoriesView2: View {
                     // Scrolling Categories
                     ScrollView(.vertical, showsIndicators: false) {
                         LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
-                            ForEach(0..<10) { i in
+                            ForEach(0..<5) { i in
                                 NavigationLink(destination: RecipeView(isNavBarHidden: $isNavBarHidden)) {
                                     Image(systemName: "cloud")
                                         .frame(width: screenSize.width - 30, height: 200)
@@ -44,21 +44,9 @@ struct CategoriesView2: View {
                     }
             }
             
-            // Add New Category Button
-            Button(action: { self.addingNewCategory.toggle() }) {
-                Image(systemName: "plus")
-                    .frame(width: screenSize.width * 0.08, height: screenSize.width * 0.08)
-                    .font(.system(.largeTitle, design: .rounded))
-                    .padding()
-                    .background(Color.green)
-                    .clipShape(Circle())
-            }
+            HoveringButtonWithMenu()
                 .padding(.bottom, 20)
-                .padding(.trailing, 16)
-                .shadow(color: Color.black.opacity(0.75), radius: 15, x: 5, y: 5)
-                .sheet(isPresented: $addingNewCategory) {
-                    AddCategoryView()
-                }
+                .padding(.trailing, 15)
         }
     }
 }

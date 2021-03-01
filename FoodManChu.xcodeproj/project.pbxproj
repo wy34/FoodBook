@@ -27,6 +27,8 @@
 		4C6300AF25EB50B50054AFE7 /* FloatingTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6300AE25EB50B50054AFE7 /* FloatingTabBar.swift */; };
 		4C6300B225EB65130054AFE7 /* MenuContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6300B125EB65130054AFE7 /* MenuContent.swift */; };
 		4C6300B625EB671A0054AFE7 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6300B525EB671A0054AFE7 /* Menu.swift */; };
+		4C85407125ED78B60022B3AA /* PopOverButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C85407025ED78B60022B3AA /* PopOverButton.swift */; };
+		4C85407525ED806A0022B3AA /* HoveringButtonWithMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C85407425ED806A0022B3AA /* HoveringButtonWithMenu.swift */; };
 		4CCEA4CC25EC811200490553 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA4CB25EC811200490553 /* SearchBar.swift */; };
 		4CCEA4CF25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA4CE25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift */; };
 		4CCEA4DB25ECB00D00490553 /* RecipeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA4DA25ECB00D00490553 /* RecipeDetailView.swift */; };
@@ -56,6 +58,8 @@
 		4C6300AE25EB50B50054AFE7 /* FloatingTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingTabBar.swift; sourceTree = "<group>"; };
 		4C6300B125EB65130054AFE7 /* MenuContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuContent.swift; sourceTree = "<group>"; };
 		4C6300B525EB671A0054AFE7 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		4C85407025ED78B60022B3AA /* PopOverButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopOverButton.swift; sourceTree = "<group>"; };
+		4C85407425ED806A0022B3AA /* HoveringButtonWithMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoveringButtonWithMenu.swift; sourceTree = "<group>"; };
 		4CCEA4CB25EC811200490553 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		4CCEA4CE25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarWithExpandingSearchBar.swift; sourceTree = "<group>"; };
 		4CCEA4DA25ECB00D00490553 /* RecipeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailView.swift; sourceTree = "<group>"; };
@@ -155,6 +159,7 @@
 				4C6300AE25EB50B50054AFE7 /* FloatingTabBar.swift */,
 				4C6300B825EB67240054AFE7 /* SlideOutMenu */,
 				4CCEA4CB25EC811200490553 /* SearchBar.swift */,
+				4C85407025ED78B60022B3AA /* PopOverButton.swift */,
 			);
 			path = TestViews;
 			sourceTree = "<group>";
@@ -173,6 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				4CCEA4CE25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift */,
+				4C85407425ED806A0022B3AA /* HoveringButtonWithMenu.swift */,
 			);
 			path = ComponentViews;
 			sourceTree = "<group>";
@@ -260,11 +266,13 @@
 				4C3B481125EC1003001D2098 /* RootView.swift in Sources */,
 				4C3B480D25EC0CE6001D2098 /* MenuButton.swift in Sources */,
 				4CCEA4E025ECBD8700490553 /* CategoriesView2.swift in Sources */,
+				4C85407525ED806A0022B3AA /* HoveringButtonWithMenu.swift in Sources */,
 				4C63009425EB46E40054AFE7 /* RecipeView.swift in Sources */,
 				4C6300A925EB4F690054AFE7 /* AddCategoryView.swift in Sources */,
 				4C6300B625EB671A0054AFE7 /* Menu.swift in Sources */,
 				4C6300B225EB65130054AFE7 /* MenuContent.swift in Sources */,
 				4C3B480225EBFC69001D2098 /* test.swift in Sources */,
+				4C85407125ED78B60022B3AA /* PopOverButton.swift in Sources */,
 				4C6300AF25EB50B50054AFE7 /* FloatingTabBar.swift in Sources */,
 				4CCEA4CC25EC811200490553 /* SearchBar.swift in Sources */,
 				4C63008425EB3B060054AFE7 /* FoodManChuApp.swift in Sources */,

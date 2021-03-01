@@ -10,7 +10,7 @@ import SwiftUI
 struct RecipeView: View {
     // MARK: - Properties
     // 2 columns, this spacing is between columns
-    let gridItems = Array(repeating: GridItem(.flexible(minimum: 50, maximum: 200)), count: 2)
+    let gridItems = Array(repeating: GridItem(.flexible(minimum: 50, maximum: 200), spacing: 15), count: 2)
     let screenSize = UIScreen.main.bounds
 
     @Binding var isNavBarHidden: Bool
@@ -24,13 +24,13 @@ struct RecipeView: View {
                 ForEach(0..<11) { i in
                     NavigationLink(destination: RecipeDetailView()) {
                         Image(systemName: "cloud")
-                            .frame(width: screenSize.width / 2 - 40, height: screenSize.height / 3)
+                            .frame(width: screenSize.width / 2 - 25, height: screenSize.height / 3)
                             .background(Color(.red))
                             .cornerRadius(30)
                     }
                 }
             })
-                .padding([.vertical, .horizontal], 20)
+                .padding([.vertical, .horizontal], 12)
         }
             .navigationBarTitle("Meat Recipes", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
