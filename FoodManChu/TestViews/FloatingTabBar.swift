@@ -34,10 +34,10 @@ struct FloatingTabBar: View {
                     .foregroundColor(self.selection == 2 ? .white : .black)
             }
         }
-            .frame(width: screen.width - 56, height: 50)
+            .frame(width: screen.width, height: 50)
             .background(Color.red)
-            .cornerRadius(25)
-            .padding([.horizontal], 28)
+//            .cornerRadius(25)
+//            .padding([.horizontal], 28)
             .padding(.bottom)
     }
 }
