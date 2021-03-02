@@ -13,7 +13,7 @@ struct CategoriesView2: View {
     let gridItems = Array(repeating: GridItem(.flexible(minimum: 80, maximum: 200), spacing: 0), count: 1)
     
     @State private var addingNewCategory = false
-    @State private var isNavBarHidden = true
+    @EnvironmentObject var modalManager: ModalManager
     
     // MARK: - Body
     var body: some View {
@@ -26,7 +26,7 @@ struct CategoriesView2: View {
                     ScrollView(.vertical, showsIndicators: false) {
                         LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
                             ForEach(0..<5) { i in
-                                NavigationLink(destination: RecipeView(isNavBarHidden: $isNavBarHidden)) {
+                                NavigationLink(destination: RecipeView()) {
                                     Image(systemName: "cloud")
                                         .frame(width: screenSize.width - 30, height: 200)
                                         .background(Color(i % 2 == 0 ? .blue : .red))
@@ -37,16 +37,15 @@ struct CategoriesView2: View {
                             .padding([.top, .bottom], 15)
                     }
                 }
-                    .navigationBarHidden(self.isNavBarHidden)
+                    .navigationBarHidden(true)
                     .edgesIgnoringSafeArea(.top)
-                    .onAppear() {
-                        self.isNavBarHidden = true
-                    }
             }
             
-            HoveringButtonWithMenu()
-                .padding(.bottom, 20)
-                .padding(.trailing, 15)
+            if !modalManager.isRecipeDetailViewShowing {
+                HoveringButtonWithMenu()
+                    .padding(.bottom, 20)
+                    .padding(.trailing, 15)
+            }
         }
     }
 }
@@ -55,6 +54,7 @@ struct CategoriesView2: View {
 struct CategoriesView2_Previews: PreviewProvider {
     static var previews: some View {
         CategoriesView2()
+            .environmentObject(ModalManager())
             .preferredColorScheme(.light)
     }
 }

@@ -26,7 +26,7 @@ struct CategoriesView: View {
                     ScrollView(.vertical, showsIndicators: false) {
                         LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
                             ForEach(0..<10) { i in
-                                NavigationLink(destination: RecipeView(isNavBarHidden: $isNavBarHidden)) {
+                                NavigationLink(destination: RecipeView()) {
                                     Image(systemName: "cloud")
                                         .frame(width: screenSize.width - 30, height: 200)
                                         .background(Color(i % 2 == 0 ? .blue : .red))

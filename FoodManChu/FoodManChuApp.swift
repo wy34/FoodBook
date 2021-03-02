@@ -18,6 +18,7 @@ struct FoodManChuApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environmentObject(ModalManager())
                 .onAppear() {
                     for family in UIFont.familyNames.sorted() {
                         let names = UIFont.fontNames(forFamilyName: family)

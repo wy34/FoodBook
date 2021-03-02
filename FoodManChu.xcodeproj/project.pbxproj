@@ -29,6 +29,8 @@
 		4C6300B625EB671A0054AFE7 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6300B525EB671A0054AFE7 /* Menu.swift */; };
 		4C85407125ED78B60022B3AA /* PopOverButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C85407025ED78B60022B3AA /* PopOverButton.swift */; };
 		4C85407525ED806A0022B3AA /* HoveringButtonWithMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C85407425ED806A0022B3AA /* HoveringButtonWithMenu.swift */; };
+		4C85409825ED9FC10022B3AA /* CustomModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C85409725ED9FC10022B3AA /* CustomModalView.swift */; };
+		4C85409B25EDF3DF0022B3AA /* ModalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C85409A25EDF3DF0022B3AA /* ModalManager.swift */; };
 		4CCEA4CC25EC811200490553 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA4CB25EC811200490553 /* SearchBar.swift */; };
 		4CCEA4CF25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA4CE25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift */; };
 		4CCEA4DB25ECB00D00490553 /* RecipeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA4DA25ECB00D00490553 /* RecipeDetailView.swift */; };
@@ -60,6 +62,8 @@
 		4C6300B525EB671A0054AFE7 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		4C85407025ED78B60022B3AA /* PopOverButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopOverButton.swift; sourceTree = "<group>"; };
 		4C85407425ED806A0022B3AA /* HoveringButtonWithMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoveringButtonWithMenu.swift; sourceTree = "<group>"; };
+		4C85409725ED9FC10022B3AA /* CustomModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModalView.swift; sourceTree = "<group>"; };
+		4C85409A25EDF3DF0022B3AA /* ModalManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalManager.swift; sourceTree = "<group>"; };
 		4CCEA4CB25EC811200490553 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		4CCEA4CE25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarWithExpandingSearchBar.swift; sourceTree = "<group>"; };
 		4CCEA4DA25ECB00D00490553 /* RecipeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailView.swift; sourceTree = "<group>"; };
@@ -80,6 +84,7 @@
 		4C3B480925EC0C2D001D2098 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				4C85409A25EDF3DF0022B3AA /* ModalManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -143,7 +148,6 @@
 			isa = PBXGroup;
 			children = (
 				4C3B481025EC1003001D2098 /* RootView.swift */,
-				4C63008525EB3B060054AFE7 /* CategoriesView.swift */,
 				4CCEA4DF25ECBD8700490553 /* CategoriesView2.swift */,
 				4C63009325EB46E40054AFE7 /* RecipeView.swift */,
 				4CCEA4DA25ECB00D00490553 /* RecipeDetailView.swift */,
@@ -155,6 +159,7 @@
 		4C6300AD25EB50940054AFE7 /* TestViews */ = {
 			isa = PBXGroup;
 			children = (
+				4C63008525EB3B060054AFE7 /* CategoriesView.swift */,
 				4C3B480125EBFC69001D2098 /* test.swift */,
 				4C6300AE25EB50B50054AFE7 /* FloatingTabBar.swift */,
 				4C6300B825EB67240054AFE7 /* SlideOutMenu */,
@@ -179,6 +184,7 @@
 			children = (
 				4CCEA4CE25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift */,
 				4C85407425ED806A0022B3AA /* HoveringButtonWithMenu.swift */,
+				4C85409725ED9FC10022B3AA /* CustomModalView.swift */,
 			);
 			path = ComponentViews;
 			sourceTree = "<group>";
@@ -264,12 +270,14 @@
 				4C63008625EB3B060054AFE7 /* CategoriesView.swift in Sources */,
 				4CCEA4DB25ECB00D00490553 /* RecipeDetailView.swift in Sources */,
 				4C3B481125EC1003001D2098 /* RootView.swift in Sources */,
+				4C85409825ED9FC10022B3AA /* CustomModalView.swift in Sources */,
 				4C3B480D25EC0CE6001D2098 /* MenuButton.swift in Sources */,
 				4CCEA4E025ECBD8700490553 /* CategoriesView2.swift in Sources */,
 				4C85407525ED806A0022B3AA /* HoveringButtonWithMenu.swift in Sources */,
 				4C63009425EB46E40054AFE7 /* RecipeView.swift in Sources */,
 				4C6300A925EB4F690054AFE7 /* AddCategoryView.swift in Sources */,
 				4C6300B625EB671A0054AFE7 /* Menu.swift in Sources */,
+				4C85409B25EDF3DF0022B3AA /* ModalManager.swift in Sources */,
 				4C6300B225EB65130054AFE7 /* MenuContent.swift in Sources */,
 				4C3B480225EBFC69001D2098 /* test.swift in Sources */,
 				4C85407125ED78B60022B3AA /* PopOverButton.swift in Sources */,
