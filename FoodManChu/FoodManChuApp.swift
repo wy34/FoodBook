@@ -11,8 +11,14 @@ import SwiftUI
 struct FoodManChuApp: App {
     init() {
         UINavigationBar.appearance().titleTextAttributes = [
-            NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "TypoRoundBoldDemo", size: 16)!)
+            NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "TypoRoundBoldDemo", size: 18)!)
         ]
+        
+        UINavigationBar.appearance().largeTitleTextAttributes = [
+            NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "TypoRoundBoldDemo", size: 30)!)
+        ]
+        
+        UINavigationBar.appearance().shadowImage = UIImage()
     }
     
     var body: some Scene {

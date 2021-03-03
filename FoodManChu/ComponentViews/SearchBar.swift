@@ -8,16 +8,19 @@
 import SwiftUI
 
 struct SearchBar: View {
+    var placeholder: String
+    
     @State private var searchText = ""
     @State private var isSearching = false
+    
  
     var body: some View {
         HStack(spacing: 0) {
-            TextField("Search categories", text: $searchText)
+            TextField(placeholder, text: $searchText)
                 .padding(.leading, 25)
                 .padding(.trailing, self.isSearching ? 25 : 0)
-                .padding(9)
-                .background(Color(.lightGray))
+                .padding(6)
+                .background(Color(.systemGray5))
                 .overlay(
                     HStack {
                         Image(systemName: "magnifyingglass")
@@ -55,7 +58,7 @@ struct SearchBar: View {
 
 struct SearchBar_Previews: PreviewProvider {
     static var previews: some View {
-        SearchBar()
+        SearchBar(placeholder: "Search Categories")
             .preferredColorScheme(.dark)
     }
 }

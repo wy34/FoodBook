@@ -19,7 +19,7 @@ struct CategoriesView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                NavigationBarWithExpandingSearchBar()
+                NavigationBarWithExpandingSearchBar(title: "Categories", preferLargeTitle: true)
                 
                 ZStack(alignment: .bottomTrailing) {
                     // Scrolling Categories

@@ -9,6 +9,9 @@ import SwiftUI
 
 struct NavigationBarWithExpandingSearchBar: View {
     // MARK: - Properties
+    var title: String
+    var preferLargeTitle: Bool
+    
     @State private var show = false
     @State private var txt = ""
     
@@ -16,9 +19,9 @@ struct NavigationBarWithExpandingSearchBar: View {
     var body: some View {
         HStack {
             if show == false {
-                Text("Categories")
+                Text(title)
                     .fontWeight(.bold)
-                    .font(.custom("TypoRoundBoldDemo", size: 40, relativeTo: .body))
+                    .font(.custom("TypoRoundBoldDemo", size: self.preferLargeTitle ? 40 : 24, relativeTo: .body))
                     .foregroundColor(.white)
             }
             
@@ -50,8 +53,8 @@ struct NavigationBarWithExpandingSearchBar: View {
         }
             .padding(.horizontal)
             .frame(width: UIScreen.main.bounds.width, height: 60)
-            .padding(.top, 55)
-            .padding(.bottom, 10)
+            .padding(.top, self.preferLargeTitle ? 55 : 18)
+            .padding(.bottom, self.preferLargeTitle ? 10 : 5)
             .background(Color.orange)
             .animation(.default)
     }
@@ -60,7 +63,7 @@ struct NavigationBarWithExpandingSearchBar: View {
 // MARK: - Preview
 struct NavigationBarWithExpandingSearchBar_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationBarWithExpandingSearchBar()
+        NavigationBarWithExpandingSearchBar(title: "Categories", preferLargeTitle: false)
             .preferredColorScheme(.dark)
     }
 }

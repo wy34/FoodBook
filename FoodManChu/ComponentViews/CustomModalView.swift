@@ -9,10 +9,12 @@ import SwiftUI
 
 struct CustomModalView<Content: View>: View {
     // MARK: - Properties
+    let content: Content
+    let screenSize = UIScreen.main.bounds
+    
     @State private var showScaling = false
     @EnvironmentObject var modalManager: ModalManager
-    let content: Content
-    
+
     // MARK: - Body
     var body: some View {
         ZStack {
@@ -23,7 +25,7 @@ struct CustomModalView<Content: View>: View {
                     .onTapGesture { self.dismissModal() }
             }
             
-            ZStack(alignment: .bottomTrailing) {
+            ZStack(alignment: .topTrailing) {
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color.white)
                     .overlay(
@@ -32,11 +34,11 @@ struct CustomModalView<Content: View>: View {
                     )
                     .shadow(color: Color.black.opacity(0.25), radius: 10)
                     
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     content
-                        .cornerRadius(20)
-                        .frame(width: 300, height: 300)
+                        .frame(width: screenSize.width - 50)
                 }
+                    .cornerRadius(20)
                     .padding(5)
                 
                 Button(action: { self.dismissModal() }) {
@@ -49,7 +51,7 @@ struct CustomModalView<Content: View>: View {
             }
                 .scaleEffect(self.showScaling ? 1 : 0)
                 .padding(.horizontal, 25)
-                .padding(.vertical, 25)
+                .padding(.vertical, 20)
         }
             .onAppear() {
                 self.showScaling = true
@@ -78,7 +80,7 @@ struct RoundedButtonView: UIViewRepresentable {
         let view = UIView()
         view.backgroundColor = .red
         view.layer.cornerRadius = 20
-        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMaxYCorner]
+        view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMinYCorner]
         return view
     }
     

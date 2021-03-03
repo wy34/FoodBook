@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4C3B480225EBFC69001D2098 /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3B480125EBFC69001D2098 /* test.swift */; };
+		4C3B480225EBFC69001D2098 /* DisclosureGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3B480125EBFC69001D2098 /* DisclosureGroup.swift */; };
 		4C3B480D25EC0CE6001D2098 /* MenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3B480C25EC0CE6001D2098 /* MenuButton.swift */; };
 		4C3B481125EC1003001D2098 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3B481025EC1003001D2098 /* RootView.swift */; };
 		4C63008425EB3B060054AFE7 /* FoodManChuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63008325EB3B060054AFE7 /* FoodManChuApp.swift */; };
@@ -27,6 +27,9 @@
 		4C6300AF25EB50B50054AFE7 /* FloatingTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6300AE25EB50B50054AFE7 /* FloatingTabBar.swift */; };
 		4C6300B225EB65130054AFE7 /* MenuContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6300B125EB65130054AFE7 /* MenuContent.swift */; };
 		4C6300B625EB671A0054AFE7 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6300B525EB671A0054AFE7 /* Menu.swift */; };
+		4C79B7DE25EEDB1C0074B424 /* CustomSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C79B7DD25EEDB1C0074B424 /* CustomSegmentedControl.swift */; };
+		4C79B7E125EF21850074B424 /* NavBarWithSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C79B7E025EF21850074B424 /* NavBarWithSearchBar.swift */; };
+		4C79B7E425EF379F0074B424 /* CustomNavBarWithSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C79B7E325EF379F0074B424 /* CustomNavBarWithSearch.swift */; };
 		4C85407125ED78B60022B3AA /* PopOverButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C85407025ED78B60022B3AA /* PopOverButton.swift */; };
 		4C85407525ED806A0022B3AA /* HoveringButtonWithMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C85407425ED806A0022B3AA /* HoveringButtonWithMenu.swift */; };
 		4C85409825ED9FC10022B3AA /* CustomModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C85409725ED9FC10022B3AA /* CustomModalView.swift */; };
@@ -38,7 +41,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4C3B480125EBFC69001D2098 /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test.swift; sourceTree = "<group>"; };
+		4C3B480125EBFC69001D2098 /* DisclosureGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureGroup.swift; sourceTree = "<group>"; };
 		4C3B480C25EC0CE6001D2098 /* MenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButton.swift; sourceTree = "<group>"; };
 		4C3B481025EC1003001D2098 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		4C63008025EB3B060054AFE7 /* FoodManChu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoodManChu.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,6 +63,9 @@
 		4C6300AE25EB50B50054AFE7 /* FloatingTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingTabBar.swift; sourceTree = "<group>"; };
 		4C6300B125EB65130054AFE7 /* MenuContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuContent.swift; sourceTree = "<group>"; };
 		4C6300B525EB671A0054AFE7 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		4C79B7DD25EEDB1C0074B424 /* CustomSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSegmentedControl.swift; sourceTree = "<group>"; };
+		4C79B7E025EF21850074B424 /* NavBarWithSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarWithSearchBar.swift; sourceTree = "<group>"; };
+		4C79B7E325EF379F0074B424 /* CustomNavBarWithSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBarWithSearch.swift; sourceTree = "<group>"; };
 		4C85407025ED78B60022B3AA /* PopOverButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopOverButton.swift; sourceTree = "<group>"; };
 		4C85407425ED806A0022B3AA /* HoveringButtonWithMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoveringButtonWithMenu.swift; sourceTree = "<group>"; };
 		4C85409725ED9FC10022B3AA /* CustomModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModalView.swift; sourceTree = "<group>"; };
@@ -159,12 +165,14 @@
 		4C6300AD25EB50940054AFE7 /* TestViews */ = {
 			isa = PBXGroup;
 			children = (
+				4CCEA4CE25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift */,
+				4C79B7E325EF379F0074B424 /* CustomNavBarWithSearch.swift */,
 				4C63008525EB3B060054AFE7 /* CategoriesView.swift */,
-				4C3B480125EBFC69001D2098 /* test.swift */,
+				4C3B480125EBFC69001D2098 /* DisclosureGroup.swift */,
 				4C6300AE25EB50B50054AFE7 /* FloatingTabBar.swift */,
 				4C6300B825EB67240054AFE7 /* SlideOutMenu */,
-				4CCEA4CB25EC811200490553 /* SearchBar.swift */,
 				4C85407025ED78B60022B3AA /* PopOverButton.swift */,
+				4C79B7E025EF21850074B424 /* NavBarWithSearchBar.swift */,
 			);
 			path = TestViews;
 			sourceTree = "<group>";
@@ -182,9 +190,10 @@
 		4CCEA4D725ECA75200490553 /* ComponentViews */ = {
 			isa = PBXGroup;
 			children = (
-				4CCEA4CE25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift */,
+				4CCEA4CB25EC811200490553 /* SearchBar.swift */,
 				4C85407425ED806A0022B3AA /* HoveringButtonWithMenu.swift */,
 				4C85409725ED9FC10022B3AA /* CustomModalView.swift */,
+				4C79B7DD25EEDB1C0074B424 /* CustomSegmentedControl.swift */,
 			);
 			path = ComponentViews;
 			sourceTree = "<group>";
@@ -267,19 +276,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CCEA4CF25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift in Sources */,
+				4C79B7DE25EEDB1C0074B424 /* CustomSegmentedControl.swift in Sources */,
 				4C63008625EB3B060054AFE7 /* CategoriesView.swift in Sources */,
+				4C79B7E425EF379F0074B424 /* CustomNavBarWithSearch.swift in Sources */,
 				4CCEA4DB25ECB00D00490553 /* RecipeDetailView.swift in Sources */,
 				4C3B481125EC1003001D2098 /* RootView.swift in Sources */,
 				4C85409825ED9FC10022B3AA /* CustomModalView.swift in Sources */,
 				4C3B480D25EC0CE6001D2098 /* MenuButton.swift in Sources */,
 				4CCEA4E025ECBD8700490553 /* CategoriesView2.swift in Sources */,
 				4C85407525ED806A0022B3AA /* HoveringButtonWithMenu.swift in Sources */,
+				4C79B7E125EF21850074B424 /* NavBarWithSearchBar.swift in Sources */,
 				4C63009425EB46E40054AFE7 /* RecipeView.swift in Sources */,
 				4C6300A925EB4F690054AFE7 /* AddCategoryView.swift in Sources */,
 				4C6300B625EB671A0054AFE7 /* Menu.swift in Sources */,
 				4C85409B25EDF3DF0022B3AA /* ModalManager.swift in Sources */,
 				4C6300B225EB65130054AFE7 /* MenuContent.swift in Sources */,
-				4C3B480225EBFC69001D2098 /* test.swift in Sources */,
+				4C3B480225EBFC69001D2098 /* DisclosureGroup.swift in Sources */,
 				4C85407125ED78B60022B3AA /* PopOverButton.swift in Sources */,
 				4C6300AF25EB50B50054AFE7 /* FloatingTabBar.swift in Sources */,
 				4CCEA4CC25EC811200490553 /* SearchBar.swift in Sources */,

@@ -41,7 +41,6 @@ struct HoveringButtonWithMenu: View {
                         .foregroundColor(.black)
                         .frame(width: 115)
                         .padding(15)
-                        .padding(.bottom, 20)
                         .background(Arrow().fill(Color.red))
                         .cornerRadius(10)
                 }
@@ -56,7 +55,6 @@ struct HoveringButtonWithMenu: View {
                         .clipShape(Circle())
                 }
             }
-//                .padding(10)
                 .animation(.easeIn)
         }
     }
@@ -78,13 +76,9 @@ struct Arrow: Shape {
         return Path() { path in
             path.move(to: CGPoint(x: 0, y: 0))
             path.addLine(to: CGPoint(x: rect.width, y: 0))
-            path.addLine(to: CGPoint(x: rect.width, y: rect.height - 20))
-            
-            path.addLine(to: CGPoint(x: center + 15, y: rect.height - 20))
-            path.addLine(to: CGPoint(x: center, y: rect.height - 5))
-            path.addLine(to: CGPoint(x: center - 15, y: rect.height - 20))
-            
-            path.addLine(to: CGPoint(x: 0, y: rect.height - 20))
+            path.addLine(to: CGPoint(x: rect.width, y: rect.height))
+            path.addLine(to: CGPoint(x: 0, y: rect.height))
+            path.addLine(to: CGPoint(x: 0, y: 0))
         }
     }
 }
