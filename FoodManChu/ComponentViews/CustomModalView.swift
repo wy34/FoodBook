@@ -36,7 +36,6 @@ struct CustomModalView<Content: View>: View {
                     
                 ScrollView(showsIndicators: false) {
                     content
-                        .frame(width: screenSize.width - 50)
                 }
                     .cornerRadius(20)
                     .padding(5)
@@ -46,6 +45,8 @@ struct CustomModalView<Content: View>: View {
                         .frame(width: 50, height: 50)
                         .overlay(
                             Image(systemName: "xmark")
+                                .font(.title)
+                                .foregroundColor(.white)
                         )
                 }
             }
@@ -78,7 +79,7 @@ struct CustomModalView_Previews: PreviewProvider {
 struct RoundedButtonView: UIViewRepresentable {
     func makeUIView(context: Context) -> UIView {
         let view = UIView()
-        view.backgroundColor = .red
+        view.backgroundColor = #colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)
         view.layer.cornerRadius = 20
         view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMinYCorner]
         return view

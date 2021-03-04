@@ -19,6 +19,7 @@ struct RootView: View {
                 .tabItem {
                     Image(systemName: "house")
                     Text("Home")
+                        
                 }
             Color.red
                 .tabItem {
@@ -31,6 +32,7 @@ struct RootView: View {
                     Text("Home")
                 }
         }
+            .accentColor(Color(#colorLiteral(red: 0.4468465447, green: 0.6117238402, blue: 0.4210793078, alpha: 1)))
     }
 }
 

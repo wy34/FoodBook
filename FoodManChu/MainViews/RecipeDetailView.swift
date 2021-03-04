@@ -7,12 +7,11 @@
 
 import SwiftUI
 
+// MARK: - RecipeDetailView
 struct RecipeDetailView: View {
-    // MARK: - Properties
     let screenSize = UIScreen.main.bounds
     @Environment(\.presentationMode) var presentationMode
 
-    // MARK: - Body
     var body: some View {
         ScrollView {
             VStack {
@@ -38,9 +37,9 @@ struct RecipeDetailView: View {
                         .font(.custom("TypoRoundLightDemo", size: 18, relativeTo: .body))
                         .cornerRadius(5)
                     Divider()
-                        .background(Color.red)
+                        .background(Color.black)
                         .frame(width: 1, height: 15)
-                    Color.orange
+                    Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1))
                         .frame(width: 45, height: 30)
                         .cornerRadius(5)
                 }
@@ -72,6 +71,7 @@ struct RecipeDetailView: View {
     }
 }
 
+// MARK: - Preview
 struct RecipeDetailView_Previews: PreviewProvider {
     static var previews: some View {
         RecipeDetailView()

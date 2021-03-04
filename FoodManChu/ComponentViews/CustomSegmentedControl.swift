@@ -17,13 +17,13 @@ struct CustomSegmentedPickerWithMenu: View {
                 Button(action: { self.selected = 0 }) {
                     Text("Ingredients")
                         .padding()
-                        .foregroundColor(self.selected == 0 ? Color(#colorLiteral(red: 0.48782897, green: 0.6444895864, blue: 0.435850203, alpha: 1)) : Color(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)))
+                        .foregroundColor(self.selected == 0 ? Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)) : Color(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)))
                 }
                 
                 Button(action: { self.selected = 1 }) {
                     Text("Directions")
                         .padding()
-                        .foregroundColor(self.selected == 1 ? Color(#colorLiteral(red: 0.48782897, green: 0.6444895864, blue: 0.435850203, alpha: 1)) : Color(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)))
+                        .foregroundColor(self.selected == 1 ? Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)) : Color(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)))
                 }
             }
                 .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
