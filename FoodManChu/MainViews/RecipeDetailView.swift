@@ -59,7 +59,7 @@ struct RecipeDetailView: View {
                         .lineLimit(nil)
                 }
                     .padding(.top, 10)
-                .padding(.bottom, 20)
+                    .padding(.bottom, 20)
                 
                 CustomSegmentedPickerWithMenu()
                 

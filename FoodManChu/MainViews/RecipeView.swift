@@ -7,6 +7,19 @@
 
 import SwiftUI
 
+
+// Hiding back button and replacing it with custom image breaks the navigation swipe to pop, this brings that back
+extension UINavigationController: UIGestureRecognizerDelegate {
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        interactivePopGestureRecognizer?.delegate = self
+    }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
+    }
+}
+
 // MARK: - RecipeView
 struct RecipeView: View {
     // 2 columns, this spacing is between columns
@@ -51,6 +64,8 @@ struct RecipeGrid: View {
     @EnvironmentObject var modalManager: ModalManager
     @Binding var isEditing: Bool
     
+    @State private var isShowingAddRecipe = false
+    
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             VStack {
@@ -62,29 +77,31 @@ struct RecipeGrid: View {
                     // this spacing is between rows
                     LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
                         ForEach(0..<11) { i in
-                            RecipeCell(isEditing: $isEditing)
+                            RecipeCell(isEditing: $isEditing, isShowingAddRecipe: $isShowingAddRecipe)
                         }
                     })
                         .padding(15)
                 }
                     .navigationBarTitle("Meat", displayMode: .inline)
                     .navigationBarBackButtonHidden(true)
-                    .navigationBarItems(leading: // have to put in here otherwise won't show in navbar
-                        Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
-                            Image(systemName: "arrow.left")
-                                .imageScale(.large)
-                                .foregroundColor(.black)
-                        }, trailing:
+                    .navigationBarItems(
+                        leading:
+                            Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+                                Image(systemName: "arrow.left")
+                                    .imageScale(.large)
+                                    .foregroundColor(.black)
+                            },
+                        trailing:
                             Button(action: { self.isEditing.toggle(); self.modalManager.isRecipeDetailViewShowing = false }) {
-                            Text(self.isEditing ? "Cancel" : "Edit")
-                                .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
-                                .foregroundColor(self.isEditing ? .red : .black)
-                        }
+                                Text(self.isEditing ? "Cancel" : "Edit")
+                                    .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
+                                    .foregroundColor(self.isEditing ? .red : .black)
+                            }
                     )
             }
             
             if !self.isEditing {
-                Button(action: {  }) {
+                Button(action: { self.isShowingAddRecipe = true }) {
                     Image(systemName: "plus")
                         .font(.system(.title))
                         .foregroundColor(.white)
@@ -97,6 +114,9 @@ struct RecipeGrid: View {
                     .padding(.trailing, 20)
             }
         }
+            .fullScreenCover(isPresented: $isShowingAddRecipe, content: {
+                NewRecipeView()
+            })
     }
 }
 
@@ -105,6 +125,7 @@ struct RecipeCell: View {
     let screenSize = UIScreen.main.bounds
     
     @Binding var isEditing: Bool
+    @Binding var isShowingAddRecipe: Bool
     @EnvironmentObject var modalManager: ModalManager
 
     var body: some View {
@@ -123,7 +144,7 @@ struct RecipeCell: View {
                         .fill(Color.black.opacity(0.35))
                         .frame(width: screenSize.width / 2 - 35, height: screenSize.height / 4)
                         .overlay(
-                            Button(action: {}) {
+                            Button(action: { self.isShowingAddRecipe = true }) {
                                 Image(systemName: "pencil.circle")
                                     .font(.system(.largeTitle, design: .rounded))
                                     .imageScale(.large)
@@ -133,6 +154,7 @@ struct RecipeCell: View {
                         )
                 } 
             }
+                .shadow(color: Color.black.opacity(0.35), radius: 8, x: 10, y: 10)
                 .animation(.easeInOut)
                 
             Text("Beef with Broccoli")
@@ -147,6 +169,6 @@ struct RecipeCell: View {
 
 struct RecipeCell_previews: PreviewProvider {
     static var previews: some View {
-        RecipeCell(isEditing: .constant(false))
+        RecipeCell(isEditing: .constant(false), isShowingAddRecipe: .constant(false))
     }
 }

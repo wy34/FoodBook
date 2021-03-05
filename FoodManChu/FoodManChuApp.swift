@@ -19,6 +19,7 @@ struct FoodManChuApp: App {
         ]
         
         UINavigationBar.appearance().shadowImage = UIImage()
+        UINavigationBar.appearance().tintColor = .black
     }
     
     var body: some Scene {
