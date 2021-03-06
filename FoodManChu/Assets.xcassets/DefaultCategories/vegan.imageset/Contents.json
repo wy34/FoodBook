@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "foodBg.jpg",
+      "filename" : "vegan.jpeg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "vegan@2x.jpeg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "vegan@3x.jpeg",
       "idiom" : "universal",
       "scale" : "3x"
     }

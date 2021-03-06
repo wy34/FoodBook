@@ -15,16 +15,16 @@ struct RootView: View {
     // MARK: - Body
     var body: some View {
         TabView {
-            CategoriesView2()
+            CategoriesView()
                 .tabItem {
-                    Image(systemName: "house")
-                    Text("Home")
+                    Image(systemName: "hammer")
+                    Text("Builder")
                         
                 }
-            Color.red
+            RecipesBookView()
                 .tabItem {
-                    Image(systemName: "book")
-                    Text("Home")
+                    Image(systemName: "magnifyingglass")
+                    Text("Lookup")
                 }
             Color(.red)
                 .tabItem {
@@ -39,6 +39,7 @@ struct RootView: View {
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         RootView()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
             .environmentObject(ModalManager())
     }
 }

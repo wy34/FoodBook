@@ -22,16 +22,22 @@ struct FoodManChuApp: App {
         UINavigationBar.appearance().tintColor = .black
     }
     
+    @StateObject var persistenceController = PersistenceController.shared
+    @Environment(\.scenePhase) var scenePhase // use with .onChange to save whenever app is going to background
+    
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext) // used for creating objects, etc
+                .environmentObject(persistenceController) // to save nsmanagedobjects
                 .environmentObject(ModalManager())
                 .onAppear() {
-                    for family in UIFont.familyNames.sorted() {
-                        let names = UIFont.fontNames(forFamilyName: family)
-                        print("Family: \(family) Font names: \(names)")
-                    }
+                    persistenceController.createDefaultCategories()
+                    print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
                 }
         }
+            .onChange(of: scenePhase) { (_) in
+                persistenceController.save()
+            }
     }
 }

@@ -23,22 +23,22 @@ extension UINavigationController: UIGestureRecognizerDelegate {
 // MARK: - RecipeView
 struct RecipeView: View {
     // 2 columns, this spacing is between columns
-    let gridItems = Array(repeating: GridItem(.flexible(minimum: 50, maximum: 200), spacing: 15), count: 2)
-    let screenSize = UIScreen.main.bounds
+//    let gridItems = Array(repeating: GridItem(.flexible(minimum: 50, maximum: 200), spacing: 15), count: 2)
+//    let screenSize = UIScreen.main.bounds
     
     @State private var isEditing = false
     
     @EnvironmentObject var modalManager: ModalManager
-    @Environment(\.presentationMode) var presentationMode
+//    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         ZStack {
             RecipeGrid(isEditing: $isEditing)
 
-            if modalManager.isRecipeDetailViewShowing {
-                CustomModalView(content: RecipeDetailView())
-                    .animation(Animation.easeInOut(duration: 0.4))
-            }
+//            if modalManager.isRecipeDetailViewShowing {
+//                CustomModalView(content: RecipeDetailView())
+//                    .animation(Animation.easeInOut(duration: 0.4))
+//            }
         }
         .onDisappear() {
             self.modalManager.isRecipeDetailViewShowing = false
@@ -63,6 +63,7 @@ struct RecipeGrid: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var modalManager: ModalManager
     @Binding var isEditing: Bool
+    @FetchRequest(entity: Recipe.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Recipe.recipeName, ascending: true)]) var recipes: FetchedResults<Recipe>
     
     @State private var isShowingAddRecipe = false
     
@@ -76,13 +77,13 @@ struct RecipeGrid: View {
                     
                     // this spacing is between rows
                     LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
-                        ForEach(0..<11) { i in
-                            RecipeCell(isEditing: $isEditing, isShowingAddRecipe: $isShowingAddRecipe)
+                        ForEach(recipes, id: \.self) { recipe in
+                            RecipeCell(recipe: recipe, isEditing: $isEditing, isShowingAddRecipe: $isShowingAddRecipe)
                         }
                     })
                         .padding(15)
                 }
-                    .navigationBarTitle("Meat", displayMode: .inline)
+                    .navigationBarTitle("Meat Recipes", displayMode: .inline)
                     .navigationBarBackButtonHidden(true)
                     .navigationBarItems(
                         leading:
@@ -113,6 +114,12 @@ struct RecipeGrid: View {
                     .padding(.bottom, 20)
                     .padding(.trailing, 20)
             }
+            
+            
+            if modalManager.isRecipeDetailViewShowing {
+                CustomModalView(content: RecipeDetailView())
+                    .animation(Animation.easeInOut(duration: 0.4))
+            }
         }
             .fullScreenCover(isPresented: $isShowingAddRecipe, content: {
                 NewRecipeView()
@@ -123,6 +130,7 @@ struct RecipeGrid: View {
 // MARK: - RecipeCell
 struct RecipeCell: View {
     let screenSize = UIScreen.main.bounds
+    var recipe: Recipe
     
     @Binding var isEditing: Bool
     @Binding var isShowingAddRecipe: Bool
@@ -132,7 +140,7 @@ struct RecipeCell: View {
         VStack {
             ZStack {
                 Button(action: { self.modalManager.isRecipeDetailViewShowing = true }) {
-                    Image("food2")
+                    Image(uiImage: UIImage(data: recipe.recipeThumbnail!)!)
                         .resizable()
                         .scaledToFill()
                         .frame(width: screenSize.width / 2 - 35, height: screenSize.height / 4)
@@ -154,10 +162,10 @@ struct RecipeCell: View {
                         )
                 } 
             }
-                .shadow(color: Color.black.opacity(0.35), radius: 8, x: 10, y: 10)
+                .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 0)
                 .animation(.easeInOut)
                 
-            Text("Beef with Broccoli")
+            Text(recipe.recipeName!)
                 .multilineTextAlignment(.center)
                 .font(.custom("TypoRoundRegularDemo", size: 18, relativeTo: .body))
                 .frame(width: screenSize.width / 2 - 35)
@@ -167,8 +175,8 @@ struct RecipeCell: View {
     }
 }
 
-struct RecipeCell_previews: PreviewProvider {
-    static var previews: some View {
-        RecipeCell(isEditing: .constant(false), isShowingAddRecipe: .constant(false))
-    }
-}
+//struct RecipeCell_previews: PreviewProvider {
+//    static var previews: some View {
+//        RecipeCell(recipe: <#Recipe#>, isEditing: .constant(false), isShowingAddRecipe: .constant(false))
+//    }
+//}

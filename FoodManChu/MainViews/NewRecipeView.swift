@@ -10,19 +10,18 @@ import SwiftUI
 
 enum Steps: String {
     case Ingredient
-    case Direction
+    case Instruction
 }
 
 // MARK: - NewRecipeManager
 class NewRecipeManager: ObservableObject {
-    @Published var selectedImage = Image("food")
+    @Published var selectedImage = UIImage(named: "food")!
     @Published var isImagePickerOpen = false
     @Published var name = ""
     @Published var description = ""
     @Published var hours = 0.0
     @Published var minutes = 0.0
 }
-
 
 // MARK: - NewRecipeView
 struct NewRecipeView: View {
@@ -33,6 +32,8 @@ struct NewRecipeView: View {
     
     @StateObject var newRecipeManager = NewRecipeManager()
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.managedObjectContext) var moc
+    @EnvironmentObject var persistenceController: PersistenceController
     
     var body: some View {
         NavigationView {
@@ -48,13 +49,13 @@ struct NewRecipeView: View {
                         }
                     }
                     
-                    Section(header: Text("Select an image").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
+                    Section(header: Text("Thumbnail").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
                         Button(action: { self.newRecipeManager.isImagePickerOpen = true }) {
                             Text("Open Image Picker")
                                 .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
                         }
 
-                        self.newRecipeManager.selectedImage
+                        Image(uiImage: self.newRecipeManager.selectedImage)
                             .resizable()
                             .scaledToFill()
                             .cornerRadius(10)
@@ -62,7 +63,7 @@ struct NewRecipeView: View {
                     }
                     
                     
-                    Section(header: Text("Time").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
+                    Section(header: Text("Prep Time").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
                         HStack {
                             Slider(value: self.$newRecipeManager.hours, in: 0...23, step: 1)
                             Text("\(self.newRecipeManager.hours, specifier: "%.0f") h")
@@ -78,39 +79,60 @@ struct NewRecipeView: View {
                         NavigationLink(destination: AddingStepsView(stepsType: .Ingredient)) {
                             Text("Ingredients")
                         }
-                        NavigationLink(destination: AddingStepsView(stepsType: .Direction)) {
-                            Text("Directions")
+                        NavigationLink(destination: AddingStepsView(stepsType: .Instruction)) {
+                            Text("Instructions")
                         }
                     }
 
                 }
                     .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
                     .navigationBarTitle(Text("New Recipe"), displayMode: .inline)
-                    .navigationBarItems(leading:
-                        Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
-                            Image(systemName: "xmark")
-                                .imageScale(.large)
-                                .foregroundColor(.primary)
-                        }
+                    .navigationBarItems(
+                        leading: Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+                                    Image(systemName: "xmark")
+                                        .imageScale(.large)
+                                        .foregroundColor(.primary)
+                                },
+                        trailing: Button(action: { /* Delete Recipe */ }) {
+                                    Image(systemName: "trash")
+                                        .imageScale(.large)
+                                        .foregroundColor(.red)
+                                }
                     )
                     .sheet(isPresented: self.$newRecipeManager.isImagePickerOpen) {
                         ImagePicker(selectedImage: self.$newRecipeManager.selectedImage, isImagePickerOpen: self.$newRecipeManager.isImagePickerOpen)
                     }
                 
-                Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+                Button(action: {
+                    self.createNewRecipe()
+                }) {
                      Text("Save")
                         .font(.custom("TypoRoundBoldDemo", size: 24, relativeTo: .body))
-                        .foregroundColor(.white)
+                        .foregroundColor(self.newRecipeManager.name.isEmpty ? Color(.systemGray2) :.white)
                         .frame(maxWidth: .infinity)
                         .padding(12)
-                        .background(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
+                        .background(self.newRecipeManager.name.isEmpty ? Color.gray : Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
                         .cornerRadius(20)
                         .padding([.horizontal], 20)
                         .padding(.bottom, 10)
                 }
-                .padding(.top, 15)
+                    .padding(.top, 15)
+                    .disabled(self.newRecipeManager.name.isEmpty ? true : false)
             }
         }
+    }
+    
+    func createNewRecipe() {
+        let recipe = Recipe(context: self.moc)
+        recipe.recipeName = "General Tso's Chicken"
+        recipe.recipeDescription = "Crispy chicken that is coated in a sweet and spicy sauce."
+        recipe.recipeThumbnail = UIImage(named: "food")?.pngData()
+        recipe.timeHours = 0.0
+        recipe.timeMinutes = 30
+        recipe.ingredients = ["Chicken", "Hot Peppers", "Sugar", "Corn Starch"]
+        recipe.instructions = ["Cut chicken to small pieces", "Make the batter", "Put chicken in batter", "Fried the chicken", "Make the sauce", "Coat chicken in sauce"]
+        self.persistenceController.save()
+        self.presentationMode.wrappedValue.dismiss()
     }
 }
 
@@ -123,6 +145,7 @@ struct NewRecipeView_Previews: PreviewProvider {
 
 // MARK: - AddingStepsView
 struct AddingStepsView: View {
+    @Environment(\.presentationMode) var presentationMode
     var stepsType: Steps
     var testData = ["Cheese"]
 
@@ -147,6 +170,15 @@ struct AddingStepsView: View {
                     }
                 }
             }
+            .navigationBarTitle(self.stepsType.rawValue + "s")
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading:
+                Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+                    Image(systemName: "arrow.left")
+                        .imageScale(.large)
+                        .foregroundColor(.black)
+                }
+            )
             
             if self.showingPopup {
                 NewStepPopupView(stepsType: stepsType, showingPopup: $showingPopup)
@@ -181,7 +213,7 @@ struct NewStepPopupView: View {
                 Text("New \(stepsType.rawValue)")
                     .padding(.bottom, 5)
                     .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
-                CustomTextField(text: self.stepsType == .Ingredient ? $ingredientName : $directionName, isFirstResponder: true, placeholder: self.stepsType == .Ingredient ? "Name" : "Direction")
+                CustomTextField(text: self.stepsType == .Ingredient ? $ingredientName : $directionName, isFirstResponder: true, placeholder: self.stepsType == .Ingredient ? "Name" : "Instruction")
                     .frame(width: UIScreen.main.bounds.width * 0.6)
                     .padding(8)
                     .background(Color(#colorLiteral(red: 0.9968960881, green: 0.9921532273, blue: 1, alpha: 1)))
@@ -243,7 +275,7 @@ struct NewStepPopupView: View {
 
 struct IngredientPopupView_Previews: PreviewProvider {
     static var previews: some View {
-        NewStepPopupView(stepsType: .Direction, showingPopup: .constant(false))
+        NewStepPopupView(stepsType: .Instruction, showingPopup: .constant(false))
     }
 }
 
