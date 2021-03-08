@@ -9,7 +9,7 @@ import SwiftUI
 
 class CategoryManager: ObservableObject {
     @Published var categoryName = ""
-    @Published var categoryImage = UIImage(named: "food")!
+    @Published var categoryImage = UIImage(named: "placeholder")!
     
     @Published var isEditOn = false
     @Published var isShowingEditingView = false
@@ -44,7 +44,7 @@ struct CategoriesView: View {
                 .navigationBarTitle("Categories")
                 .navigationBarItems(trailing:
                     Button(action: { self.categoryManager.isEditOn.toggle() }) {
-                        Text(self.categoryManager.isEditOn  ? "Cancel" : "Edit")
+                        Text(self.categoryManager.isEditOn  ? "Done" : "Edit")
                             .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
                             .foregroundColor(self.categoryManager.isEditOn  ? .red : .black)
                     })
@@ -104,7 +104,7 @@ struct CategoryCell: View {
         if let thumbnailData = category.thumbnail {
             ZStack(alignment: .topLeading) {
                 ZStack(alignment: .topTrailing) {
-                    NavigationLink(destination: RecipeView()) {
+                    NavigationLink(destination: RecipeView(category: self.category)) {
                         Image(uiImage: UIImage(data: thumbnailData)!)
                             .resizable()
                             .scaledToFill()
@@ -134,7 +134,7 @@ struct CategoryCell: View {
                             self.categoryManager.categoryImage = UIImage(data: self.category.thumbnail ?? Data()) ?? UIImage(named: "food")!
                             self.categoryManager.isShowingEditingView = true
                         }) {
-                            RoundedButtonView(bgColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.6499315956))
+                            RoundedButtonView(corners: [.layerMaxXMinYCorner, .layerMinXMaxYCorner], bgColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.6499315956), cornerRadius: 20)
                                 .frame(width: 50, height: 50)
                                 .overlay(
                                     Image(systemName: "pencil.circle")
@@ -144,18 +144,17 @@ struct CategoryCell: View {
                         }
                     }
                 }
+                
                 if self.isEditing {
-                    Button(action: { self.categoryManager.isShowingDeleteAlert = true  }) {
-                        Circle()
-                            .fill(Color.red)
-                            .frame(width: 23, height: 23)
+                    Button(action: { self.categoryManager.isShowingDeleteAlert = true }) {
+                        RoundedButtonView(corners: [.layerMinXMinYCorner, .layerMaxXMaxYCorner], bgColor: #colorLiteral(red: 0.997196734, green: 0.2449620962, blue: 0.2093260586, alpha: 0.7458057316), cornerRadius: 20)
+                            .frame(width: 50, height: 50)
                             .overlay(
-                                Image(systemName: "xmark")
+                                Image(systemName: "trash")
+                                    .imageScale(.large)
                                     .foregroundColor(.white)
-                                    .imageScale(.small)
                             )
                     }
-                        .offset(x: -6, y: -6)
                 }
             }
                 .animation(.easeIn)
@@ -197,7 +196,7 @@ struct AddEditCategoryView: View {
                     }
                         .padding(.top, 25)
                     
-                    Section(header: Text("Select an image").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
+                    Section(header: Text("Image").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
                         Button(action: { self.isImagePickerOpen = true }) {
                             Text("Open Image Picker")
                                 .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
@@ -211,7 +210,7 @@ struct AddEditCategoryView: View {
                     }
                 }
                     .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
-                    .navigationBarTitle("New Category", displayMode: .inline)
+                    .navigationBarTitle(self.categoryManager.isShowingEditingView ? "Edit \(self.category!.name!)" : "New Category", displayMode: .inline)
                     .navigationBarItems(leading:
                         Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
                             Image(systemName: "xmark")

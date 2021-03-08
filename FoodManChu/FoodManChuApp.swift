@@ -20,6 +20,9 @@ struct FoodManChuApp: App {
         
         UINavigationBar.appearance().shadowImage = UIImage()
         UINavigationBar.appearance().tintColor = .black
+        
+        UISlider.appearance().tintColor = #colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)
+        UITableView.appearance().showsVerticalScrollIndicator = false
     }
     
     @StateObject var persistenceController = PersistenceController.shared
@@ -31,6 +34,7 @@ struct FoodManChuApp: App {
                 .environment(\.managedObjectContext, persistenceController.container.viewContext) // used for creating objects, etc
                 .environmentObject(persistenceController) // to save nsmanagedobjects
                 .environmentObject(ModalManager())
+                .preferredColorScheme(.light)
                 .onAppear() {
                     persistenceController.createDefaultCategories()
                     print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))

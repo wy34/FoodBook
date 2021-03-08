@@ -8,64 +8,87 @@
 import SwiftUI
 
 
-// Hiding back button and replacing it with custom image breaks the navigation swipe to pop, this brings that back
-extension UINavigationController: UIGestureRecognizerDelegate {
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        interactivePopGestureRecognizer?.delegate = self
+class RecipeManager: ObservableObject {
+    @Published var recipe: Recipe?
+    @Published var isShowingDeleteRecipeAlert = false
+    @Published var isShowingAddRecipe = false
+    
+    @Published var selectedImage = UIImage(named: "placeholder")!
+    @Published var isImagePickerOpen = false
+    @Published var name = ""
+    @Published var description = ""
+    @Published var hours = 0.0
+    @Published var minutes = 0.0
+    @Published var ingredients = [Ingredient]()
+    @Published var instructions = [String]()
+    
+    var recipeName: String {
+        return self.recipe?.recipeName ?? ""
     }
-
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return viewControllers.count > 1
+    
+    var recipeImage: UIImage {
+        return UIImage(data: self.recipe?.recipeThumbnail ?? Data())!
+    }
+    
+    var recipeDescription: String {
+        return self.recipe?.recipeDescription ?? ""
+    }
+    
+    var formattedPrepTimeText: Text {
+        let hours = self.recipe?.timeHours
+        let minutes = self.recipe?.timeMinutes
+        
+        if hours == 0.0 {
+            return Text("\(minutes ?? 0.0, specifier: "%.0f") m")
+        } else {
+            return Text("\(hours ?? 0.0, specifier: "%.0f") h \(minutes ?? 0.0, specifier: "%.0f") m")
+        }
+    }
+    
+    var recipeIngredients: [Ingredient] {
+        return self.recipe?.ingredients?.allObjects as? [Ingredient] ?? []
+    }
+    
+    var recipeInstructions: [String] {
+        return self.recipe?.instructions ?? []
     }
 }
 
 // MARK: - RecipeView
 struct RecipeView: View {
-    // 2 columns, this spacing is between columns
-//    let gridItems = Array(repeating: GridItem(.flexible(minimum: 50, maximum: 200), spacing: 15), count: 2)
-//    let screenSize = UIScreen.main.bounds
-    
+    var category: Category
     @State private var isEditing = false
-    
     @EnvironmentObject var modalManager: ModalManager
-//    @Environment(\.presentationMode) var presentationMode
-
+    @StateObject var recipeManager = RecipeManager()
+    
     var body: some View {
-        ZStack {
-            RecipeGrid(isEditing: $isEditing)
-
-//            if modalManager.isRecipeDetailViewShowing {
-//                CustomModalView(content: RecipeDetailView())
-//                    .animation(Animation.easeInOut(duration: 0.4))
-//            }
-        }
-        .onDisappear() {
-            self.modalManager.isRecipeDetailViewShowing = false
-            self.isEditing = false
-        }
+        RecipeGrid(category: category, isEditing: $isEditing)
+            .environmentObject(recipeManager)
+            .onDisappear() {
+                self.modalManager.isRecipeDetailViewShowing = false
+                self.isEditing = false
+            }
     }
 }
-
-struct RecipeView_Previews: PreviewProvider {
-    static var previews: some View {
-        RecipeView()
-            .environmentObject(ModalManager())
-    }
-}
-
 
 // MARK: - RecipeGrid
 struct RecipeGrid: View {
-    // 2 columns, this spacing is between columns
+    var category: Category
     let gridItems = Array(repeating: GridItem(.flexible(minimum: 50, maximum: 200), spacing: 15), count: 2)
     let screenSize = UIScreen.main.bounds
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var modalManager: ModalManager
     @Binding var isEditing: Bool
-    @FetchRequest(entity: Recipe.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Recipe.recipeName, ascending: true)]) var recipes: FetchedResults<Recipe>
+    let recipes: FetchRequest<Recipe>
     
-    @State private var isShowingAddRecipe = false
+    init(category: Category, isEditing: Binding<Bool>) {
+        self.category = category
+        _isEditing = isEditing
+        self.recipes = FetchRequest(entity: Recipe.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Recipe.recipeName, ascending: true)], predicate: NSPredicate(format: "category.name MATCHES %@",  category.name ?? ""))
+    }
+    
+//    @State private var isShowingAddRecipe = false
+    @EnvironmentObject var recipeManager: RecipeManager
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -77,13 +100,14 @@ struct RecipeGrid: View {
                     
                     // this spacing is between rows
                     LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
-                        ForEach(recipes, id: \.self) { recipe in
-                            RecipeCell(recipe: recipe, isEditing: $isEditing, isShowingAddRecipe: $isShowingAddRecipe)
+                        ForEach(recipes.wrappedValue, id: \.self) { recipe in
+                            RecipeCell(recipe: recipe, category: self.category, isEditing: $isEditing)
                         }
                     })
                         .padding(15)
+                        .animation(Animation.easeOut(duration: 0.15))
                 }
-                    .navigationBarTitle("Meat Recipes", displayMode: .inline)
+                    .navigationBarTitle("\(self.category.name ?? "") Recipes", displayMode: .inline)
                     .navigationBarBackButtonHidden(true)
                     .navigationBarItems(
                         leading:
@@ -94,7 +118,7 @@ struct RecipeGrid: View {
                             },
                         trailing:
                             Button(action: { self.isEditing.toggle(); self.modalManager.isRecipeDetailViewShowing = false }) {
-                                Text(self.isEditing ? "Cancel" : "Edit")
+                                Text(self.isEditing ? "Done" : "Edit")
                                     .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
                                     .foregroundColor(self.isEditing ? .red : .black)
                             }
@@ -102,7 +126,7 @@ struct RecipeGrid: View {
             }
             
             if !self.isEditing {
-                Button(action: { self.isShowingAddRecipe = true }) {
+                Button(action: { self.recipeManager.isShowingAddRecipe = true }) {
                     Image(systemName: "plus")
                         .font(.system(.title))
                         .foregroundColor(.white)
@@ -115,15 +139,14 @@ struct RecipeGrid: View {
                     .padding(.trailing, 20)
             }
             
-            
             if modalManager.isRecipeDetailViewShowing {
                 CustomModalView(content: RecipeDetailView())
                     .animation(Animation.easeInOut(duration: 0.4))
             }
         }
-            .fullScreenCover(isPresented: $isShowingAddRecipe, content: {
-                NewRecipeView()
-            })
+//            .fullScreenCover(isPresented: self.$recipeManager.isShowingAddRecipe, content: {
+//                NewRecipeView(category: self.category)
+//            })
     }
 }
 
@@ -131,16 +154,22 @@ struct RecipeGrid: View {
 struct RecipeCell: View {
     let screenSize = UIScreen.main.bounds
     var recipe: Recipe
+    var category: Category
     
     @Binding var isEditing: Bool
-    @Binding var isShowingAddRecipe: Bool
+//    @Binding var isShowingAddRecipe: Bool
     @EnvironmentObject var modalManager: ModalManager
+    @EnvironmentObject var recipeManager: RecipeManager
+    @EnvironmentObject var persistenceController: PersistenceController
 
     var body: some View {
         VStack {
             ZStack {
-                Button(action: { self.modalManager.isRecipeDetailViewShowing = true }) {
-                    Image(uiImage: UIImage(data: recipe.recipeThumbnail!)!)
+                Button(action: {
+                    self.recipeManager.recipe = self.recipe
+                    self.modalManager.isRecipeDetailViewShowing = true
+                }) {
+                    Image(uiImage: UIImage(data: recipe.recipeThumbnail ?? Data()) ?? UIImage())
                         .resizable()
                         .scaledToFill()
                         .frame(width: screenSize.width / 2 - 35, height: screenSize.height / 4)
@@ -152,7 +181,11 @@ struct RecipeCell: View {
                         .fill(Color.black.opacity(0.35))
                         .frame(width: screenSize.width / 2 - 35, height: screenSize.height / 4)
                         .overlay(
-                            Button(action: { self.isShowingAddRecipe = true }) {
+                           Button(action: {
+                                self.recipeManager.recipe = self.recipe
+                                self.setRecipeValuesToPublished()
+                                self.recipeManager.isShowingAddRecipe = true
+                           }) {
                                 Image(systemName: "pencil.circle")
                                     .font(.system(.largeTitle, design: .rounded))
                                     .imageScale(.large)
@@ -160,23 +193,56 @@ struct RecipeCell: View {
                                     .padding(30)
                             }
                         )
+                        .overlay(
+                            Button(action: {
+                                self.recipeManager.isShowingDeleteRecipeAlert = true
+                                self.recipeManager.recipe = self.recipe
+                            }) {
+                                Image(systemName: "trash")
+                                    .imageScale(.medium)
+                                    .foregroundColor(.white)
+                                    .padding(12)
+                            }
+                                .background(RoundedButtonView(corners: [.layerMinXMinYCorner, .layerMaxXMaxYCorner], bgColor: #colorLiteral(red: 0.997196734, green: 0.2449620962, blue: 0.2093260586, alpha: 0.7458057316), cornerRadius: 30))
+                            , alignment: .topLeading
+                        )
                 } 
             }
                 .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 0)
                 .animation(.easeInOut)
                 
-            Text(recipe.recipeName!)
+            Text(recipe.recipeName ?? "")
                 .multilineTextAlignment(.center)
                 .font(.custom("TypoRoundRegularDemo", size: 18, relativeTo: .body))
                 .frame(width: screenSize.width / 2 - 35)
                 .lineLimit(nil)
                 .padding(.top, 3)
         }
+            .fullScreenCover(isPresented: self.$recipeManager.isShowingAddRecipe, content: {
+                NewRecipeView(category: self.category)
+            })
+            .alert(isPresented: $recipeManager.isShowingDeleteRecipeAlert) {
+                Alert(title: Text("Delete"), message: Text("Are you sure you want to delete this recipe?"), primaryButton: .cancel(), secondaryButton: .default(Text("Yes")) {
+                        if let recipe = self.recipeManager.recipe {
+                            self.persistenceController.delete(recipe)
+                            self.persistenceController.save()
+                        }
+                    }
+                )
+            }
+    }
+    
+    func setRecipeValuesToPublished() {
+        self.recipeManager.name = self.recipe.recipeName ?? ""
+        self.recipeManager.description = self.recipe.recipeDescription ?? ""
+        self.recipeManager.selectedImage = UIImage(data: self.recipe.recipeThumbnail ?? Data()) ?? UIImage()
+        self.recipeManager.hours = self.recipe.timeHours
+        self.recipeManager.minutes = self.recipe.timeMinutes
+        
+        if let ingredients = self.recipe.ingredients?.allObjects as? [Ingredient] {
+            self.recipeManager.ingredients = ingredients
+        }
+        
+        self.recipeManager.instructions = self.recipe.instructions ?? []
     }
 }
-
-//struct RecipeCell_previews: PreviewProvider {
-//    static var previews: some View {
-//        RecipeCell(recipe: <#Recipe#>, isEditing: .constant(false), isShowingAddRecipe: .constant(false))
-//    }
-//}

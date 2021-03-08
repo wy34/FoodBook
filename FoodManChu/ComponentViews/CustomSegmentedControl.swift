@@ -9,77 +9,100 @@ import SwiftUI
 
 struct CustomSegmentedPickerWithMenu: View {
     @State private var selected = 0
+    @ObservedObject var recipeManager: RecipeManager
     
     // MARK: - Body
     var body: some View {
         VStack {
-            HStack(spacing: -10) {
+            HStack(spacing: 20) {
                 Button(action: { self.selected = 0 }) {
                     Text("Ingredients")
-                        .padding()
-                        .foregroundColor(self.selected == 0 ? Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)) : Color(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)))
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 8)
+                        .background(self.selected == 0 ? Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)) : Color(.clear))
+                        .foregroundColor(self.selected == 0 ? Color(.white) : Color(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)))
+                        .cornerRadius(10)
                 }
                 
                 Button(action: { self.selected = 1 }) {
                     Text("Directions")
-                        .padding()
-                        .foregroundColor(self.selected == 1 ? Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)) : Color(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)))
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 8)
+                        .background(self.selected == 1 ? Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)) : Color(.clear))
+                        .foregroundColor(self.selected == 1 ? Color(.white) : Color(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)))
+                        .cornerRadius(10)
                 }
             }
                 .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
                 .animation(.easeIn)
                         
             if self.selected == 0 {
-                PickerMenu(isIngredient: true, dataSource: ["Cheese", "Tomatoes", "Apples", "Beef", "Carrots", "Chicken", "Onions", "Bananas", "Broccoli", "Garlic", "Ginger", "Salt", "Pepper"])
+                PickerMenu(ingredients: self.recipeManager.recipeIngredients)
             } else {
-                PickerMenu(isIngredient: false, dataSource: ["Preheat Oven to 330", "Slice the Apples to thin pieces", "Make the gravy", "Peel the potatoes", "Thicken the gravy", "Add milk to sauce"])
+                PickerMenu(instructions: self.recipeManager.recipeInstructions)
             }
         }
-        .animation(.easeIn)
+            .animation(.easeInOut)
     }
 }
 
 
 struct CustomSegmentedPickerWithMenu_Previews: PreviewProvider {
     static var previews: some View {
-        CustomSegmentedPickerWithMenu()
+        CustomSegmentedPickerWithMenu(recipeManager: RecipeManager())
+    }
+}
+
+// MARK: - PickerMenu
+struct PickerMenu: View {
+    var ingredients: [Ingredient]?
+    var instructions: [String]?
+    
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            if self.ingredients != nil {
+                ForEach(0..<ingredients!.count, id: \.self) { i in
+                    IngredientDirectionsCell(ingredient: ingredients![i], direction: nil, dataSourceCount: ingredients!.count, index: i)
+                }
+            } else {
+                ForEach(0..<instructions!.count, id: \.self) { i in
+                    IngredientDirectionsCell(ingredient: nil, direction: instructions![i], dataSourceCount: instructions!.count, index: i)
+                }
+            }
+        }
+            .padding(.vertical, 12)
+            .padding(.horizontal, 12)
+            .frame(width: 250, height: ingredients != nil ? CGFloat(ingredients!.count) * 50 : CGFloat(instructions!.count) * 50)
     }
 }
 
 
-// MARK: - PickerMenu
-struct PickerMenu: View {
-    var isIngredient: Bool
-    var dataSource: [String]
+struct IngredientDirectionsCell: View {
+    var ingredient: Ingredient?
+    var direction: String?
+    var dataSourceCount: Int
+    var index: Int
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            ForEach(0..<dataSource.count, id: \.self) { i in
-                VStack {
-                    HStack {
-                        Image(systemName: self.isIngredient ? "house" : "chevron.right")
-                        Text("\(dataSource[i])")
-                            .font(.custom("TypoRoundLightDemo", size: 16, relativeTo: .body))
-                        Spacer()
-                        if isIngredient {
-                            Text("2 cups")
-                                .font(.custom("TypoRoundLightDemo", size: 12, relativeTo: .body))
-                        }
-                    }
-                        .padding(.horizontal, 15)
-                        .padding(.vertical, 5)
-
-                    if i != dataSource.count - 1 {
-                        Divider()
-                    }
+        VStack {
+            HStack {
+                if ingredient != nil {
+                    Image(systemName: "chevron.right")
+                }
+                
+                Text(ingredient != nil ? ingredient!.name! : "\(index + 1).  " + direction!)
+                Spacer()
+                
+                if ingredient != nil {
+                    Text(ingredient!.amount!)
+                        .font(.custom("TypoRoundLightDemo", size: 12, relativeTo: .body))
                 }
             }
+            
+            if index != dataSourceCount - 1 {
+                Divider()
+                    .background(Color.black.opacity(0.2))
+            }
         }
-            .padding(.vertical, 8)
-            .frame(width: 250, height: (dataSource.count > 5) ? 175 : CGFloat(dataSource.count) * 50)
-            .overlay(
-                RoundedRectangle(cornerRadius: 15)
-                    .stroke(Color.black.opacity(0.25), lineWidth: 1)
-            )
     }
 }

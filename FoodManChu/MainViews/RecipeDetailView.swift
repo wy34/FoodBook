@@ -11,14 +11,15 @@ import SwiftUI
 struct RecipeDetailView: View {
     let screenSize = UIScreen.main.bounds
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var recipeManager: RecipeManager
 
     var body: some View {
         ScrollView {
             VStack {
-                Image("food2")
+                Image(uiImage: self.recipeManager.recipeImage)
                     .resizable()
                     .frame(width: screenSize.width * 0.45, height: screenSize.width * 0.45)
-                    .scaledToFit()
+                    .scaledToFill()
                     .clipShape(Circle())
                     .overlay(
                         Circle()
@@ -26,14 +27,14 @@ struct RecipeDetailView: View {
                             .shadow(color: Color.black, radius: 10)
                     )
                     
-                 Text("Beef with Broccoli")
+                Text(self.recipeManager.recipeName)
                     .multilineTextAlignment(.center)
                     .padding(.top, 15)
                     .lineLimit(nil)
                     .font(.custom("TypoRoundBoldDemo", size: 28, relativeTo: .body))
                 
                 HStack {
-                    Text("25 min")
+                    self.recipeManager.formattedPrepTimeText
                         .font(.custom("TypoRoundLightDemo", size: 18, relativeTo: .body))
                         .cornerRadius(5)
                     Divider()
@@ -46,6 +47,7 @@ struct RecipeDetailView: View {
                     .padding(.bottom, 15)
                 
                 Divider()
+                    .background(Color.black.opacity(0.2))
                 
                 // Description
                 VStack(alignment: .leading) {
@@ -54,28 +56,21 @@ struct RecipeDetailView: View {
                         .underline()
                         .padding(.bottom, 1)
                     
-                    Text("lsaf slkjdflksj;fdk ksdfj lkjsdf sjd ljlsjdlf kjf sldfl dksjflsdjf ksdjfljsdf ldfjj skdjfls ksdjfljsdf ldfjj skdjfls ksdjfljsdf ldfjj skdjfls ksdjfljsdf ldfjj skdjfls ksdjfljsdf ldfjj skdjfls ksdjfljsdf ldfjj skdjfls")
+                    Text(self.recipeManager.recipeDescription)
                         .font(.custom("TypoRoundLightDemo", size: 18, relativeTo: .body))
+                        .multilineTextAlignment(.leading)
                         .lineLimit(nil)
                 }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.top, 10)
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 50)
                 
-                CustomSegmentedPickerWithMenu()
+                CustomSegmentedPickerWithMenu(recipeManager: self.recipeManager)
                 
                 Spacer()
             }
-                .padding(.vertical, 30)
-                .padding(.horizontal, 15)
+                .padding(.vertical, 40)
+                .padding(.horizontal, 20)
         }
     }
 }
-
-// MARK: - Preview
-struct RecipeDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        RecipeDetailView()
-    }
-}
-
-
