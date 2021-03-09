@@ -8,26 +8,20 @@
 import SwiftUI
 
 struct RecipesBookView: View {
-    var rawData = [
-        "XYZ Fried Rice",
-        "Beef with Broccoli",
-        "General Tso's Chicken",
-        "Garlic Chicken"
-    ]
-    
-    @State private var wordGroups = ["g": ["General Tso\'s Chicken", "Garlic Chicken"], "b": ["Beef with Broccoli"], "x": ["XYZ Fried Rice"]]
-    
+    @FetchRequest(entity: Recipe.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Recipe.recipeName, ascending: true)]) var recipes: FetchedResults<Recipe>
+    @StateObject var recipeManager = RecipeManager()
+        
     var body: some View {
         NavigationView {
             VStack {
-                SearchBar(placeholder: "Recipe")
-                    .padding(.bottom, 5)
+//                SearchBar(placeholder: "Recipe")
+//                    .padding(.bottom, 5)
                 Form {
-                    ForEach(Array(wordGroups.keys).sorted(), id: \.self) { key in
-                        Section(header: Text(key)) {
-                            ForEach(wordGroups[key]!, id: \.self) { food in
-                                NavigationLink(destination: Text("Hello")) {
-                                    Text(food)
+                    ForEach(Array(groupsByFirstLetter().keys.sorted()), id: \.self) { key in
+                        Section(header: Text(String(key))) {
+                            ForEach(groupsByFirstLetter()[key]!, id: \.id) { recipe in
+                                NavigationLink(destination: BookRecipeDetailView(recipe: recipe, recipeManager: self.recipeManager)) {
+                                    Text(recipe.recipeName ?? "")
                                 }
                             }
                         }
@@ -38,30 +32,26 @@ struct RecipesBookView: View {
         }
     }
     
-    func getAllFirstLetterGroups() -> [String: [String]] {
+    func groupsByFirstLetter() -> [Character: [Recipe]] {
         let alphabet = "abcdefghijklmnopqrstuvwxyz"
-        var sameStartingLetterDict = [String: [String]]()
+        var recipeListGroupedByFirstLetter = [Character: [Recipe]]()
         
         for letter in alphabet {
-            for data in rawData {
-                if let firstLetter = data.first {
-                    if firstLetter.lowercased() == String(letter) {
-                        let key = String(letter)
-                
-                        if sameStartingLetterDict[key] != nil {
-                            sameStartingLetterDict[key]?.append(data)
+            for recipe in self.recipes {
+                if let firstLetter = recipe.recipeName?.first?.lowercased() {
+                    if String(letter) == firstLetter {
+                        if var recipeArr = recipeListGroupedByFirstLetter[letter] {
+                            recipeArr.append(recipe)
+                            recipeListGroupedByFirstLetter[letter] = recipeArr
                         } else {
-                            sameStartingLetterDict[key] = [data]
+                            recipeListGroupedByFirstLetter[letter] = [recipe]
                         }
                     }
                 }
             }
         }
         
-        print("Dictionary: \(sameStartingLetterDict)")
-        print("Keys: \(sameStartingLetterDict.keys)")
-
-        return sameStartingLetterDict
+        return recipeListGroupedByFirstLetter
     }
 }
 
@@ -69,5 +59,122 @@ struct RecipesBookView: View {
 struct RecipesBookView_previews: PreviewProvider {
     static var previews: some View {
         RecipesBookView()
+    }
+}
+
+
+struct BookRecipeDetailView: View {
+    var recipe: Recipe
+    @ObservedObject var recipeManager: RecipeManager
+    @State private var translationHeight: CGFloat = UIScreen.main.bounds.height * 0.25
+    @Environment(\.presentationMode) var presentationMode 
+    
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            VStack {
+                Image(uiImage: UIImage(data: recipe.recipeThumbnail ?? Data())!)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.45)
+                Spacer()
+            }
+            
+            ZStack {
+                RoundedButtonView(corners: [.layerMinXMinYCorner, .layerMaxXMinYCorner], bgColor: .white, cornerRadius: 30)
+                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.65)
+                    .overlay(
+                        Capsule()
+                            .fill(Color.gray.opacity(0.75))
+                            .frame(width: 80, height: 6)
+                            .padding(.top, 5)
+                        , alignment: .top
+                    )
+                    .overlay(
+                        VStack(alignment: .leading) {
+                            Text(recipe.recipeName ?? "")
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5)
+                                .font(.custom("TypoRoundBoldDemo", size: 30, relativeTo: .body))
+                                .padding(.top, 30)
+                            
+                            HStack {
+                                Text("\(recipeManager.formattedPrepTimeText)")
+                                    .font(.custom("TypoRoundLightDemo", size: 18, relativeTo: .body))
+                                    .cornerRadius(5)
+                                Divider()
+                                    .background(Color.black)
+                                    .frame(width: 1, height: 15)
+                                Text(self.recipe.category?.name ?? "")
+                                    .padding(.vertical, 5)
+                                    .padding(.horizontal, 8)
+                                    .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
+                                    .background(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
+                                    .foregroundColor(.white)
+                                    .cornerRadius(5)
+                            }
+                                .padding(.bottom, 15)
+                            
+                            Group {
+                                Text("Description")
+                                    .font(.custom("TypoRoundRegularDemo", size: 22, relativeTo: .body))
+                                    .underline()
+                                    .lineLimit(nil)
+                                    .padding(.bottom, 1)
+                                
+                                Text(recipe.recipeDescription ?? "")
+                                    .font(.custom("TypoRoundLightDemo", size: 18, relativeTo: .body))
+                                    .multilineTextAlignment(.leading)
+                                    .lineLimit(nil)
+                            }
+                            
+                            HStack {
+                                Spacer()
+                                CustomSegmentedPickerWithMenu(recipeManager: self.recipeManager)
+                                Spacer()
+                            }
+                                .padding(.vertical, 25)
+                        }
+                            .padding(.horizontal, 25)
+                        , alignment: .topLeading
+                    )
+                    .offset(x: 0, y: self.translationHeight)
+                    .animation(.easeIn)
+                    .gesture(
+                        DragGesture()
+                            .onChanged({ (value) in
+    //                            self.yCoor = value.location.y
+    //                            if value.translation.height < 0 {
+    //                                if value.location.y > 1000 {
+    //                                    self.translationHeight = value.translation.height + UIScreen.main.bounds.height * 0.18
+    //                                }
+    //                            } else {
+    //                                if value.location.y < 110.5 {
+    //                                    self.translationHeight = value.translation.height
+    //                                }
+    //                            }
+                            })
+                            .onEnded({ (value) in
+                                if value.translation.height <= 0 {
+                                    self.translationHeight = 0
+                                } else {
+                                    self.translationHeight = UIScreen.main.bounds.height * 0.25
+                                }
+                            })
+                    )
+                
+            }
+        }
+            .navigationBarTitle("Details", displayMode: .inline)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading:
+                Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+                    Image(systemName: "arrow.left")
+                        .imageScale(.large)
+                        .foregroundColor(.black)
+                }
+            )
+            .onAppear() {
+                self.recipeManager.recipe = self.recipe
+            }
     }
 }

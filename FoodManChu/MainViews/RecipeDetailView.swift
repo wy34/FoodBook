@@ -11,7 +11,7 @@ import SwiftUI
 struct RecipeDetailView: View {
     let screenSize = UIScreen.main.bounds
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var recipeManager: RecipeManager
+    @ObservedObject var recipeManager: RecipeManager
 
     var body: some View {
         ScrollView {
@@ -19,7 +19,7 @@ struct RecipeDetailView: View {
                 Image(uiImage: self.recipeManager.recipeImage)
                     .resizable()
                     .frame(width: screenSize.width * 0.45, height: screenSize.width * 0.45)
-                    .scaledToFill()
+                    .aspectRatio(contentMode: .fill)
                     .clipShape(Circle())
                     .overlay(
                         Circle()

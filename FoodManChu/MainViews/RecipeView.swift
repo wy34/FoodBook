@@ -12,6 +12,7 @@ class RecipeManager: ObservableObject {
     @Published var recipe: Recipe?
     @Published var isShowingDeleteRecipeAlert = false
     @Published var isShowingAddRecipe = false
+    @Published var isShowingEditRecipe = false
     
     @Published var selectedImage = UIImage(named: "placeholder")!
     @Published var isImagePickerOpen = false
@@ -52,6 +53,16 @@ class RecipeManager: ObservableObject {
     var recipeInstructions: [String] {
         return self.recipe?.instructions ?? []
     }
+    
+    func resetRecipeValuesToEmpty() {
+        self.name = ""
+        self.description = ""
+        self.selectedImage = UIImage(named: "placeholder")!
+        self.hours = 0.0
+        self.minutes = 0.0
+        self.ingredients = [Ingredient]()
+        self.instructions = [String]()
+    }
 }
 
 // MARK: - RecipeView
@@ -62,12 +73,13 @@ struct RecipeView: View {
     @StateObject var recipeManager = RecipeManager()
     
     var body: some View {
-        RecipeGrid(category: category, isEditing: $isEditing)
-            .environmentObject(recipeManager)
-            .onDisappear() {
-                self.modalManager.isRecipeDetailViewShowing = false
-                self.isEditing = false
-            }
+        ZStack {
+            RecipeGrid(category: category, isEditing: $isEditing, recipeManager: self.recipeManager)
+                .onDisappear() {
+                    self.modalManager.isRecipeDetailViewShowing = false
+                    self.isEditing = false
+                }
+        }
     }
 }
 
@@ -81,14 +93,14 @@ struct RecipeGrid: View {
     @Binding var isEditing: Bool
     let recipes: FetchRequest<Recipe>
     
-    init(category: Category, isEditing: Binding<Bool>) {
+    init(category: Category, isEditing: Binding<Bool>, recipeManager: RecipeManager) {
         self.category = category
         _isEditing = isEditing
         self.recipes = FetchRequest(entity: Recipe.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Recipe.recipeName, ascending: true)], predicate: NSPredicate(format: "category.name MATCHES %@",  category.name ?? ""))
+        self.recipeManager = recipeManager
     }
     
-//    @State private var isShowingAddRecipe = false
-    @EnvironmentObject var recipeManager: RecipeManager
+    @ObservedObject var recipeManager: RecipeManager
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -101,7 +113,7 @@ struct RecipeGrid: View {
                     // this spacing is between rows
                     LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
                         ForEach(recipes.wrappedValue, id: \.self) { recipe in
-                            RecipeCell(recipe: recipe, category: self.category, isEditing: $isEditing)
+                            RecipeCell(recipe: recipe, category: self.category, isEditing: $isEditing, recipeManager: self.recipeManager)
                         }
                     })
                         .padding(15)
@@ -126,7 +138,10 @@ struct RecipeGrid: View {
             }
             
             if !self.isEditing {
-                Button(action: { self.recipeManager.isShowingAddRecipe = true }) {
+                Button(action: {
+                    self.recipeManager.resetRecipeValuesToEmpty()
+                    self.recipeManager.isShowingEditRecipe = true
+                }) {
                     Image(systemName: "plus")
                         .font(.system(.title))
                         .foregroundColor(.white)
@@ -137,16 +152,16 @@ struct RecipeGrid: View {
                 }
                     .padding(.bottom, 20)
                     .padding(.trailing, 20)
+                    .fullScreenCover(isPresented: self.$recipeManager.isShowingEditRecipe) {
+                        AddEditRecipeView(category: self.category, recipeManager: self.recipeManager)
+                    }
             }
             
             if modalManager.isRecipeDetailViewShowing {
-                CustomModalView(content: RecipeDetailView())
+                CustomModalView(content: RecipeDetailView(recipeManager: self.recipeManager))
                     .animation(Animation.easeInOut(duration: 0.4))
             }
         }
-//            .fullScreenCover(isPresented: self.$recipeManager.isShowingAddRecipe, content: {
-//                NewRecipeView(category: self.category)
-//            })
     }
 }
 
@@ -157,9 +172,8 @@ struct RecipeCell: View {
     var category: Category
     
     @Binding var isEditing: Bool
-//    @Binding var isShowingAddRecipe: Bool
     @EnvironmentObject var modalManager: ModalManager
-    @EnvironmentObject var recipeManager: RecipeManager
+    @ObservedObject var recipeManager: RecipeManager
     @EnvironmentObject var persistenceController: PersistenceController
 
     var body: some View {
@@ -178,7 +192,7 @@ struct RecipeCell: View {
                 
                 if self.isEditing {
                     RoundedRectangle(cornerRadius: 30)
-                        .fill(Color.black.opacity(0.35))
+                        .fill(Color.black.opacity(0.45))
                         .frame(width: screenSize.width / 2 - 35, height: screenSize.height / 4)
                         .overlay(
                            Button(action: {
@@ -219,7 +233,7 @@ struct RecipeCell: View {
                 .padding(.top, 3)
         }
             .fullScreenCover(isPresented: self.$recipeManager.isShowingAddRecipe, content: {
-                NewRecipeView(category: self.category)
+                AddEditRecipeView(recipeManager: self.recipeManager)
             })
             .alert(isPresented: $recipeManager.isShowingDeleteRecipeAlert) {
                 Alert(title: Text("Delete"), message: Text("Are you sure you want to delete this recipe?"), primaryButton: .cancel(), secondaryButton: .default(Text("Yes")) {

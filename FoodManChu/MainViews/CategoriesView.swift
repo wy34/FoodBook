@@ -171,6 +171,9 @@ struct CategoryCell: View {
     }
     
     func delete() {
+        for recipe in category.recipe?.allObjects as! [Recipe] {
+            persistenceController.delete(recipe)
+        }
         persistenceController.delete(category)
         persistenceController.save()
     }

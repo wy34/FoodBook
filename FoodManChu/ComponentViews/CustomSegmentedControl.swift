@@ -35,6 +35,7 @@ struct CustomSegmentedPickerWithMenu: View {
             }
                 .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
                 .animation(.easeIn)
+                .padding(.bottom, 7)
                         
             if self.selected == 0 {
                 PickerMenu(ingredients: self.recipeManager.recipeIngredients)
@@ -72,7 +73,12 @@ struct PickerMenu: View {
         }
             .padding(.vertical, 12)
             .padding(.horizontal, 12)
-            .frame(width: 250, height: ingredients != nil ? CGFloat(ingredients!.count) * 50 : CGFloat(instructions!.count) * 50)
+//            .frame(width: 250, height: ingredients != nil ? CGFloat(ingredients!.count) * 50 : CGFloat(instructions!.count) * 50)
+            .frame(width: 250, height: 175)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.gray, lineWidth: 1)
+            )
     }
 }
 

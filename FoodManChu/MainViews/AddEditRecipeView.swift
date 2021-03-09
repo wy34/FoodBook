@@ -13,26 +13,13 @@ enum Steps: String {
     case Instruction
 }
 
-//// MARK: - NewRecipeManager
-//class NewRecipeManager: ObservableObject {
-//    @Published var selectedImage = UIImage(named: "placeholder")!
-//    @Published var isImagePickerOpen = false
-//    @Published var name = ""
-//    @Published var description = ""
-//    @Published var hours = 0.0
-//    @Published var minutes = 0.0
-//    @Published var ingredients = [Ingredient]()
-//    @Published var instructions = [String]()
-//}
-
-// MARK: - NewRecipeView
-struct NewRecipeView: View {
-    var category: Category
-//    @StateObject var newRecipeManager = NewRecipeManager()
+// MARK: - AddEditRecipeView
+struct AddEditRecipeView: View {
+    var category: Category?
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) var moc
     @EnvironmentObject var persistenceController: PersistenceController
-    @EnvironmentObject var recipeManager: RecipeManager
+    @ObservedObject var recipeManager: RecipeManager
     
     var body: some View {
         NavigationView {
@@ -75,17 +62,17 @@ struct NewRecipeView: View {
                     }
                     
                     Section(header: Text("Other").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
-                        NavigationLink(destination: AddingStepsView(stepsType: .Ingredient)) {
+                        NavigationLink(destination: AddingStepsView(recipeManager: self.recipeManager, stepsType: .Ingredient)) {
                             Text("Ingredients")
                         }
-                        NavigationLink(destination: AddingStepsView(stepsType: .Instruction)) {
+                        NavigationLink(destination: AddingStepsView(recipeManager: self.recipeManager, stepsType: .Instruction)) {
                             Text("Instructions")
                         }
                     }
 
                 }
                     .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
-                    .navigationBarTitle(Text("New Recipe"), displayMode: .inline)
+                    .navigationBarTitle(Text(self.category == nil ? "Edit \(self.recipeManager.recipeName)" : "New Recipe"), displayMode: .inline)
                     .navigationBarItems(leading:
                         Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
                             Image(systemName: "xmark")
@@ -98,7 +85,14 @@ struct NewRecipeView: View {
                     }
                 
                 Button(action: {
-                    self.createNewRecipe()
+                    if let _ = self.category {
+                        self.createRecipe()
+                    } else {
+                        self.editRecipe()
+                    }
+                    
+                    self.persistenceController.save()
+                    self.presentationMode.wrappedValue.dismiss()
                 }) {
                      Text("Save")
                         .font(.custom("TypoRoundBoldDemo", size: 24, relativeTo: .body))
@@ -114,11 +108,9 @@ struct NewRecipeView: View {
                     .disabled(self.recipeManager.name.isEmpty ? true : false)
             }
         }
-        .environmentObject(self.recipeManager)
-//            .environmentObject(newRecipeManager)
     }
     
-    func createNewRecipe() {
+    func createRecipe() {
         let recipe = Recipe(context: self.moc)
         recipe.recipeName = self.recipeManager.name
         recipe.recipeDescription = self.recipeManager.description
@@ -127,17 +119,26 @@ struct NewRecipeView: View {
         recipe.timeMinutes = self.recipeManager.minutes
         recipe.instructions = self.recipeManager.instructions
         self.recipeManager.ingredients.forEach({ $0.addToRecipe(recipe) })
-        recipe.category = self.category
-        self.persistenceController.save()
-        self.presentationMode.wrappedValue.dismiss()
+        recipe.category = category
+        self.recipeManager.isShowingAddRecipe = false
+    }
+    
+    func editRecipe() {
+        self.recipeManager.recipe?.recipeName = self.recipeManager.name
+        self.recipeManager.recipe?.recipeDescription = self.recipeManager.description
+        self.recipeManager.recipe?.recipeThumbnail = self.recipeManager.selectedImage.pngData()
+        self.recipeManager.recipe?.timeHours = self.recipeManager.hours
+        self.recipeManager.recipe?.timeMinutes = self.recipeManager.minutes
+        self.recipeManager.recipe?.ingredients = NSSet(array: self.recipeManager.ingredients)
+        self.recipeManager.recipe?.instructions = self.recipeManager.instructions
+        self.recipeManager.isShowingEditRecipe = false
     }
 }
 
 // MARK: - AddingStepsView
 struct AddingStepsView: View {
     @Environment(\.presentationMode) var presentationMode
-//    @EnvironmentObject var newRecipeManager: NewRecipeManager
-    @EnvironmentObject var recipeManager: RecipeManager
+    @ObservedObject var recipeManager: RecipeManager
 
     var stepsType: Steps
 
@@ -193,7 +194,7 @@ struct AddingStepsView: View {
                 )
             
             if self.showingPopup {
-                NewStepPopupView(stepsType: stepsType, showingPopup: $showingPopup)
+                NewStepPopupView(stepsType: stepsType, showingPopup: $showingPopup, recipeManager: self.recipeManager)
             }
         }
     }
@@ -217,8 +218,7 @@ struct NewStepPopupView: View {
     @State private var instruction = ""
     @State private var scales = false
     
-//    @EnvironmentObject var newRecipeManager: NewRecipeManager
-    @EnvironmentObject var recipeManager: RecipeManager
+    @ObservedObject var recipeManager: RecipeManager
 
     @Environment(\.managedObjectContext) var moc
     @EnvironmentObject var persistenceController: PersistenceController

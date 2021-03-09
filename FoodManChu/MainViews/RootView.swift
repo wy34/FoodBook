@@ -23,8 +23,8 @@ struct RootView: View {
                 }
             RecipesBookView()
                 .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Lookup")
+                    Image(systemName: "book")
+                    Text("List")
                 }
             Color(.red)
                 .tabItem {
