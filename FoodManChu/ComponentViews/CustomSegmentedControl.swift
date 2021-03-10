@@ -14,7 +14,7 @@ struct CustomSegmentedPickerWithMenu: View {
     // MARK: - Body
     var body: some View {
         VStack {
-            HStack(spacing: 20) {
+            HStack(spacing: 15) {
                 Button(action: { self.selected = 0 }) {
                     Text("Ingredients")
                         .padding(.vertical, 5)
@@ -58,27 +58,29 @@ struct CustomSegmentedPickerWithMenu_Previews: PreviewProvider {
 struct PickerMenu: View {
     var ingredients: [Ingredient]?
     var instructions: [String]?
+    @State private var hide = false
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            if self.ingredients != nil {
-                ForEach(0..<ingredients!.count, id: \.self) { i in
-                    IngredientDirectionsCell(ingredient: ingredients![i], direction: nil, dataSourceCount: ingredients!.count, index: i)
-                }
-            } else {
-                ForEach(0..<instructions!.count, id: \.self) { i in
-                    IngredientDirectionsCell(ingredient: nil, direction: instructions![i], dataSourceCount: instructions!.count, index: i)
+        VStack {
+            ScrollView(showsIndicators: false) {
+                if self.ingredients != nil {
+                    ForEach(0..<ingredients!.count, id: \.self) { i in
+                        IngredientDirectionsCell(ingredient: ingredients![i], direction: nil, dataSourceCount: ingredients!.count, index: i)
+                    }
+                } else {
+                    ForEach(0..<instructions!.count, id: \.self) { i in
+                        IngredientDirectionsCell(ingredient: nil, direction: instructions![i], dataSourceCount: instructions!.count, index: i)
+                    }
                 }
             }
+                .padding(.top, 12)
+                .padding(.horizontal, 12)
+                .frame(width: 250, height: 175)
+    //            .overlay(
+    //                RoundedRectangle(cornerRadius: 10)
+    //                    .stroke(Color.gray, lineWidth: 1)
+    //            )
         }
-            .padding(.vertical, 12)
-            .padding(.horizontal, 12)
-//            .frame(width: 250, height: ingredients != nil ? CGFloat(ingredients!.count) * 50 : CGFloat(instructions!.count) * 50)
-            .frame(width: 250, height: 175)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.gray, lineWidth: 1)
-            )
     }
 }
 

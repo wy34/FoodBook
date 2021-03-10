@@ -27,15 +27,16 @@ struct AddEditRecipeView: View {
                 Form {
                     Section(header: Text("Details").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
                         TextField("Name", text: self.$recipeManager.name)
+
                         ZStack(alignment: .leading) {
-                            Text("Description")
+                            Text("Description (Optional)")
                                 .foregroundColor(!self.recipeManager.description.isEmpty ? .clear : Color(#colorLiteral(red: 0.7848425508, green: 0.7855817676, blue: 0.7926406264, alpha: 1)))
                             TextEditor(text: self.$recipeManager.description)
                                 .padding(.leading, -5)
                         }
                     }
                     
-                    Section(header: Text("Thumbnail").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
+                    Section(header: Text("Thumbnail (Optional)").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
                         Button(action: { self.recipeManager.isImagePickerOpen = true }) {
                             Text("Open Image Picker")
                                 .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
@@ -96,16 +97,16 @@ struct AddEditRecipeView: View {
                 }) {
                      Text("Save")
                         .font(.custom("TypoRoundBoldDemo", size: 24, relativeTo: .body))
-                        .foregroundColor(self.recipeManager.name.isEmpty ? Color(.systemGray2) :.white)
+                        .foregroundColor(!self.recipeManager.isRecipeInputValid ? Color(.systemGray2) : .white)
                         .frame(maxWidth: .infinity)
                         .padding(12)
-                        .background(self.recipeManager.name.isEmpty ? Color.gray : Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
+                        .background(!self.recipeManager.isRecipeInputValid ? Color.gray : Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
                         .cornerRadius(20)
                         .padding([.horizontal], 20)
                         .padding(.bottom, 10)
                 }
                     .padding(.top, 15)
-                    .disabled(self.recipeManager.name.isEmpty ? true : false)
+                    .disabled(!self.recipeManager.isRecipeInputValid ? true : false)
             }
         }
     }
@@ -148,10 +149,12 @@ struct AddingStepsView: View {
         ZStack {
             Form {
                 if self.stepsType == .Ingredient {
-                    Button(action: {  }) {
-                        Label("Pick From Existing List", systemImage: "book")
-                            .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
-                            .font(.custom("TypoRoundBoldDemo", size: 16, relativeTo: .body))
+                    NavigationLink(destination: ExistingIngredientView(recipeManager: self.recipeManager)) {
+                        Button(action: {  }) {
+                            Label("Pick From Existing List", systemImage: "book")
+                                .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
+                                .font(.custom("TypoRoundBoldDemo", size: 16, relativeTo: .body))
+                        }
                     }
                 }
                 

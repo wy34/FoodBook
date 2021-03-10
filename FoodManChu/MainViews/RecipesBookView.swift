@@ -13,15 +13,21 @@ struct RecipesBookView: View {
         
     var body: some View {
         NavigationView {
-            VStack {
-//                SearchBar(placeholder: "Recipe")
-//                    .padding(.bottom, 5)
-                Form {
-                    ForEach(Array(groupsByFirstLetter().keys.sorted()), id: \.self) { key in
-                        Section(header: Text(String(key))) {
-                            ForEach(groupsByFirstLetter()[key]!, id: \.id) { recipe in
-                                NavigationLink(destination: BookRecipeDetailView(recipe: recipe, recipeManager: self.recipeManager)) {
+            Form {
+                ForEach(Array(groupsByFirstLetter().keys.sorted()), id: \.self) { key in
+                    Section(header: Text(String(key))) {
+                        ForEach(groupsByFirstLetter()[key]!, id: \.id) { recipe in
+                            NavigationLink(destination: BookRecipeDetailView(recipe: recipe, recipeManager: self.recipeManager)) {
+                                HStack {
                                     Text(recipe.recipeName ?? "")
+                                    Spacer()
+                                    Text(recipe.category?.name ?? "")
+                                        .padding(.vertical, 5)
+                                        .padding(.horizontal, 8)
+                                        .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
+                                        .background(Color(#colorLiteral(red: 0.6970165372, green: 0.7750255466, blue: 0.9293276668, alpha: 1)))
+                                        .foregroundColor(.white)
+                                        .cornerRadius(5)
                                 }
                             }
                         }
@@ -80,88 +86,88 @@ struct BookRecipeDetailView: View {
             }
             
             ZStack {
-                RoundedButtonView(corners: [.layerMinXMinYCorner, .layerMaxXMinYCorner], bgColor: .white, cornerRadius: 30)
+                RoundedButtonView(corners: [.layerMinXMinYCorner, .layerMaxXMinYCorner], bgColor: #colorLiteral(red: 0.9480282664, green: 0.9499420524, blue: 0.9704909921, alpha: 1), cornerRadius: 30)
                     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.65)
                     .overlay(
                         Capsule()
                             .fill(Color.gray.opacity(0.75))
                             .frame(width: 80, height: 6)
-                            .padding(.top, 5)
+                            .padding(.top, 12.5)
+                            .padding(.bottom, 18.5)
                         , alignment: .top
                     )
                     .overlay(
-                        VStack(alignment: .leading) {
-                            Text(recipe.recipeName ?? "")
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.5)
-                                .font(.custom("TypoRoundBoldDemo", size: 30, relativeTo: .body))
-                                .padding(.top, 30)
-                            
-                            HStack {
-                                Text("\(recipeManager.formattedPrepTimeText)")
-                                    .font(.custom("TypoRoundLightDemo", size: 18, relativeTo: .body))
-                                    .cornerRadius(5)
-                                Divider()
-                                    .background(Color.black)
-                                    .frame(width: 1, height: 15)
-                                Text(self.recipe.category?.name ?? "")
+                        ScrollView(showsIndicators: false) {
+                            VStack(alignment: .leading) {
+                                Text(recipe.recipeName ?? "")
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.5)
+                                    .font(.custom("TypoRoundBoldDemo", size: 30, relativeTo: .body))
+
+                                
+                                HStack {
+                                    Image(systemName: "clock")
+                                    Text("\(recipeManager.formattedPrepTimeText)")
+                                        .font(.custom("TypoRoundLightDemo", size: 18, relativeTo: .body))
+                                }
+                                    .foregroundColor(.white)
                                     .padding(.vertical, 5)
                                     .padding(.horizontal, 8)
-                                    .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
-                                    .background(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
-                                    .foregroundColor(.white)
-                                    .cornerRadius(5)
-                            }
-                                .padding(.bottom, 15)
-                            
-                            Group {
-                                Text("Description")
-                                    .font(.custom("TypoRoundRegularDemo", size: 22, relativeTo: .body))
-                                    .underline()
-                                    .lineLimit(nil)
-                                    .padding(.bottom, 1)
+                                    .background(Color.orange)
+                                    .cornerRadius(10)
+                                    .padding(.top, 10)
+                                    .padding(.bottom, 15)
                                 
-                                Text(recipe.recipeDescription ?? "")
-                                    .font(.custom("TypoRoundLightDemo", size: 18, relativeTo: .body))
-                                    .multilineTextAlignment(.leading)
-                                    .lineLimit(nil)
+                                Group {
+                                    Text("Description")
+                                        .font(.custom("TypoRoundRegularDemo", size: 22, relativeTo: .body))
+                                        .underline()
+                                        .lineLimit(nil)
+                                        .padding(.bottom, 1)
+                                    
+                                    Text(recipe.recipeDescription ?? "")
+                                        .font(.custom("TypoRoundLightDemo", size: 18, relativeTo: .body))
+                                        .multilineTextAlignment(.leading)
+                                        .lineLimit(nil)
+                                }
+                                
+                                HStack {
+                                    Spacer()
+                                    CustomSegmentedPickerWithMenu(recipeManager: self.recipeManager)
+                                    Spacer()
+                                }
+                                    .padding(.vertical, 30)
                             }
-                            
-                            HStack {
-                                Spacer()
-                                CustomSegmentedPickerWithMenu(recipeManager: self.recipeManager)
-                                Spacer()
+                                .padding(.top, 5)
+                                .padding(.horizontal, 25)
                             }
-                                .padding(.vertical, 25)
-                        }
-                            .padding(.horizontal, 25)
+                                .padding(.top, 30)
                         , alignment: .topLeading
                     )
-                    .offset(x: 0, y: self.translationHeight)
-                    .animation(.easeIn)
-                    .gesture(
-                        DragGesture()
-                            .onChanged({ (value) in
-    //                            self.yCoor = value.location.y
-    //                            if value.translation.height < 0 {
-    //                                if value.location.y > 1000 {
-    //                                    self.translationHeight = value.translation.height + UIScreen.main.bounds.height * 0.18
-    //                                }
-    //                            } else {
-    //                                if value.location.y < 110.5 {
-    //                                    self.translationHeight = value.translation.height
-    //                                }
-    //                            }
-                            })
-                            .onEnded({ (value) in
-                                if value.translation.height <= 0 {
-                                    self.translationHeight = 0
-                                } else {
-                                    self.translationHeight = UIScreen.main.bounds.height * 0.25
-                                }
-                            })
-                    )
-                
+                        .offset(x: 0, y: self.translationHeight)
+                        .animation(.easeIn)
+                        .gesture(
+                            DragGesture()
+                                .onChanged({ (value) in
+        //                            self.yCoor = value.location.y
+        //                            if value.translation.height < 0 {
+        //                                if value.location.y > 1000 {
+        //                                    self.translationHeight = value.translation.height + UIScreen.main.bounds.height * 0.18
+        //                                }
+        //                            } else {
+        //                                if value.location.y < 110.5 {
+        //                                    self.translationHeight = value.translation.height
+        //                                }
+        //                            }
+                                })
+                                .onEnded({ (value) in
+                                    if value.translation.height <= 0 {
+                                        self.translationHeight = 0
+                                    } else {
+                                        self.translationHeight = UIScreen.main.bounds.height * 0.25
+                                    }
+                                })
+                        )
             }
         }
             .navigationBarTitle("Details", displayMode: .inline)

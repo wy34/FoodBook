@@ -46,7 +46,7 @@ class PersistenceController: ObservableObject {
     
     // creating default categories on first time
     func createDefaultCategories() {
-        if !UserDefaults.standard.bool(forKey: "oldUser") {
+        if !UserDefaults.standard.bool(forKey: "hasDefaultCategories") {
             let names = ["Meat", "Vegan", "Vegetarian", "Paleo", "Keto"]
             let images = [UIImage(named: "meat"), UIImage(named: "vegan"), UIImage(named: "vegetarian"), UIImage(named: "paleo"), UIImage(named: "keto")]
             
@@ -57,7 +57,25 @@ class PersistenceController: ObservableObject {
                 self.save()
             }
             
-            UserDefaults.standard.setValue(true, forKey: "oldUser")
+            UserDefaults.standard.setValue(true, forKey: "hasDefaultCategories")
+        }
+    }
+    
+    // creating default ingredients on first time
+    func createDefaultIngredients() {
+        if !UserDefaults.standard.bool(forKey: "hasDefaultIngredients") {
+            let defaultIngredients = [
+                "Chicken", "Beef", "Pork", "Broccoli", "Apple", "Orange", "Onion", "Pepper", "Salt", "Water", "Sugar", "Vinegar", "Milk", "Flour", "Cheese", "Eggs", "Tomato", "Potato", "Butter", "Chocolate", "Ketchup", "Olive Oil", "Rice", "Garlic", "Bread", "Carrot", "Celery", "Cinnamin", "Vanilla", "Corn", "Shrimp", "Fish", "Spinich", "Pasta", "Lemon", "Honey", "Beef Broth", "Rosemary", "Green Beans", "Lettuce", "Cabbage", "Bacon", "Mushroom", "Soy Sauce", "Banana", "Oats", "Yogurt", "Whip Cream", "Baking Soda", "Hot Dog"
+            ]
+            
+            for ingredientName in defaultIngredients {
+                let ingredientObj = Ingredient(context: self.container.viewContext)
+                ingredientObj.name = ingredientName
+                ingredientObj.amount = ""
+                self.save()
+            }
+            
+            UserDefaults.standard.setValue(true, forKey: "hasDefaultIngredients")
         }
     }
     
@@ -80,4 +98,5 @@ class PersistenceController: ObservableObject {
         context.delete(object)
     }
 }
+
 

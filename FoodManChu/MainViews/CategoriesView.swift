@@ -199,7 +199,7 @@ struct AddEditCategoryView: View {
                     }
                         .padding(.top, 25)
                     
-                    Section(header: Text("Image").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
+                    Section(header: Text("Image (Optional)").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
                         Button(action: { self.isImagePickerOpen = true }) {
                             Text("Open Image Picker")
                                 .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))

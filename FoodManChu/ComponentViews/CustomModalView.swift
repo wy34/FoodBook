@@ -41,7 +41,7 @@ struct CustomModalView<Content: View>: View {
                     .padding(5)
                 
                 Button(action: { self.dismissModal() }) {
-                    RoundedButtonView(corners: [.layerMaxXMinYCorner, .layerMinXMaxYCorner], bgColor: #colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1), cornerRadius: 20)
+                    RoundedButtonView(corners: [.layerMaxXMinYCorner, .layerMinXMaxYCorner], bgColor: #colorLiteral(red: 1, green: 0.4903432131, blue: 0.4654182792, alpha: 1), cornerRadius: 20)
                         .frame(width: 50, height: 50)
                         .overlay(
                             Image(systemName: "xmark")

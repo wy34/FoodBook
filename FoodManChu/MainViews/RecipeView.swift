@@ -40,9 +40,9 @@ class RecipeManager: ObservableObject {
         let minutes = self.recipe?.timeMinutes
         
         if hours == 0.0 {
-            return Text("\(minutes ?? 0.0, specifier: "%.0f") m")
+            return Text("\(minutes ?? 0.0, specifier: "%.0f")m")
         } else {
-            return Text("\(hours ?? 0.0, specifier: "%.0f") h \(minutes ?? 0.0, specifier: "%.0f") m")
+            return Text("\(hours ?? 0.0, specifier: "%.0f")h \(minutes ?? 0.0, specifier: "%.0f")m")
         }
     }
     
@@ -52,6 +52,10 @@ class RecipeManager: ObservableObject {
     
     var recipeInstructions: [String] {
         return self.recipe?.instructions ?? []
+    }
+    
+    var isRecipeInputValid: Bool {
+        return !name.isEmpty && (hours != 0.0 || minutes != 0.0) && !ingredients.isEmpty && !instructions.isEmpty
     }
     
     func resetRecipeValuesToEmpty() {

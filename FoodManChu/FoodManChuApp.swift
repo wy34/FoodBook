@@ -37,6 +37,7 @@ struct FoodManChuApp: App {
                 .preferredColorScheme(.light)
                 .onAppear() {
                     persistenceController.createDefaultCategories()
+                    persistenceController.createDefaultIngredients()
                     print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
                 }
         }
