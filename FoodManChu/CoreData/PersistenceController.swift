@@ -97,6 +97,17 @@ class PersistenceController: ObservableObject {
         let context = container.viewContext
         context.delete(object)
     }
+    
+    // batch delete ingredients
+    func deleteAllIngredients() {
+        let request = NSBatchDeleteRequest(fetchRequest: Ingredient.fetchRequest())
+        
+        do {
+            try container.viewContext.execute(request)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
 
 

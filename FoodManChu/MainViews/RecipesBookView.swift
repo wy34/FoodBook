@@ -25,7 +25,7 @@ struct RecipesBookView: View {
                                         .padding(.vertical, 5)
                                         .padding(.horizontal, 8)
                                         .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
-                                        .background(Color(#colorLiteral(red: 0.6970165372, green: 0.7750255466, blue: 0.9293276668, alpha: 1)))
+                                        .background(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
                                         .foregroundColor(.white)
                                         .cornerRadius(5)
                                 }

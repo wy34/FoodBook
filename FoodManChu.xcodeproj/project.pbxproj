@@ -36,6 +36,8 @@
 		4C85407525ED806A0022B3AA /* HoveringButtonWithMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C85407425ED806A0022B3AA /* HoveringButtonWithMenu.swift */; };
 		4C85409825ED9FC10022B3AA /* CustomModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C85409725ED9FC10022B3AA /* CustomModalView.swift */; };
 		4C85409B25EDF3DF0022B3AA /* ModalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C85409A25EDF3DF0022B3AA /* ModalManager.swift */; };
+		4CAD685D25F9CFA30063E3DF /* Discover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CAD685C25F9CFA30063E3DF /* Discover.swift */; };
+		4CAD686025F9DA160063E3DF /* DiscoverMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CAD685F25F9DA160063E3DF /* DiscoverMoreView.swift */; };
 		4CCEA4CC25EC811200490553 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA4CB25EC811200490553 /* SearchBar.swift */; };
 		4CCEA4CF25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA4CE25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift */; };
 		4CCEA4DB25ECB00D00490553 /* RecipeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA4DA25ECB00D00490553 /* RecipeDetailView.swift */; };
@@ -78,6 +80,8 @@
 		4C85407425ED806A0022B3AA /* HoveringButtonWithMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoveringButtonWithMenu.swift; sourceTree = "<group>"; };
 		4C85409725ED9FC10022B3AA /* CustomModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModalView.swift; sourceTree = "<group>"; };
 		4C85409A25EDF3DF0022B3AA /* ModalManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalManager.swift; sourceTree = "<group>"; };
+		4CAD685C25F9CFA30063E3DF /* Discover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Discover.swift; sourceTree = "<group>"; };
+		4CAD685F25F9DA160063E3DF /* DiscoverMoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverMoreView.swift; sourceTree = "<group>"; };
 		4CCEA4CB25EC811200490553 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		4CCEA4CE25EC960500490553 /* NavigationBarWithExpandingSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarWithExpandingSearchBar.swift; sourceTree = "<group>"; };
 		4CCEA4DA25ECB00D00490553 /* RecipeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailView.swift; sourceTree = "<group>"; };
@@ -170,10 +174,12 @@
 				4C3B481025EC1003001D2098 /* RootView.swift */,
 				4CCEA4DF25ECBD8700490553 /* CategoriesView.swift */,
 				4C63009325EB46E40054AFE7 /* RecipeView.swift */,
-				4C29968025F18BD80000E5EE /* AddEditRecipeView.swift */,
 				4CCEA4DA25ECB00D00490553 /* RecipeDetailView.swift */,
-				4CD174E125F2A7B3009751C0 /* RecipesBookView.swift */,
+				4C29968025F18BD80000E5EE /* AddEditRecipeView.swift */,
 				4C1DE30D25F850AB00A179AC /* ExistingIngredientView.swift */,
+				4CD174E125F2A7B3009751C0 /* RecipesBookView.swift */,
+				4CAD685C25F9CFA30063E3DF /* Discover.swift */,
+				4CAD685F25F9DA160063E3DF /* DiscoverMoreView.swift */,
 			);
 			path = MainViews;
 			sourceTree = "<group>";
@@ -321,6 +327,7 @@
 				4C3B480D25EC0CE6001D2098 /* MenuButton.swift in Sources */,
 				4CD174E625F2ADE0009751C0 /* Contacts.swift in Sources */,
 				4CCEA4E025ECBD8700490553 /* CategoriesView.swift in Sources */,
+				4CAD686025F9DA160063E3DF /* DiscoverMoreView.swift in Sources */,
 				4C85407525ED806A0022B3AA /* HoveringButtonWithMenu.swift in Sources */,
 				4C79B7E125EF21850074B424 /* NavBarWithSearchBar.swift in Sources */,
 				4C14167625F09FC700512635 /* CategoryPickerView.swift in Sources */,
@@ -329,6 +336,7 @@
 				4C85409B25EDF3DF0022B3AA /* ModalManager.swift in Sources */,
 				4C6300B225EB65130054AFE7 /* MenuContent.swift in Sources */,
 				4C3B480225EBFC69001D2098 /* DisclosureGroup.swift in Sources */,
+				4CAD685D25F9CFA30063E3DF /* Discover.swift in Sources */,
 				4C717AFB25F5C51800657207 /* UINavigationController.swift in Sources */,
 				4C29968125F18BD80000E5EE /* AddEditRecipeView.swift in Sources */,
 				4C85407125ED78B60022B3AA /* PopOverButton.swift in Sources */,

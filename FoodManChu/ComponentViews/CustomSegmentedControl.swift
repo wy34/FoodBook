@@ -14,12 +14,12 @@ struct CustomSegmentedPickerWithMenu: View {
     // MARK: - Body
     var body: some View {
         VStack {
-            HStack(spacing: 15) {
+            HStack(spacing: 18) {
                 Button(action: { self.selected = 0 }) {
                     Text("Ingredients")
                         .padding(.vertical, 5)
-                        .padding(.horizontal, 8)
-                        .background(self.selected == 0 ? Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)) : Color(.clear))
+                        .padding(.horizontal, 10)
+                        .background(self.selected == 0 ? Color(#colorLiteral(red: 0.6970165372, green: 0.7750255466, blue: 0.9293276668, alpha: 1)) : Color(.clear))
                         .foregroundColor(self.selected == 0 ? Color(.white) : Color(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)))
                         .cornerRadius(10)
                 }
@@ -27,8 +27,8 @@ struct CustomSegmentedPickerWithMenu: View {
                 Button(action: { self.selected = 1 }) {
                     Text("Directions")
                         .padding(.vertical, 5)
-                        .padding(.horizontal, 8)
-                        .background(self.selected == 1 ? Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)) : Color(.clear))
+                        .padding(.horizontal, 10)
+                        .background(self.selected == 1 ? Color(#colorLiteral(red: 0.6970165372, green: 0.7750255466, blue: 0.9293276668, alpha: 1)) : Color(.clear))
                         .foregroundColor(self.selected == 1 ? Color(.white) : Color(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)))
                         .cornerRadius(10)
                 }

@@ -10,7 +10,7 @@ import SwiftUI
 struct SearchBar: View {
     var placeholder: String
     
-    @State private var searchText = ""
+    @Binding var searchText: String
     @State private var isSearching = false
     
  
@@ -55,12 +55,5 @@ struct SearchBar: View {
         }
             .padding(.horizontal, 15)
         .animation(Animation.easeOut, value: self.isSearching)
-    }
-}
-
-struct SearchBar_Previews: PreviewProvider {
-    static var previews: some View {
-        SearchBar(placeholder: "Search Categories")
-            .preferredColorScheme(.dark)
     }
 }

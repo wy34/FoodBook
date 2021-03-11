@@ -15,7 +15,8 @@ class RecipeManager: ObservableObject {
     @Published var isShowingEditRecipe = false
     
     @Published var selectedImage = UIImage(named: "placeholder")!
-    @Published var isImagePickerOpen = false
+    @Published var isPhotoLibraryOpen = false
+    @Published var isCameraOpen = false
     @Published var name = ""
     @Published var description = ""
     @Published var hours = 0.0
@@ -95,6 +96,7 @@ struct RecipeGrid: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var modalManager: ModalManager
     @Binding var isEditing: Bool
+    @State private var searchText = ""
     let recipes: FetchRequest<Recipe>
     
     init(category: Category, isEditing: Binding<Bool>, recipeManager: RecipeManager) {
@@ -110,13 +112,13 @@ struct RecipeGrid: View {
         ZStack(alignment: .bottomTrailing) {
             VStack {
                 ScrollView(showsIndicators: false) {
-                    SearchBar(placeholder: "Search Recipes")
+                    SearchBar(placeholder: "Search Recipes", searchText: $searchText)
                         .padding(.top, 15)
                         .padding(.horizontal, 5)
                     
                     // this spacing is between rows
                     LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
-                        ForEach(recipes.wrappedValue, id: \.self) { recipe in
+                        ForEach(recipes.wrappedValue.filter({ $0.recipeName!.lowercased().contains(searchText.lowercased()) || searchText.isEmpty }), id: \.self) { recipe in
                             RecipeCell(recipe: recipe, category: self.category, isEditing: $isEditing, recipeManager: self.recipeManager)
                         }
                     })
@@ -136,7 +138,7 @@ struct RecipeGrid: View {
                             Button(action: { self.isEditing.toggle(); self.modalManager.isRecipeDetailViewShowing = false }) {
                                 Text(self.isEditing ? "Done" : "Edit")
                                     .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
-                                    .foregroundColor(self.isEditing ? .red : .black)
+                                    .foregroundColor(self.isEditing ? Color(#colorLiteral(red: 1, green: 0.4903432131, blue: 0.4654182792, alpha: 0.7518001152)) : .black)
                             }
                     )
             }
@@ -221,7 +223,7 @@ struct RecipeCell: View {
                                     .foregroundColor(.white)
                                     .padding(12)
                             }
-                                .background(RoundedButtonView(corners: [.layerMinXMinYCorner, .layerMaxXMaxYCorner], bgColor: #colorLiteral(red: 0.997196734, green: 0.2449620962, blue: 0.2093260586, alpha: 0.7458057316), cornerRadius: 30))
+                                .background(RoundedButtonView(corners: [.layerMinXMinYCorner, .layerMaxXMaxYCorner], bgColor: #colorLiteral(red: 1, green: 0.4903432131, blue: 0.4654182792, alpha: 0.7518001152), cornerRadius: 30))
                             , alignment: .topLeading
                         )
                 } 

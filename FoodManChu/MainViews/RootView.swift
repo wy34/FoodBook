@@ -24,12 +24,12 @@ struct RootView: View {
             RecipesBookView()
                 .tabItem {
                     Image(systemName: "book")
-                    Text("List")
+                    Text("Book")
                 }
-            Color(.red)
+            Discover()
                 .tabItem {
                     Image(systemName: "globe")
-                    Text("Home")
+                    Text("Discover")
                 }
         }
             .accentColor(Color(#colorLiteral(red: 0.4468465447, green: 0.6117238402, blue: 0.4210793078, alpha: 1)))

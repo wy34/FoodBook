@@ -13,10 +13,11 @@ struct CategoryPickerView: View {
     let cats = ["Meat", "Vegan", "Vegetarian"]
     @Binding var selectedCategory: Int
     @Binding var isShowingPicker: Bool
+    @State private var searchText = ""
     
     var body: some View {
         ScrollView(showsIndicators: false) {
-            SearchBar(placeholder: "Category")
+            SearchBar(placeholder: "Category", searchText: $searchText)
                 .padding(.top, 25)
                 .padding(.bottom, 10)
 

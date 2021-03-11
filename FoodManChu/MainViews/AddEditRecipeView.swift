@@ -37,8 +37,13 @@ struct AddEditRecipeView: View {
                     }
                     
                     Section(header: Text("Thumbnail (Optional)").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
-                        Button(action: { self.recipeManager.isImagePickerOpen = true }) {
-                            Text("Open Image Picker")
+                        Button(action: { self.recipeManager.isPhotoLibraryOpen = true }) {
+                            Text("Photo Library")
+                                .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
+                        }
+                        
+                        Button(action: { self.recipeManager.isCameraOpen = true }) {
+                            Text("Camera")
                                 .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
                         }
 
@@ -81,8 +86,8 @@ struct AddEditRecipeView: View {
                                 .foregroundColor(.primary)
                             }
                     )
-                    .sheet(isPresented: self.$recipeManager.isImagePickerOpen) {
-                        ImagePicker(selectedImage: self.$recipeManager.selectedImage, isImagePickerOpen: self.$recipeManager.isImagePickerOpen)
+                    .sheet(isPresented: self.recipeManager.isPhotoLibraryOpen ? self.$recipeManager.isPhotoLibraryOpen : self.$recipeManager.isCameraOpen) {
+                        ImagePicker(sourceType: self.recipeManager.isPhotoLibraryOpen ? .photoLibrary : .camera, selectedImage: self.$recipeManager.selectedImage, isImagePickerOpen: self.recipeManager.isPhotoLibraryOpen ? self.$recipeManager.isPhotoLibraryOpen : self.$recipeManager.isCameraOpen)
                     }
                 
                 Button(action: {
@@ -140,6 +145,7 @@ struct AddEditRecipeView: View {
 struct AddingStepsView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var recipeManager: RecipeManager
+    @State private var isShowingExistingList = false
 
     var stepsType: Steps
 
@@ -149,12 +155,10 @@ struct AddingStepsView: View {
         ZStack {
             Form {
                 if self.stepsType == .Ingredient {
-                    NavigationLink(destination: ExistingIngredientView(recipeManager: self.recipeManager)) {
-                        Button(action: {  }) {
-                            Label("Pick From Existing List", systemImage: "book")
-                                .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
-                                .font(.custom("TypoRoundBoldDemo", size: 16, relativeTo: .body))
-                        }
+                    Button(action: { self.isShowingExistingList = true }) {
+                        Label("Pick From Existing List", systemImage: "book")
+                            .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
+                            .font(.custom("TypoRoundBoldDemo", size: 16, relativeTo: .body))
                     }
                 }
                 
@@ -171,7 +175,7 @@ struct AddingStepsView: View {
                                 .font(.custom("TypoRoundLightDemo", size: 16, relativeTo: .body))
                             Spacer()
                             Text("\(data.amount ?? "")")
-                                .font(.custom("TypoRoundLightDemo", size: 12, relativeTo: .body))
+                                .font(.custom("TypoRoundLightDemo", size: 14, relativeTo: .body))
                         }
                     }
                         .onDelete(perform: delete(at:))
@@ -200,6 +204,9 @@ struct AddingStepsView: View {
                 NewStepPopupView(stepsType: stepsType, showingPopup: $showingPopup, recipeManager: self.recipeManager)
             }
         }
+            .sheet(isPresented: $isShowingExistingList) {
+                ExistingIngredientView(recipeManager: self.recipeManager)
+            }
     }
     
     func delete(at offsets: IndexSet) {
@@ -225,9 +232,9 @@ struct NewStepPopupView: View {
 
     @Environment(\.managedObjectContext) var moc
     @EnvironmentObject var persistenceController: PersistenceController
-
-
     
+    @FetchRequest(entity: Ingredient.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Ingredient.name, ascending: true)]) var ingredients: FetchedResults<Ingredient>
+
     var body: some View {
         ZStack {
             Color.gray.opacity(0)
@@ -299,15 +306,34 @@ struct NewStepPopupView: View {
             }
     }
     
+    
     func createNewStep() {
         guard ingredientName != "" || instruction != "" else { return }
-        
+       
         if self.stepsType == .Ingredient {
-            let ingredient = Ingredient(context: self.moc)
-            ingredient.name = ingredientName
-            ingredient.amount = ingredientAmount
-            self.persistenceController.save()
-            self.recipeManager.ingredients.append(ingredient)
+            // only add to offical core data list if not already existing based on spelling of name only
+            let matchingIngredientFromCoreData = self.ingredients.filter({ $0.name?.lowercased() == ingredientName.lowercased() })
+            let matchingIngredientFromRecipeManager = self.recipeManager.ingredients.filter({ $0.name?.lowercased() == ingredientName.lowercased() })
+
+            // if adding a brand new ingredient
+            if matchingIngredientFromCoreData.count == 0 {
+                let ingredient = Ingredient(context: self.moc)
+                ingredient.name = ingredientName
+                ingredient.amount = ingredientAmount
+                self.persistenceController.save()
+                self.recipeManager.ingredients.append(ingredient)
+            } else if matchingIngredientFromRecipeManager.count != 0 {
+                if let first = matchingIngredientFromRecipeManager.first {
+                    first.amount = self.ingredientAmount
+                }
+            } else {
+                // this way allows a same ingredient to not be added to list again but still show up in list
+                // adding an ingredient to that recipe list, but already exists inside of the ingredients database
+                if let first = matchingIngredientFromCoreData.first {
+                    first.amount = self.ingredientAmount
+                    self.recipeManager.ingredients.append(first)
+                }
+            }
         } else {
             let instruction = self.instruction
             self.recipeManager.instructions.append(instruction)
@@ -316,20 +342,6 @@ struct NewStepPopupView: View {
         self.showingPopup = false
     }
 }
-
-// MARK: - IngredientSelectionView
-struct IngredientSelectionView: View {
-    var body: some View {
-        Text("Hello")
-    }
-}
-
-struct IngredientSelectionView_previews: PreviewProvider {
-    static var previews: some View {
-        IngredientSelectionView()
-    }
-}
-
 
 // MARK: - CustomTextfield
 struct CustomTextField: UIViewRepresentable {

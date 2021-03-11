@@ -46,7 +46,7 @@ struct CategoriesView: View {
                     Button(action: { self.categoryManager.isEditOn.toggle() }) {
                         Text(self.categoryManager.isEditOn  ? "Done" : "Edit")
                             .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
-                            .foregroundColor(self.categoryManager.isEditOn  ? .red : .black)
+                            .foregroundColor(self.categoryManager.isEditOn  ? Color(#colorLiteral(red: 1, green: 0.4903432131, blue: 0.4654182792, alpha: 0.7518001152)) : .black)
                     })
         }
             .fullScreenCover(isPresented: self.$addingNewCategory) {
@@ -73,16 +73,16 @@ struct CategoryGrid: View {
     @StateObject var categoryManager: CategoryManager
     @FetchRequest(entity: Category.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Category.name, ascending: true)]) var categories: FetchedResults<Category>
     @EnvironmentObject var persistenceController: PersistenceController
-
+    @State private var searchText = ""
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            SearchBar(placeholder: "Search Categories")
+            SearchBar(placeholder: "Search Categories", searchText: $searchText)
                 .padding(.top, 10)
                 .padding(.horizontal, 5)
             
             LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
-                ForEach(categories, id: \.self) { category in
+                ForEach(categories.filter({ $0.name!.lowercased().contains(searchText.lowercased()) || searchText.isEmpty }), id: \.self) { category in
                     CategoryCell(category: category, isEditing: self.$categoryManager.isEditOn)
                 }
             })
@@ -147,7 +147,7 @@ struct CategoryCell: View {
                 
                 if self.isEditing {
                     Button(action: { self.categoryManager.isShowingDeleteAlert = true }) {
-                        RoundedButtonView(corners: [.layerMinXMinYCorner, .layerMaxXMaxYCorner], bgColor: #colorLiteral(red: 0.997196734, green: 0.2449620962, blue: 0.2093260586, alpha: 0.7458057316), cornerRadius: 20)
+                        RoundedButtonView(corners: [.layerMinXMinYCorner, .layerMaxXMaxYCorner], bgColor: #colorLiteral(red: 1, green: 0.4903432131, blue: 0.4654182792, alpha: 0.7518001152), cornerRadius: 20)
                             .frame(width: 50, height: 50)
                             .overlay(
                                 Image(systemName: "trash")
@@ -184,7 +184,9 @@ struct AddEditCategoryView: View {
     var category: Category?
     @ObservedObject var categoryManager: CategoryManager
     
-    @State private var isImagePickerOpen = false
+    @State private var isPhotoLibraryOpen = false
+    @State private var isCameraOpen = false
+
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) var moc
     @EnvironmentObject var persistenceController: PersistenceController
@@ -200,8 +202,13 @@ struct AddEditCategoryView: View {
                         .padding(.top, 25)
                     
                     Section(header: Text("Image (Optional)").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
-                        Button(action: { self.isImagePickerOpen = true }) {
-                            Text("Open Image Picker")
+                        Button(action: { self.isPhotoLibraryOpen = true }) {
+                            Text("Photo Library")
+                                .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
+                        }
+                        
+                        Button(action: { self.isCameraOpen = true }) {
+                            Text("Camera")
                                 .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
                         }
                         
@@ -243,8 +250,8 @@ struct AddEditCategoryView: View {
                     .disabled(self.categoryManager.categoryName.isEmpty ? true : false)
             }
         }
-            .sheet(isPresented: $isImagePickerOpen) {
-                ImagePicker(selectedImage: self.$categoryManager.categoryImage, isImagePickerOpen: $isImagePickerOpen)
+            .sheet(isPresented: self.isPhotoLibraryOpen ? $isPhotoLibraryOpen : $isCameraOpen) {
+                ImagePicker(sourceType: self.isPhotoLibraryOpen ? .photoLibrary : .camera, selectedImage: self.$categoryManager.categoryImage, isImagePickerOpen: self.isPhotoLibraryOpen ? $isPhotoLibraryOpen : $isCameraOpen)
             }
     }
     
@@ -274,13 +281,14 @@ struct NewCategoryView_previews: PreviewProvider {
 
 // MARK: - Image Picker
 struct ImagePicker: UIViewControllerRepresentable {
+    var sourceType: UIImagePickerController.SourceType
     @Binding var selectedImage: UIImage
     @Binding var isImagePickerOpen: Bool
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
         picker.allowsEditing = true
-        picker.sourceType = .photoLibrary
+        picker.sourceType = sourceType
         picker.delegate = context.coordinator
         return picker
     }
