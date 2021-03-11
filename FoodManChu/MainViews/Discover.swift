@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct Discover: View {
+struct Discover: View {    
     var body: some View {
         NavigationView {
             ScrollView() {
                 VStack(spacing: 20) {
-                    ForEach(0..<10) { i in
+                    ForEach(0..<1) { i in
                         NavigationLink(destination: DiscoverMoreView()) {
                             VStack {
                                 DiscoverCell()
@@ -30,7 +30,7 @@ struct Discover: View {
             }
                 .navigationBarTitle("Discover")
                 .navigationBarItems(trailing:
-                    Button(action: {}) {
+                    Button(action: {  }) {
                         Image(systemName: "arrow.clockwise")
                     }
                 )

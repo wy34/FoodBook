@@ -11,32 +11,22 @@ struct CustomSegmentedPickerWithMenu: View {
     @State private var selected = 0
     @ObservedObject var recipeManager: RecipeManager
     
+    @State private var pickerSelection = 0
+    var selections = ["Ingredients", "Instructions"]
+    
     // MARK: - Body
     var body: some View {
         VStack {
-            HStack(spacing: 18) {
-                Button(action: { self.selected = 0 }) {
-                    Text("Ingredients")
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 10)
-                        .background(self.selected == 0 ? Color(#colorLiteral(red: 0.6970165372, green: 0.7750255466, blue: 0.9293276668, alpha: 1)) : Color(.clear))
-                        .foregroundColor(self.selected == 0 ? Color(.white) : Color(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)))
-                        .cornerRadius(10)
-                }
-                
-                Button(action: { self.selected = 1 }) {
-                    Text("Directions")
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 10)
-                        .background(self.selected == 1 ? Color(#colorLiteral(red: 0.6970165372, green: 0.7750255466, blue: 0.9293276668, alpha: 1)) : Color(.clear))
-                        .foregroundColor(self.selected == 1 ? Color(.white) : Color(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)))
-                        .cornerRadius(10)
+            Picker("", selection: $selected) {
+                ForEach(0..<selections.count, id: \.self) { i in
+                    Text(selections[i])
                 }
             }
-                .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
-                .animation(.easeIn)
-                .padding(.bottom, 7)
-                        
+                .pickerStyle(SegmentedPickerStyle())
+                .padding(5)
+                .background(Color(#colorLiteral(red: 0.8968909383, green: 0.9103438258, blue: 0.9443851113, alpha: 1)))
+                .cornerRadius(10)
+            
             if self.selected == 0 {
                 PickerMenu(ingredients: self.recipeManager.recipeIngredients)
             } else {
@@ -75,11 +65,7 @@ struct PickerMenu: View {
             }
                 .padding(.top, 12)
                 .padding(.horizontal, 12)
-                .frame(width: 250, height: 175)
-    //            .overlay(
-    //                RoundedRectangle(cornerRadius: 10)
-    //                    .stroke(Color.gray, lineWidth: 1)
-    //            )
+                .frame(maxWidth: .infinity, maxHeight: 175)
         }
     }
 }

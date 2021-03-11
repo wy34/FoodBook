@@ -102,8 +102,8 @@ struct RecipeGrid: View {
     init(category: Category, isEditing: Binding<Bool>, recipeManager: RecipeManager) {
         self.category = category
         _isEditing = isEditing
-        self.recipes = FetchRequest(entity: Recipe.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Recipe.recipeName, ascending: true)], predicate: NSPredicate(format: "category.name MATCHES %@",  category.name ?? ""))
         self.recipeManager = recipeManager
+        self.recipes = FetchRequest(entity: Recipe.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Recipe.recipeName, ascending: true)], predicate: NSPredicate(format: "category.name MATCHES %@",  category.name ?? ""))
     }
     
     @ObservedObject var recipeManager: RecipeManager
