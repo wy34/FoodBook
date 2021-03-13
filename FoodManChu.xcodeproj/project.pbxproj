@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C12C45625FABCAC009F6486 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C12C45525FABCAC009F6486 /* CloudKit.framework */; };
 		4C14167625F09FC700512635 /* CategoryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C14167525F09FC700512635 /* CategoryPickerView.swift */; };
 		4C1DE30E25F850AB00A179AC /* ExistingIngredientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1DE30D25F850AB00A179AC /* ExistingIngredientView.swift */; };
 		4C29968125F18BD80000E5EE /* AddEditRecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C29968025F18BD80000E5EE /* AddEditRecipeView.swift */; };
 		4C3B480225EBFC69001D2098 /* DisclosureGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3B480125EBFC69001D2098 /* DisclosureGroup.swift */; };
 		4C3B480D25EC0CE6001D2098 /* MenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3B480C25EC0CE6001D2098 /* MenuButton.swift */; };
 		4C3B481125EC1003001D2098 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3B481025EC1003001D2098 /* RootView.swift */; };
+		4C3F326D25FBEAAA007720DF /* CloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F326C25FBEAAA007720DF /* CloudKitManager.swift */; };
 		4C63008425EB3B060054AFE7 /* FoodManChuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63008325EB3B060054AFE7 /* FoodManChuApp.swift */; };
 		4C63008825EB3B060054AFE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C63008725EB3B060054AFE7 /* Assets.xcassets */; };
 		4C63008B25EB3B060054AFE7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C63008A25EB3B060054AFE7 /* Preview Assets.xcassets */; };
@@ -49,12 +51,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C12C45225FABC96009F6486 /* FoodManChu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FoodManChu.entitlements; sourceTree = "<group>"; };
+		4C12C45525FABCAC009F6486 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		4C14167525F09FC700512635 /* CategoryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerView.swift; sourceTree = "<group>"; };
 		4C1DE30D25F850AB00A179AC /* ExistingIngredientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExistingIngredientView.swift; sourceTree = "<group>"; };
 		4C29968025F18BD80000E5EE /* AddEditRecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditRecipeView.swift; sourceTree = "<group>"; };
 		4C3B480125EBFC69001D2098 /* DisclosureGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureGroup.swift; sourceTree = "<group>"; };
 		4C3B480C25EC0CE6001D2098 /* MenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButton.swift; sourceTree = "<group>"; };
 		4C3B481025EC1003001D2098 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		4C3F326C25FBEAAA007720DF /* CloudKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitManager.swift; sourceTree = "<group>"; };
 		4C63008025EB3B060054AFE7 /* FoodManChu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoodManChu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C63008325EB3B060054AFE7 /* FoodManChuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodManChuApp.swift; sourceTree = "<group>"; };
 		4C63008725EB3B060054AFE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -97,16 +102,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C12C45625FABCAC009F6486 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C12C45425FABCAC009F6486 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4C12C45525FABCAC009F6486 /* CloudKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4C3B480925EC0C2D001D2098 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
 				4C85409A25EDF3DF0022B3AA /* ModalManager.swift */,
+				4C3F326C25FBEAAA007720DF /* CloudKitManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -116,6 +131,7 @@
 			children = (
 				4C63008225EB3B060054AFE7 /* FoodManChu */,
 				4C63008125EB3B060054AFE7 /* Products */,
+				4C12C45425FABCAC009F6486 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -130,6 +146,7 @@
 		4C63008225EB3B060054AFE7 /* FoodManChu */ = {
 			isa = PBXGroup;
 			children = (
+				4C12C45225FABC96009F6486 /* FoodManChu.entitlements */,
 				4C63008325EB3B060054AFE7 /* FoodManChuApp.swift */,
 				4C63009625EB49590054AFE7 /* Fonts */,
 				4C717AF925F5C4F600657207 /* Extensions */,
@@ -329,6 +346,7 @@
 				4CCEA4E025ECBD8700490553 /* CategoriesView.swift in Sources */,
 				4CAD686025F9DA160063E3DF /* DiscoverMoreView.swift in Sources */,
 				4C85407525ED806A0022B3AA /* HoveringButtonWithMenu.swift in Sources */,
+				4C3F326D25FBEAAA007720DF /* CloudKitManager.swift in Sources */,
 				4C79B7E125EF21850074B424 /* NavBarWithSearchBar.swift in Sources */,
 				4C14167625F09FC700512635 /* CategoryPickerView.swift in Sources */,
 				4C63009425EB46E40054AFE7 /* RecipeView.swift in Sources */,
@@ -471,6 +489,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FoodManChu/FoodManChu.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"FoodManChu/Preview Content\"";
 				DEVELOPMENT_TEAM = YNSMJAS38V;
@@ -493,6 +512,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FoodManChu/FoodManChu.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"FoodManChu/Preview Content\"";
 				DEVELOPMENT_TEAM = YNSMJAS38V;

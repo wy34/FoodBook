@@ -7,30 +7,61 @@
 
 import SwiftUI
 
-struct Discover: View {    
+struct Discover: View {
+    @EnvironmentObject var cloudKitManager: CloudKitManager
+    
     var body: some View {
         NavigationView {
-            ScrollView() {
-                VStack(spacing: 20) {
-                    ForEach(0..<1) { i in
-                        NavigationLink(destination: DiscoverMoreView()) {
+            ScrollView(showsIndicators: false) {
+                ZStack() {
+                    VStack {
+                        Text("Currently empty. Share a recipe or try refreshing!")
+                            .font(.custom("TypoRoundBoldDemo", size: 16, relativeTo: .body))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(cloudKitManager.recipes.isEmpty && !cloudKitManager.isLoading ? .black : .clear)
+                            .frame(width: UIScreen.main.bounds.width * 0.8)
+                        
+                        
+                        if cloudKitManager.isLoading {
                             VStack {
-                                DiscoverCell()
-                                
-                                if i != 9 {
-                                    Divider()
-                                        .background(Color.black)
+                                LoadingSpinner()
+                                Text("Loading...")
+                                    .foregroundColor(.white)
+                                    .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
+                            }
+                                .frame(width: 75, height: 75)
+                                .padding()
+                                .background(Color(.systemGray2))
+                                .cornerRadius(10)
+                        }
+                    }
+                        .padding(.top, 75)
+
+                    
+                    VStack(spacing: 20) {
+                        ForEach(0..<cloudKitManager.recipes.count, id: \.self) { i in
+                            NavigationLink(destination: DiscoverMoreView(recipeRecord: cloudKitManager.recipes[i])) {
+                                VStack {
+                                    DiscoverCell(recipeRecord: cloudKitManager.recipes[i])
+                                    
+                                    if i != cloudKitManager.recipes.count - 1 {
+                                        Divider()
+                                            .background(Color.black)
+                                    }
                                 }
                             }
                         }
                     }
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 20)
                 }
-                    .padding(.horizontal, 18)
-                    .padding(.vertical, 20)
             }
                 .navigationBarTitle("Discover")
                 .navigationBarItems(trailing:
-                    Button(action: {  }) {
+                    Button(action: {
+                        self.cloudKitManager.recipes.removeAll()
+                        self.cloudKitManager.fetchRecipeRecords()
+                    }) {
                         Image(systemName: "arrow.clockwise")
                     }
                 )
@@ -38,28 +69,32 @@ struct Discover: View {
     }
 }
 
-struct Discover_Previews: PreviewProvider {
-    static var previews: some View {
-        Discover()
-    }
-}
-
 
 struct DiscoverCell: View {
+    var recipeRecord: RecipeRecord
+    
+    var formattedTimeLabel: Text {
+        if recipeRecord.timeHour == 0.0 {
+            return Text("\(recipeRecord.timeMinute, specifier: "%.0f")m")
+        } else {
+            return Text("\(recipeRecord.timeHour, specifier: "%.0f")h \(recipeRecord.timeMinute, specifier: "%.0f")m")
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Image("food2")
+            Image(uiImage: recipeRecord.recipeImage)
                 .resizable()
                 .scaledToFill()
                 .frame(maxWidth: .infinity)
                 .cornerRadius(10)
-            Text("General Tso's Chicken")
+            Text(recipeRecord.recipeName)
                 .lineLimit(nil)
                 .font(.custom("TypoRoundBoldDemo", size: 24, relativeTo: .body))
                 .padding(.top, 12)
                 .foregroundColor(.black)
             HStack {
-                Text("Meat")
+                Text(recipeRecord.recipeCategory)
                     .padding(.vertical, 5)
                     .padding(.horizontal, 8)
                     .background(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
@@ -71,7 +106,7 @@ struct DiscoverCell: View {
                 
                 HStack {
                     Image(systemName: "clock")
-                    Text("1h 30m")
+                    formattedTimeLabel
                 }
                     .padding(.vertical, 5)
                     .padding(.horizontal, 8)
@@ -82,11 +117,28 @@ struct DiscoverCell: View {
                 .font(.custom("TypoRoundRegularDemo", size: 18, relativeTo: .body))
                 .padding(.top, 12)
             
-            Text("3 ijrioj02 394 29304 ksjf i3093 sifjisjfoisjf 342349 sfjj  sjf e isjfi sdifsjd fiosjfsif osf jieojwerier wierjoier 23i iw eirieuriwer ie riwer sdkjf sdkfjlsdjf eirwoer iwer iewro weir02409 394 203")
+            Text(recipeRecord.recipeDescription)
+                .frame(maxWidth: .infinity)
                 .lineLimit(nil)
                 .foregroundColor(Color(.darkGray))
                 .padding(.bottom, 8)
                 .padding(.top, 15)
         }
+//        .padding(.horizontal)
+    }
+}
+
+
+struct LoadingSpinner: UIViewRepresentable {
+    func makeUIView(context: Context) -> UIActivityIndicatorView {
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.color = .white
+        spinner.hidesWhenStopped = true
+        spinner.startAnimating()
+        return spinner
+    }
+    
+    func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
+        
     }
 }

@@ -72,9 +72,15 @@ struct RecipesBookView_previews: PreviewProvider {
 struct BookRecipeDetailView: View {
     var recipe: Recipe
     @ObservedObject var recipeManager: RecipeManager
+    @EnvironmentObject var cloudKitManager: CloudKitManager
     @State private var translationHeight: CGFloat = UIScreen.main.bounds.height * 0.25
-    @Environment(\.presentationMode) var presentationMode 
+    @State private var showShareAlert = false
+    @Environment(\.presentationMode) var presentationMode
     
+    var shareResultMessage: (String, String) {
+        return cloudKitManager.successfullySavedRecipe ? ("Success", "Refresh, and you should see your post!") : ("Error", "There was an error sharing. Check your network connection or try again.")
+    }
+
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack {
@@ -172,13 +178,25 @@ struct BookRecipeDetailView: View {
         }
             .navigationBarTitle("Details", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading:
-                Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
-                    Image(systemName: "arrow.left")
-                        .imageScale(.large)
-                        .foregroundColor(.black)
-                }
+            .navigationBarItems(
+                leading:
+                    Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+                        Image(systemName: "arrow.left")
+                            .imageScale(.large)
+                            .foregroundColor(.black)
+                    },
+                trailing:
+                    Button(action: { self.showShareAlert = true }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .imageScale(.large)
+                            .foregroundColor(.black)
+                    }
             )
+            .alert(isPresented: $showShareAlert) {
+                Alert(title: Text("Share"), message: Text("This will share to the discover page, where all users will be able to see this recipe."), primaryButton: .cancel(), secondaryButton: .default(Text("OK")) {
+                    cloudKitManager.createRecipeRecord(recipe: self.recipe)
+                })
+            }
             .onAppear() {
                 self.recipeManager.recipe = self.recipe
             }

@@ -31,7 +31,7 @@ struct FoodManChuApp: App {
     }
     
     @StateObject var persistenceController = PersistenceController.shared
-    @Environment(\.scenePhase) var scenePhase // use with .onChange to save whenever app is going to background
+    @StateObject var cloudKitManager = CloudKitManager()
     
     var body: some Scene {
         WindowGroup {
@@ -39,15 +39,13 @@ struct FoodManChuApp: App {
                 .environment(\.managedObjectContext, persistenceController.container.viewContext) // used for creating objects, etc
                 .environmentObject(persistenceController) // to save nsmanagedobjects
                 .environmentObject(ModalManager())
+                .environmentObject(cloudKitManager)
                 .preferredColorScheme(.light)
                 .onAppear() {
                     persistenceController.createDefaultCategories()
                     persistenceController.createDefaultIngredients()
-                    print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+                    self.cloudKitManager.fetchRecipeRecords() // load it once and all subsequent times will be user manually refreshing
                 }
         }
-            .onChange(of: scenePhase) { (_) in
-                persistenceController.save()
-            }
     }
 }

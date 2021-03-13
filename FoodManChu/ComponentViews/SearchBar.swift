@@ -54,6 +54,6 @@ struct SearchBar: View {
             }
         }
             .padding(.horizontal, 15)
-        .animation(Animation.easeOut, value: self.isSearching)
+            .animation(Animation.easeOut, value: self.isSearching)
     }
 }
