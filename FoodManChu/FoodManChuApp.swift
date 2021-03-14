@@ -31,6 +31,7 @@ struct FoodManChuApp: App {
     }
     
     @StateObject var persistenceController = PersistenceController.shared
+    @StateObject var networkManager = NetworkManager()
     @StateObject var cloudKitManager = CloudKitManager()
     
     var body: some Scene {
@@ -39,11 +40,13 @@ struct FoodManChuApp: App {
                 .environment(\.managedObjectContext, persistenceController.container.viewContext) // used for creating objects, etc
                 .environmentObject(persistenceController) // to save nsmanagedobjects
                 .environmentObject(ModalManager())
+                .environmentObject(networkManager)
                 .environmentObject(cloudKitManager)
                 .preferredColorScheme(.light)
                 .onAppear() {
                     persistenceController.createDefaultCategories()
                     persistenceController.createDefaultIngredients()
+                    networkManager.setupNetworkMonitor()
                     self.cloudKitManager.fetchRecipeRecords() // load it once and all subsequent times will be user manually refreshing
                 }
         }

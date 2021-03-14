@@ -191,11 +191,14 @@ struct BookRecipeDetailView: View {
                             .imageScale(.large)
                             .foregroundColor(.black)
                     }
+                    .alert(isPresented: $showShareAlert) {
+                        Alert(title: Text("Share"), message: Text("This will share to the discover page, where all users will be able to see this recipe."), primaryButton: .cancel(), secondaryButton: .default(Text("OK")) {
+                            cloudKitManager.createRecipeRecord(recipe: self.recipe)
+                        })
+                    }
             )
-            .alert(isPresented: $showShareAlert) {
-                Alert(title: Text("Share"), message: Text("This will share to the discover page, where all users will be able to see this recipe."), primaryButton: .cancel(), secondaryButton: .default(Text("OK")) {
-                    cloudKitManager.createRecipeRecord(recipe: self.recipe)
-                })
+            .alert(isPresented: self.$cloudKitManager.successfullySavedRecipe) {
+                Alert(title: Text(shareResultMessage.0), message: Text(shareResultMessage.1), dismissButton: .default(Text("OK")))
             }
             .onAppear() {
                 self.recipeManager.recipe = self.recipe

@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import Network
 
 struct Discover: View {
+    @EnvironmentObject var networkManager: NetworkManager
     @EnvironmentObject var cloudKitManager: CloudKitManager
     
     var body: some View {
@@ -18,11 +20,10 @@ struct Discover: View {
                         Text("Currently empty. Share a recipe or try refreshing!")
                             .font(.custom("TypoRoundBoldDemo", size: 16, relativeTo: .body))
                             .multilineTextAlignment(.center)
-                            .foregroundColor(cloudKitManager.recipes.isEmpty && !cloudKitManager.isLoading ? .black : .clear)
+                            .foregroundColor(cloudKitManager.recipes.isEmpty && !cloudKitManager.isLoading && networkManager.isConnectedToInternet ? .black : .clear)
                             .frame(width: UIScreen.main.bounds.width * 0.8)
-                        
-                        
-                        if cloudKitManager.isLoading {
+
+                        if cloudKitManager.isLoading && networkManager.isConnectedToInternet {
                             VStack {
                                 LoadingSpinner()
                                 Text("Loading...")
@@ -34,19 +35,25 @@ struct Discover: View {
                                 .background(Color(.systemGray2))
                                 .cornerRadius(10)
                         }
+                        
+                        if !networkManager.isConnectedToInternet {
+                            Text("Please enable internet connection in order to view shared recipes.")
+                        }
                     }
                         .padding(.top, 75)
 
                     
                     VStack(spacing: 20) {
-                        ForEach(0..<cloudKitManager.recipes.count, id: \.self) { i in
-                            NavigationLink(destination: DiscoverMoreView(recipeRecord: cloudKitManager.recipes[i])) {
-                                VStack {
-                                    DiscoverCell(recipeRecord: cloudKitManager.recipes[i])
-                                    
-                                    if i != cloudKitManager.recipes.count - 1 {
-                                        Divider()
-                                            .background(Color.black)
+                        if networkManager.isConnectedToInternet {
+                            ForEach(0..<cloudKitManager.recipes.count, id: \.self) { i in
+                                NavigationLink(destination: DiscoverMoreView(recipeRecord: cloudKitManager.recipes[i])) {
+                                    VStack {
+                                        DiscoverCell(recipeRecord: cloudKitManager.recipes[i])
+
+                                        if i != cloudKitManager.recipes.count - 1 {
+                                            Divider()
+                                                .background(Color.black)
+                                        }
                                     }
                                 }
                             }
@@ -85,7 +92,7 @@ struct DiscoverCell: View {
         VStack(alignment: .leading, spacing: 0) {
             Image(uiImage: recipeRecord.recipeImage)
                 .resizable()
-                .scaledToFill()
+                .scaledToFit()
                 .frame(maxWidth: .infinity)
                 .cornerRadius(10)
             Text(recipeRecord.recipeName)
@@ -124,7 +131,6 @@ struct DiscoverCell: View {
                 .padding(.bottom, 8)
                 .padding(.top, 15)
         }
-//        .padding(.horizontal)
     }
 }
 

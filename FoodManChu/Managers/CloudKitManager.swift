@@ -18,8 +18,7 @@ class CloudKitManager: ObservableObject {
     @Published var ingredients = [IngredientRecord]()
     @Published var instructions = [String]()
     
-    let recipeImageCache = NSCache<CKRecord.ID, NSData>()
-    
+    let recipeImageCache = NSCache<CKRecord.ID, UIImage>()
     
     func createIngredientsRecord(ingredientSet: NSSet?, withRefTo recipeRecord: CKRecord) {
         guard let ingredientsSet = ingredientSet, let ingredientsArray = ingredientsSet.allObjects as? [Ingredient] else { return }
@@ -126,19 +125,20 @@ class CloudKitManager: ObservableObject {
         self.createInstructionsRecord(instructions: recipe.instructions ?? [], withRefTo: recipeRecord)
     }
     
+    // fetching without image
     func fetchRecipeRecords() {
         self.isLoading = true
         let sort = NSSortDescriptor(key: "creationDate", ascending: false)
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: "Recipe", predicate: predicate)
         query.sortDescriptors = [sort]
-        
+
         let operation = CKQueryOperation(query: query)
-        operation.desiredKeys = ["recipeName", "recipeCategory", "recipeDescription", "timeHour", "timeMinute", "recipeImage"]
+        operation.desiredKeys = ["recipeName", "recipeCategory", "recipeDescription", "timeHour", "timeMinute"]
         operation.resultsLimit = 50
-        
+
         var loadedRecipes = [RecipeRecord]()
-        
+
         operation.recordFetchedBlock = { record in
             let recipeRecord = RecipeRecord()
             recipeRecord.recipeId = record.recordID
@@ -147,29 +147,62 @@ class CloudKitManager: ObservableObject {
             recipeRecord.recipeDescription = record["recipeDescription"] as! String
             recipeRecord.timeHour = record["timeHour"] as! Double
             recipeRecord.timeMinute = record["timeMinute"] as! Double
-            
-            if let recipeImage = record["recipeImage"] as? CKAsset {
-                if let imageData = try? Data(contentsOf: recipeImage.fileURL!) {
-                    recipeRecord.recipeImage = UIImage(data: imageData)!
-                }
-            }
-            
             loadedRecipes.append(recipeRecord)
         }
-        
+
         operation.queryCompletionBlock = { [weak self] (cursor, error) in
             DispatchQueue.main.async {
                 if let error = error {
-                    self?.recipes = []
                     print(error.localizedDescription)
                 }
-                
-                self?.isLoading = false
-                self?.recipes = loadedRecipes
+
+                self?.fetchRecipeImages(recipeRecords: loadedRecipes)
             }
         }
-        
+
         CKContainer.default().publicCloudDatabase.add(operation)
+    }
+    
+    
+    // fetchiing image from cloudkit or from cache
+    func fetchRecipeImages(recipeRecords: [RecipeRecord]) {
+        var recipeRecordsWithImage = [RecipeRecord]()
+        
+        for recipeRecord in recipeRecords {
+            if let recipeImage = recipeImageCache.object(forKey: recipeRecord.recipeId) {
+                recipeRecord.recipeImage = recipeImage
+                recipeRecordsWithImage.append(recipeRecord)
+                self.isLoading = false
+                self.recipes = recipeRecordsWithImage
+            } else {
+                let perRecordFetchOperation = CKFetchRecordsOperation(recordIDs: [recipeRecord.recipeId])
+                perRecordFetchOperation.desiredKeys = ["recipeImage"]
+                perRecordFetchOperation.queuePriority = .veryHigh
+                
+                perRecordFetchOperation.perRecordCompletionBlock = { [weak self] (record, recordID, error) in
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            self?.recipes = []
+                            print(error.localizedDescription)
+                        }
+                        
+                        if let record = record {
+                            if let asset = record["recipeImage"] as? CKAsset {
+                                if let data = try? Data(contentsOf: asset.fileURL!) {
+                                    recipeRecord.recipeImage = UIImage(data: data)!
+                                    self?.recipeImageCache.setObject(UIImage(data: data)!, forKey: recipeRecord.recipeId)
+                                    recipeRecordsWithImage.append(recipeRecord)
+                                    self?.isLoading = false
+                                    self?.recipes = recipeRecordsWithImage
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                CKContainer.default().publicCloudDatabase.add(perRecordFetchOperation)
+            }
+        }
     }
     
     func fetchIngredientsFor(recipeRecord: RecipeRecord) {
