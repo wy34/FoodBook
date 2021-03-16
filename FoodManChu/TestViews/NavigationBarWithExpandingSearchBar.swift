@@ -21,7 +21,7 @@ struct NavigationBarWithExpandingSearchBar: View {
             if show == false {
                 Text(title)
                     .fontWeight(.bold)
-                    .font(.custom("TypoRoundBoldDemo", size: self.preferLargeTitle ? 40 : 24, relativeTo: .body))
+                    .font(.custom("Comfortaa-Bold", size: self.preferLargeTitle ? 38 : 22, relativeTo: .body))
                     .foregroundColor(.white)
             }
             

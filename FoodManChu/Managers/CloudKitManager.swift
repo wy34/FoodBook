@@ -7,19 +7,54 @@
 
 import UIKit
 import CloudKit
+import Network
 
 class CloudKitManager: ObservableObject {
-    @Published var successfullySavedRecipe = false
-    @Published var successfullySavedIngredients = false
-    @Published var successfullySavedInstructions = false
+    @Published var finishedTask = false
+    
+    var successfullySavedRecipe = false
+    var successfullySavedIngredients = false
+    var successfullySavedInstructions = false
     
     @Published var isLoading = true
     @Published var recipes = [RecipeRecord]()
     @Published var ingredients = [IngredientRecord]()
     @Published var instructions = [String]()
     
+    @Published var isConnectedToInternet = false // just to default it to that
+    
     let recipeImageCache = NSCache<CKRecord.ID, UIImage>()
     
+    // observes changes in network connect
+    let monitor = NWPathMonitor()
+    var wasPreviouslyConnected = false
+    
+    // respond to different changes in connectivity
+    func setupNetworkMonitor() {
+        monitor.pathUpdateHandler = { [unowned self] path in
+            DispatchQueue.main.async {
+                if path.status == .satisfied {
+                    print("connected")
+                    self.isConnectedToInternet = true
+                } else {
+                    print("not connected")
+                    self.isConnectedToInternet = false
+                }
+                
+                // only fetching if switching from no connection to connection (wifi or cellular)
+                if !wasPreviouslyConnected && isConnectedToInternet {
+                    self.fetchRecipeRecords()
+                    self.wasPreviouslyConnected = true
+                } else if !isConnectedToInternet {
+                    self.wasPreviouslyConnected = false
+                }
+            }
+        }
+        
+        let queue = DispatchQueue(label: "Monitor")
+        monitor.start(queue: queue)
+    }
+        
     func createIngredientsRecord(ingredientSet: NSSet?, withRefTo recipeRecord: CKRecord) {
         guard let ingredientsSet = ingredientSet, let ingredientsArray = ingredientsSet.allObjects as? [Ingredient] else { return }
         
@@ -40,12 +75,14 @@ class CloudKitManager: ObservableObject {
             CKContainer.default().publicCloudDatabase.save(ingredientRecord) { [weak self] (record, error) in
                 DispatchQueue.main.async {
                     if let error = error {
-                        self?.successfullySavedIngredients = false
+//                        self?.successfullySavedIngredients = false
+//                        self?.finishedTask = true
                         print(error.localizedDescription)
                     }
 
                     if let _ = record {
-                        self?.successfullySavedIngredients = true
+//                        self?.successfullySavedIngredients = true
+//                        self?.finishedTask = true
                     }
                 }
             }
@@ -63,12 +100,14 @@ class CloudKitManager: ObservableObject {
             CKContainer.default().publicCloudDatabase.save(instructionRecord) { [weak self] (record, error) in
                 DispatchQueue.main.async {
                     if let error = error {
-                        self?.successfullySavedInstructions = false
+//                        self?.successfullySavedInstructions = false
+//                        self?.finishedTask = true
                         print(error.localizedDescription)
                     }
                     
                     if let _ = record {
-                        self?.successfullySavedInstructions = true
+//                        self?.successfullySavedInstructions = true
+//                        self?.finishedTask = true
                     }
                 }
             }
@@ -92,7 +131,7 @@ class CloudKitManager: ObservableObject {
         
         recipeRecord["timeHour"] = recipe.timeHours as CKRecordValue
         recipeRecord["timeMinute"] = recipe.timeMinutes as CKRecordValue
-        
+                
         // for the image
         // scale it down
         let originalImage = UIImage(data: recipe.recipeThumbnail!)!
@@ -110,11 +149,13 @@ class CloudKitManager: ObservableObject {
             DispatchQueue.main.async {
                 if let error = error {
                     self?.successfullySavedRecipe = false
+                    self?.finishedTask = true
                     print(error.localizedDescription)
                 }
                 
                 if let _ = record {
                     self?.successfullySavedRecipe = true
+                    self?.finishedTask = true
                 }
 
                 try? FileManager.default.removeItem(at: imageFileUrl)
@@ -127,6 +168,7 @@ class CloudKitManager: ObservableObject {
     
     // fetching without image
     func fetchRecipeRecords() {
+        self.recipes.removeAll()
         self.isLoading = true
         let sort = NSSortDescriptor(key: "creationDate", ascending: false)
         let predicate = NSPredicate(value: true)
@@ -147,6 +189,7 @@ class CloudKitManager: ObservableObject {
             recipeRecord.recipeDescription = record["recipeDescription"] as! String
             recipeRecord.timeHour = record["timeHour"] as! Double
             recipeRecord.timeMinute = record["timeMinute"] as! Double
+            recipeRecord.creationDate = record.creationDate
             loadedRecipes.append(recipeRecord)
         }
 
@@ -156,13 +199,17 @@ class CloudKitManager: ObservableObject {
                     print(error.localizedDescription)
                 }
 
-                self?.fetchRecipeImages(recipeRecords: loadedRecipes)
+                if !loadedRecipes.isEmpty {
+                    self?.fetchRecipeImages(recipeRecords: loadedRecipes)
+                } else {
+                    self?.isLoading = false
+                    self?.recipes = []
+                }
             }
         }
 
         CKContainer.default().publicCloudDatabase.add(operation)
     }
-    
     
     // fetchiing image from cloudkit or from cache
     func fetchRecipeImages(recipeRecords: [RecipeRecord]) {
@@ -178,14 +225,14 @@ class CloudKitManager: ObservableObject {
                 let perRecordFetchOperation = CKFetchRecordsOperation(recordIDs: [recipeRecord.recipeId])
                 perRecordFetchOperation.desiredKeys = ["recipeImage"]
                 perRecordFetchOperation.queuePriority = .veryHigh
-                
+
                 perRecordFetchOperation.perRecordCompletionBlock = { [weak self] (record, recordID, error) in
                     DispatchQueue.main.async {
                         if let error = error {
                             self?.recipes = []
                             print(error.localizedDescription)
                         }
-                        
+
                         if let record = record {
                             if let asset = record["recipeImage"] as? CKAsset {
                                 if let data = try? Data(contentsOf: asset.fileURL!) {
@@ -199,7 +246,7 @@ class CloudKitManager: ObservableObject {
                         }
                     }
                 }
-                
+
                 CKContainer.default().publicCloudDatabase.add(perRecordFetchOperation)
             }
         }
@@ -270,6 +317,7 @@ class RecipeRecord: NSObject, Identifiable {
     var recipeImage: UIImage = UIImage()
     var timeHour: Double = 0.0
     var timeMinute: Double = 0.0
+    var creationDate: Date?
 }
 
 class IngredientRecord: NSObject, Identifiable {

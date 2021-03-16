@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ExistingIngredientView: View {
     @ObservedObject var recipeManager: RecipeManager
-    @EnvironmentObject var persistenceController: PersistenceController
     @FetchRequest(entity: Ingredient.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Ingredient.name, ascending: true)]) var ingredients: FetchedResults<Ingredient>
     @State private var amount = ""
     @State private var tappedIngredient: Ingredient?
@@ -22,7 +21,7 @@ struct ExistingIngredientView: View {
             Form {
                 ForEach(Array(groupsByFirstLetter().keys.sorted()), id: \.self) { key in
                     Section(header: Text(String(key))) {
-                        ForEach(groupsByFirstLetter()[key]!, id: \.self) { ingredient in
+                        ForEach(groupsByFirstLetter()[key]!, id: \.id) { ingredient in
                             HStack {
                                 // only showing default name view if this isn't tapped
                                 if tappedIngredient != ingredient {
@@ -38,7 +37,7 @@ struct ExistingIngredientView: View {
                                         }) {
                                             HStack {
                                                 Text(ingredient.name ?? "")
-                                                    .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
+                                                    .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
                                                 Spacer()
                                             }
                                                 .foregroundColor(.black)
@@ -85,7 +84,7 @@ struct ExistingIngredientView: View {
                                             }) {
                                                 Text("Cancel")
                                                     .padding(.vertical, 5)
-                                                    .padding(.horizontal)
+                                                    .padding(.horizontal, 6)
                                                     .background(Color.red)
                                                     .cornerRadius(10)
                                             }
@@ -93,12 +92,14 @@ struct ExistingIngredientView: View {
                                     }
                                         .buttonStyle(PlainButtonStyle())
                                         .foregroundColor(.white)
-                                        .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
+                                        .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
                                 }
                             }
                             .animation(.easeInOut)
                         }
-                            .onDelete(perform: self.delete(at:))
+                        .onDelete(perform: { offsets in
+                            self.delete(at: offsets, category: key)
+                        })
                     }
                 }
             }
@@ -112,12 +113,13 @@ struct ExistingIngredientView: View {
                 )
                 .alert(isPresented: self.$isShowingDeleteAlert) {
                     Alert(title: Text("Delete All Ingredients"), message: Text("Are you sure you want to delete all of your ingredients?"), primaryButton: .default(Text("Yes")) {
-                        self.persistenceController.deleteAllIngredients()
-                        self.persistenceController.save()
+                        PersistenceController.shared.deleteAllIngredients()
+                        PersistenceController.shared.save()
                         self.presentationMode.wrappedValue.dismiss()
                     }, secondaryButton: .cancel())
                 }
         }
+            .preferredColorScheme(.light)
     }
     
     func groupsByFirstLetter() -> [Character: [Ingredient]] {
@@ -142,10 +144,16 @@ struct ExistingIngredientView: View {
         return ingredientListGroupedByFirstLetter
     }
     
-    func delete(at offsets: IndexSet) {
+    func delete(at offsets: IndexSet, category: Character) {
         for offset in offsets {
-            self.persistenceController.delete(self.ingredients[offset])
-            self.persistenceController.save()
+            let ingredient = groupsByFirstLetter()[category]![offset]
+            
+            if let index = recipeManager.ingredients.firstIndex(of: ingredient) {
+                recipeManager.ingredients.remove(at: index)
+            }
+            
+            PersistenceController.shared.delete(ingredient)
+            PersistenceController.shared.save()
         }
     }
 }

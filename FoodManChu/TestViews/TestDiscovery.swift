@@ -50,7 +50,7 @@ struct TestDiscovery: View {
                 .cornerRadius(10)
             Text("Cheeseburger")
                 .lineLimit(nil)
-                .font(.custom("TypoRoundBoldDemo", size: 24, relativeTo: .body))
+                .font(.custom("Comfortaa-Bold", size: 22, relativeTo: .body))
                 .padding(.top, 12)
                 .foregroundColor(.black)
             HStack {
@@ -74,7 +74,7 @@ struct TestDiscovery: View {
                     .cornerRadius(8)
             }
                 .foregroundColor(.white)
-                .font(.custom("TypoRoundRegularDemo", size: 18, relativeTo: .body))
+                .font(.custom("Comfortaa-Medium", size: 16, relativeTo: .body))
                 .padding(.top, 12)
             
             Text("alksdfjlksdf sldjflsdjf ksljdfl sdkf lksdf skdfj lsdjfl sfjweiuriwer iwer wieru woeur worweiorweirpweriwer iwerowe riw e928348209 82u3409 2340 02 34")

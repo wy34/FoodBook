@@ -15,16 +15,16 @@ struct RootView: View {
     // MARK: - Body
     var body: some View {
         TabView {
+            RecipesBookView()
+                .tabItem {
+                    Image(systemName: "book")
+                    Text("Book")
+                }
             CategoriesView()
                 .tabItem {
                     Image(systemName: "hammer")
                     Text("Builder")
                         
-                }
-            RecipesBookView()
-                .tabItem {
-                    Image(systemName: "book")
-                    Text("Book")
                 }
             Discover()
                 .tabItem {

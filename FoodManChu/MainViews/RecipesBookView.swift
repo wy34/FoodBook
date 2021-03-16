@@ -14,28 +14,42 @@ struct RecipesBookView: View {
     var body: some View {
         NavigationView {
             Form {
-                ForEach(Array(groupsByFirstLetter().keys.sorted()), id: \.self) { key in
-                    Section(header: Text(String(key))) {
-                        ForEach(groupsByFirstLetter()[key]!, id: \.id) { recipe in
-                            NavigationLink(destination: BookRecipeDetailView(recipe: recipe, recipeManager: self.recipeManager)) {
-                                HStack {
-                                    Text(recipe.recipeName ?? "")
-                                    Spacer()
-                                    Text(recipe.category?.name ?? "")
-                                        .padding(.vertical, 5)
-                                        .padding(.horizontal, 8)
-                                        .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
-                                        .background(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
-                                        .foregroundColor(.white)
-                                        .cornerRadius(5)
+                if recipes.isEmpty {
+                    Text("No recipes. Add one in the Builder view to enable convenient access here.")
+                        .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
+                        .multilineTextAlignment(.center)
+                        .frame(width: UIScreen.main.bounds.width * 0.8)
+                        .padding(.top, 75)
+                        .listRowBackground(Color(#colorLiteral(red: 0.952141583, green: 0.9497230649, blue: 0.9704508185, alpha: 1)))
+                } else {
+                    ForEach(Array(groupsByFirstLetter().keys.sorted()), id: \.self) { key in
+                        Section(header: Text(String(key)).font(.custom("Comfortaa-Bold", size: 12, relativeTo: .body))) {
+                            ForEach(groupsByFirstLetter()[key]!, id: \.id) { recipe in
+                                NavigationLink(destination: BookRecipeDetailView(recipe: recipe, recipeManager: self.recipeManager)) {
+                                    HStack {
+                                        Text(recipe.recipeName ?? "")
+                                            .font(.custom("Comfortaa-Bold", size: 16, relativeTo: .body))
+                                        Spacer()
+                                        Text(recipe.category?.name ?? "")
+                                            .padding(.vertical, 5)
+                                            .padding(.horizontal, 8)
+                                            .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
+                                            .background(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
+                                            .foregroundColor(.white)
+                                            .cornerRadius(5)
+                                    }
                                 }
                             }
+                            .onDelete(perform: { offsets in
+                                self.delete(at: offsets, category: key)
+                            })
                         }
                     }
                 }
             }
-                .navigationBarTitle("Recipes Book")
+                .navigationBarTitle("Recipe Book")
         }
+            .navigationViewStyle(StackNavigationViewStyle())
     }
     
     func groupsByFirstLetter() -> [Character: [Recipe]] {
@@ -59,6 +73,15 @@ struct RecipesBookView: View {
         
         return recipeListGroupedByFirstLetter
     }
+    
+    func delete(at offsets: IndexSet, category: Character) {
+        // have to pass in the specific category in order to delete from the correct section
+        for offset in offsets {
+            let recipe = groupsByFirstLetter()[category]![offset]
+            PersistenceController.shared.delete(recipe)
+            PersistenceController.shared.save()
+        }
+    }
 }
 
 
@@ -78,7 +101,7 @@ struct BookRecipeDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     
     var shareResultMessage: (String, String) {
-        return cloudKitManager.successfullySavedRecipe ? ("Success", "Refresh, and you should see your post!") : ("Error", "There was an error sharing. Check your network connection or try again.")
+        return cloudKitManager.finishedTask && cloudKitManager.successfullySavedRecipe ? ("Success", "Refresh, and you should see your post!") : ("Error", "Make sure you are connected to a network and/or signed into an iCloud account in order to share.")
     }
 
     var body: some View {
@@ -88,6 +111,7 @@ struct BookRecipeDetailView: View {
                     .resizable()
                     .scaledToFill()
                     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.45)
+                    .clipped()
                 Spacer()
             }
             
@@ -108,13 +132,13 @@ struct BookRecipeDetailView: View {
                                 Text(recipe.recipeName ?? "")
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.5)
-                                    .font(.custom("TypoRoundBoldDemo", size: 30, relativeTo: .body))
+                                    .font(.custom("Comfortaa-Bold", size: 28, relativeTo: .body))
 
                                 
                                 HStack {
                                     Image(systemName: "clock")
                                     Text("\(recipeManager.formattedPrepTimeText)")
-                                        .font(.custom("TypoRoundLightDemo", size: 18, relativeTo: .body))
+                                        .font(.custom("comfortaa-light", size: 16, relativeTo: .body))
                                 }
                                     .foregroundColor(.white)
                                     .padding(.vertical, 5)
@@ -126,13 +150,13 @@ struct BookRecipeDetailView: View {
                                 
                                 Group {
                                     Text("Description")
-                                        .font(.custom("TypoRoundRegularDemo", size: 22, relativeTo: .body))
+                                        .font(.custom("Comfortaa-Medium", size: 18, relativeTo: .body))
                                         .underline()
                                         .lineLimit(nil)
                                         .padding(.bottom, 1)
                                     
                                     Text(recipe.recipeDescription ?? "")
-                                        .font(.custom("TypoRoundLightDemo", size: 18, relativeTo: .body))
+                                        .font(.custom("comfortaa-light", size: 15, relativeTo: .body))
                                         .multilineTextAlignment(.leading)
                                         .lineLimit(nil)
                                 }
@@ -182,13 +206,13 @@ struct BookRecipeDetailView: View {
                 leading:
                     Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
                         Image(systemName: "arrow.left")
-                            .imageScale(.large)
+                            .imageScale(.medium)
                             .foregroundColor(.black)
                     },
                 trailing:
                     Button(action: { self.showShareAlert = true }) {
                         Image(systemName: "square.and.arrow.up")
-                            .imageScale(.large)
+                            .imageScale(.medium)
                             .foregroundColor(.black)
                     }
                     .alert(isPresented: $showShareAlert) {
@@ -197,7 +221,7 @@ struct BookRecipeDetailView: View {
                         })
                     }
             )
-            .alert(isPresented: self.$cloudKitManager.successfullySavedRecipe) {
+            .alert(isPresented: self.$cloudKitManager.finishedTask) {
                 Alert(title: Text(shareResultMessage.0), message: Text(shareResultMessage.1), dismissButton: .default(Text("OK")))
             }
             .onAppear() {

@@ -116,14 +116,22 @@ struct RecipeGrid: View {
                         .padding(.top, 15)
                         .padding(.horizontal, 5)
                     
-                    // this spacing is between rows
-                    LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
-                        ForEach(recipes.wrappedValue.filter({ $0.recipeName!.lowercased().contains(searchText.lowercased()) || searchText.isEmpty }), id: \.self) { recipe in
-                            RecipeCell(recipe: recipe, category: self.category, isEditing: $isEditing, recipeManager: self.recipeManager)
-                        }
-                    })
-                        .padding(15)
-                        .animation(Animation.easeOut(duration: 0.15))
+                    if self.recipes.wrappedValue.isEmpty {
+                        Text("No \(category.name ?? "") recipes. Press the green plus button to start adding one.")
+                            .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
+                            .multilineTextAlignment(.center)
+                            .frame(width: UIScreen.main.bounds.width * 0.8)
+                            .padding(.top, 75)
+                    } else {
+                        // this spacing is between rows
+                        LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
+                            ForEach(recipes.wrappedValue.filter({ $0.recipeName!.lowercased().contains(searchText.lowercased()) || searchText.isEmpty }), id: \.self) { recipe in
+                                RecipeCell(recipe: recipe, category: self.category, isEditing: $isEditing, recipeManager: self.recipeManager)
+                            }
+                        })
+                            .padding(15)
+                            .animation(Animation.easeOut(duration: 0.15))
+                    }
                 }
                     .navigationBarTitle("\(self.category.name ?? "") Recipes", displayMode: .inline)
                     .navigationBarBackButtonHidden(true)
@@ -131,13 +139,13 @@ struct RecipeGrid: View {
                         leading:
                             Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
                                 Image(systemName: "arrow.left")
-                                    .imageScale(.large)
+                                    .imageScale(.medium)
                                     .foregroundColor(.black)
                             },
                         trailing:
                             Button(action: { self.isEditing.toggle(); self.modalManager.isRecipeDetailViewShowing = false }) {
                                 Text(self.isEditing ? "Done" : "Edit")
-                                    .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
+                                    .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
                                     .foregroundColor(self.isEditing ? Color(#colorLiteral(red: 1, green: 0.4903432131, blue: 0.4654182792, alpha: 0.7518001152)) : .black)
                             }
                     )
@@ -180,7 +188,7 @@ struct RecipeCell: View {
     @Binding var isEditing: Bool
     @EnvironmentObject var modalManager: ModalManager
     @ObservedObject var recipeManager: RecipeManager
-    @EnvironmentObject var persistenceController: PersistenceController
+    @Environment(\.managedObjectContext) var moc
 
     var body: some View {
         VStack {
@@ -193,11 +201,11 @@ struct RecipeCell: View {
                         .resizable()
                         .scaledToFill()
                         .frame(width: screenSize.width / 2 - 35, height: screenSize.height / 4)
-                        .cornerRadius(30)
+                        .cornerRadius(20)
                 }
                 
                 if self.isEditing {
-                    RoundedRectangle(cornerRadius: 30)
+                    RoundedRectangle(cornerRadius: 21)
                         .fill(Color.black.opacity(0.45))
                         .frame(width: screenSize.width / 2 - 35, height: screenSize.height / 4)
                         .overlay(
@@ -214,16 +222,37 @@ struct RecipeCell: View {
                             }
                         )
                         .overlay(
-                            Button(action: {
-                                self.recipeManager.isShowingDeleteRecipeAlert = true
-                                self.recipeManager.recipe = self.recipe
-                            }) {
-                                Image(systemName: "trash")
-                                    .imageScale(.medium)
-                                    .foregroundColor(.white)
-                                    .padding(12)
+                            HStack {
+                                Button(action: {
+                                    self.recipeManager.isShowingDeleteRecipeAlert = true
+                                    self.recipeManager.recipe = self.recipe
+                                }) {
+                                    Image(systemName: "trash")
+                                        .imageScale(.medium)
+                                        .foregroundColor(.white)
+                                        .padding(12)
+                                }
+                                    .background(RoundedButtonView(corners: [.layerMinXMinYCorner, .layerMaxXMaxYCorner], bgColor: #colorLiteral(red: 1, green: 0.4903432131, blue: 0.4654182792, alpha: 0.7518001152), cornerRadius: 20))
+                                Spacer()
+                                Button(action: {
+                                    let recipeCopy = Recipe(context: moc)
+                                    recipeCopy.recipeName = self.recipe.recipeName
+                                    recipeCopy.recipeDescription = self.recipe.recipeDescription
+                                    recipeCopy.recipeThumbnail = self.recipe.recipeThumbnail
+                                    recipeCopy.category = self.recipe.category
+                                    recipeCopy.timeHours = self.recipe.timeHours
+                                    recipeCopy.timeMinutes = self.recipe.timeMinutes
+                                    recipeCopy.ingredients = self.recipe.ingredients
+                                    recipeCopy.instructions = self.recipe.instructions
+                                    PersistenceController.shared.save()
+                                }) {
+                                    Image(systemName: "plus.rectangle.on.rectangle")
+                                        .imageScale(.medium)
+                                        .foregroundColor(.white)
+                                        .padding(12)
+                                }
+                                    .background(RoundedButtonView(corners: [.layerMaxXMinYCorner, .layerMinXMaxYCorner], bgColor: #colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1), cornerRadius: 20))
                             }
-                                .background(RoundedButtonView(corners: [.layerMinXMinYCorner, .layerMaxXMaxYCorner], bgColor: #colorLiteral(red: 1, green: 0.4903432131, blue: 0.4654182792, alpha: 0.7518001152), cornerRadius: 30))
                             , alignment: .topLeading
                         )
                 } 
@@ -233,7 +262,7 @@ struct RecipeCell: View {
                 
             Text(recipe.recipeName ?? "")
                 .multilineTextAlignment(.center)
-                .font(.custom("TypoRoundRegularDemo", size: 18, relativeTo: .body))
+                .font(.custom("Comfortaa-Medium", size: 16, relativeTo: .body))
                 .frame(width: screenSize.width / 2 - 35)
                 .lineLimit(nil)
                 .padding(.top, 3)
@@ -244,8 +273,8 @@ struct RecipeCell: View {
             .alert(isPresented: $recipeManager.isShowingDeleteRecipeAlert) {
                 Alert(title: Text("Delete"), message: Text("Are you sure you want to delete this recipe?"), primaryButton: .cancel(), secondaryButton: .default(Text("Yes")) {
                         if let recipe = self.recipeManager.recipe {
-                            self.persistenceController.delete(recipe)
-                            self.persistenceController.save()
+                            PersistenceController.shared.delete(recipe)
+                            PersistenceController.shared.save()
                         }
                     }
                 )

@@ -18,14 +18,13 @@ struct AddEditRecipeView: View {
     var category: Category?
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) var moc
-    @EnvironmentObject var persistenceController: PersistenceController
     @ObservedObject var recipeManager: RecipeManager
     
     var body: some View {
         NavigationView {
             VStack {
                 Form {
-                    Section(header: Text("Details").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
+                    Section(header: Text("Details").font(.custom("Comfortaa-Medium", size: 10, relativeTo: .body))) {
                         TextField("Name", text: self.$recipeManager.name)
 
                         ZStack(alignment: .leading) {
@@ -36,7 +35,7 @@ struct AddEditRecipeView: View {
                         }
                     }
                     
-                    Section(header: Text("Thumbnail (Optional)").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
+                    Section(header: Text("Thumbnail (Optional)").font(.custom("Comfortaa-Medium", size: 10, relativeTo: .body))) {
                         Button(action: { self.recipeManager.isPhotoLibraryOpen = true }) {
                             Text("Photo Library")
                                 .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
@@ -55,7 +54,7 @@ struct AddEditRecipeView: View {
                     }
                     
                     
-                    Section(header: Text("Prep Time").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
+                    Section(header: Text("Prep Time").font(.custom("Comfortaa-Medium", size: 10, relativeTo: .body))) {
                         HStack {
                             Slider(value: self.$recipeManager.hours, in: 0...23, step: 1)
                             Text("\(self.recipeManager.hours, specifier: "%.0f") h")
@@ -67,7 +66,7 @@ struct AddEditRecipeView: View {
                         }
                     }
                     
-                    Section(header: Text("Other").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
+                    Section(header: Text("Other").font(.custom("Comfortaa-Medium", size: 10, relativeTo: .body))) {
                         NavigationLink(destination: AddingStepsView(recipeManager: self.recipeManager, stepsType: .Ingredient)) {
                             Text("Ingredients")
                         }
@@ -77,12 +76,12 @@ struct AddEditRecipeView: View {
                     }
 
                 }
-                    .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
+                    .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
                     .navigationBarTitle(Text(self.category == nil ? "Edit \(self.recipeManager.recipeName)" : "New Recipe"), displayMode: .inline)
                     .navigationBarItems(leading:
                         Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
                             Image(systemName: "xmark")
-                                .imageScale(.large)
+                                .imageScale(.medium)
                                 .foregroundColor(.primary)
                             }
                     )
@@ -97,11 +96,11 @@ struct AddEditRecipeView: View {
                         self.editRecipe()
                     }
                     
-                    self.persistenceController.save()
+                    PersistenceController.shared.save()
                     self.presentationMode.wrappedValue.dismiss()
                 }) {
                      Text("Save")
-                        .font(.custom("TypoRoundBoldDemo", size: 24, relativeTo: .body))
+                        .font(.custom("Comfortaa-Bold", size: 22, relativeTo: .body))
                         .foregroundColor(!self.recipeManager.isRecipeInputValid ? Color(.systemGray2) : .white)
                         .frame(maxWidth: .infinity)
                         .padding(12)
@@ -114,6 +113,7 @@ struct AddEditRecipeView: View {
                     .disabled(!self.recipeManager.isRecipeInputValid ? true : false)
             }
         }
+            .preferredColorScheme(.light)
     }
     
     func createRecipe() {
@@ -158,24 +158,24 @@ struct AddingStepsView: View {
                     Button(action: { self.isShowingExistingList = true }) {
                         Label("Pick From Existing List", systemImage: "book")
                             .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
-                            .font(.custom("TypoRoundBoldDemo", size: 16, relativeTo: .body))
+                            .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
                     }
                 }
                 
                 Button(action: { self.showingPopup = true }) {
                     Label("Add New \(stepsType.rawValue)", systemImage: "plus")
                         .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
-                        .font(.custom("TypoRoundBoldDemo", size: 16, relativeTo: .body))
+                        .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
                 }
                 
                 if self.stepsType == .Ingredient {
                     ForEach(self.recipeManager.ingredients, id: \.id) { data in
                         HStack {
                             Text(data.name ?? "")
-                                .font(.custom("TypoRoundLightDemo", size: 16, relativeTo: .body))
+                                .font(.custom("comfortaa-light", size: 14, relativeTo: .body))
                             Spacer()
                             Text("\(data.amount ?? "")")
-                                .font(.custom("TypoRoundLightDemo", size: 14, relativeTo: .body))
+                                .font(.custom("comfortaa-light", size: 12, relativeTo: .body))
                         }
                     }
                         .onDelete(perform: delete(at:))
@@ -183,7 +183,7 @@ struct AddingStepsView: View {
                     ForEach(0..<self.recipeManager.instructions.count, id: \.self) { i in
                         HStack {
                             Text("\(i + 1). " + self.recipeManager.instructions[i])
-                                .font(.custom("TypoRoundLightDemo", size: 16, relativeTo: .body))
+                                .font(.custom("comfortaa-light", size: 14, relativeTo: .body))
                             Spacer()
                         }
                     }
@@ -195,7 +195,7 @@ struct AddingStepsView: View {
                 .navigationBarItems(leading:
                     Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
                         Image(systemName: "arrow.left")
-                            .imageScale(.large)
+                            .imageScale(.medium)
                             .foregroundColor(.black)
                     }
                 )
@@ -204,6 +204,7 @@ struct AddingStepsView: View {
                 NewStepPopupView(stepsType: stepsType, showingPopup: $showingPopup, recipeManager: self.recipeManager)
             }
         }
+            .preferredColorScheme(.light)   
             .sheet(isPresented: $isShowingExistingList) {
                 ExistingIngredientView(recipeManager: self.recipeManager)
             }
@@ -231,7 +232,6 @@ struct NewStepPopupView: View {
     @ObservedObject var recipeManager: RecipeManager
 
     @Environment(\.managedObjectContext) var moc
-    @EnvironmentObject var persistenceController: PersistenceController
     
     @FetchRequest(entity: Ingredient.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Ingredient.name, ascending: true)]) var ingredients: FetchedResults<Ingredient>
 
@@ -242,17 +242,19 @@ struct NewStepPopupView: View {
             VStack {
                 Text("New \(stepsType.rawValue)")
                     .padding(.bottom, 5)
-                    .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
+                    .font(.custom("Comfortaa-Bold", size: 16, relativeTo: .body))
                 CustomTextField(text: self.stepsType == .Ingredient ? $ingredientName : $instruction, isFirstResponder: true, placeholder: self.stepsType == .Ingredient ? "Name" : "Instruction")
                     .frame(width: UIScreen.main.bounds.width * 0.6)
-                    .padding(8)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, -2)
                     .background(Color(#colorLiteral(red: 0.9968960881, green: 0.9921532273, blue: 1, alpha: 1)))
                     .cornerRadius(8)
                     .padding(.bottom, self.stepsType == .Ingredient ? 5 : 8)
                 if self.stepsType == .Ingredient {
                     CustomTextField(text: $ingredientAmount, isFirstResponder: false, placeholder: "Amount")
                         .frame(width: UIScreen.main.bounds.width * 0.6)
-                        .padding(8)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, -2)
                         .background(Color(#colorLiteral(red: 0.9968960881, green: 0.9921532273, blue: 1, alpha: 1)))
                         .cornerRadius(8)
                         .padding(.bottom, 8)
@@ -266,7 +268,7 @@ struct NewStepPopupView: View {
                     }) {
                         Text("Cancel")
                             .foregroundColor(.white)
-                            .font(.custom("TypoRoundBoldDemo", size: 16, relativeTo: .body))
+                            .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
                             .frame(maxWidth: .infinity)
                             .padding(8)
                             .background(Color.red)
@@ -279,7 +281,7 @@ struct NewStepPopupView: View {
                     }) {
                         Text("OK")
                             .foregroundColor(.white)
-                            .font(.custom("TypoRoundBoldDemo", size: 16, relativeTo: .body))
+                            .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
                             .frame(maxWidth: .infinity)
                             .padding(8)
                             .background(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
@@ -320,7 +322,7 @@ struct NewStepPopupView: View {
                 let ingredient = Ingredient(context: self.moc)
                 ingredient.name = ingredientName
                 ingredient.amount = ingredientAmount
-                self.persistenceController.save()
+                PersistenceController.shared.save()
                 self.recipeManager.ingredients.append(ingredient)
             } else if matchingIngredientFromRecipeManager.count != 0 {
                 if let first = matchingIngredientFromRecipeManager.first {
@@ -352,7 +354,7 @@ struct CustomTextField: UIViewRepresentable {
     func makeUIView(context: UIViewRepresentableContext<CustomTextField>) -> UITextField {
         let textField = UITextField(frame: .zero)
         textField.placeholder = placeholder
-        textField.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "TypoRoundRegularDemo", size: 16)!)
+        textField.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "Comfortaa-Medium", size: 14)!)
         textField.delegate = context.coordinator
         return textField
     }

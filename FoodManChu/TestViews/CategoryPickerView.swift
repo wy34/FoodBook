@@ -26,7 +26,7 @@ struct CategoryPickerView: View {
                     Button(action: { self.selectedCategory = i; self.isShowingPicker.toggle() }) {
                         HStack {
                             Text(cats[i])
-                                .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
+                                .font(.custom("Comfortaa-Bold", size: 16, relativeTo: .body))
                             Spacer()
                             Image(systemName: self.selectedCategory == i ? "checkmark" : "")
                         }

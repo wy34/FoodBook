@@ -79,12 +79,12 @@ struct CustomModalView_Previews: PreviewProvider {
 struct RoundedButtonView: UIViewRepresentable {
     var corners: CACornerMask
     var bgColor: UIColor
-    var cornerRadius: Int
+    var cornerRadius: CGFloat
     
     func makeUIView(context: Context) -> UIView {
         let view = UIView()
         view.backgroundColor = bgColor
-        view.layer.cornerRadius = 20
+        view.layer.cornerRadius = cornerRadius
         view.layer.maskedCorners = corners
         return view
     }

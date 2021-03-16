@@ -20,6 +20,7 @@ struct CustomSegmentedPickerWithMenu: View {
             Picker("", selection: $selected) {
                 ForEach(0..<selections.count, id: \.self) { i in
                     Text(selections[i])
+                        .minimumScaleFactor(0.5)
                 }
             }
                 .pickerStyle(SegmentedPickerStyle())
@@ -65,7 +66,7 @@ struct PickerMenu: View {
             }
                 .padding(.top, 12)
                 .padding(.horizontal, 12)
-                .frame(maxWidth: .infinity, maxHeight: 175)
+                .frame(maxWidth: .infinity, maxHeight: 200)
         }
     }
 }
@@ -85,11 +86,12 @@ struct IngredientDirectionsCell: View {
                 }
                 
                 Text(ingredient != nil ? ingredient!.name! : "\(index + 1).  " + direction!)
+                    .font(.custom("comfortaa-light", size: 16, relativeTo: .body))
                 Spacer()
                 
                 if ingredient != nil {
                     Text(ingredient!.amount!)
-                        .font(.custom("TypoRoundLightDemo", size: 12, relativeTo: .body))
+                        .font(.custom("comfortaa-light", size: 14, relativeTo: .body))
                 }
             }
             

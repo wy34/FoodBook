@@ -37,7 +37,7 @@ struct HoveringButtonWithMenu: View {
                             }
                         }
                     }
-                        .font(.custom("TypoRoundBoldDemo", size: 16, relativeTo: .body))
+                        .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
                         .foregroundColor(.black)
                         .frame(width: 115)
                         .padding(15)

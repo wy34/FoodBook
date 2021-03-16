@@ -16,7 +16,6 @@
 		4C3B481125EC1003001D2098 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3B481025EC1003001D2098 /* RootView.swift */; };
 		4C3F326D25FBEAAA007720DF /* CloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F326C25FBEAAA007720DF /* CloudKitManager.swift */; };
 		4C62E59E25FD915B00D58DCF /* TestDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C62E59D25FD915B00D58DCF /* TestDiscovery.swift */; };
-		4C62E5A125FD9E8700D58DCF /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C62E5A025FD9E8700D58DCF /* NetworkManager.swift */; };
 		4C63008425EB3B060054AFE7 /* FoodManChuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63008325EB3B060054AFE7 /* FoodManChuApp.swift */; };
 		4C63008825EB3B060054AFE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C63008725EB3B060054AFE7 /* Assets.xcassets */; };
 		4C63008B25EB3B060054AFE7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C63008A25EB3B060054AFE7 /* Preview Assets.xcassets */; };
@@ -32,6 +31,17 @@
 		4C6300AF25EB50B50054AFE7 /* FloatingTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6300AE25EB50B50054AFE7 /* FloatingTabBar.swift */; };
 		4C6300B225EB65130054AFE7 /* MenuContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6300B125EB65130054AFE7 /* MenuContent.swift */; };
 		4C6300B625EB671A0054AFE7 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6300B525EB671A0054AFE7 /* Menu.swift */; };
+		4C70CC9125FFF47800D28150 /* Comfortaa-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C70CC8C25FFF47800D28150 /* Comfortaa-Light.ttf */; };
+		4C70CC9225FFF47800D28150 /* Comfortaa-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C70CC8D25FFF47800D28150 /* Comfortaa-Medium.ttf */; };
+		4C70CC9325FFF47800D28150 /* Comfortaa-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C70CC8E25FFF47800D28150 /* Comfortaa-Bold.ttf */; };
+		4C70CC9425FFF47800D28150 /* Comfortaa-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C70CC8F25FFF47800D28150 /* Comfortaa-Regular.ttf */; };
+		4C70CC9525FFF47800D28150 /* Comfortaa-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C70CC9025FFF47800D28150 /* Comfortaa-SemiBold.ttf */; };
+		4C70CC9C25FFFA0600D28150 /* BalooTamma2-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C70CC9725FFFA0600D28150 /* BalooTamma2-Regular.ttf */; };
+		4C70CC9D25FFFA0600D28150 /* BalooTamma2-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C70CC9825FFFA0600D28150 /* BalooTamma2-Medium.ttf */; };
+		4C70CC9E25FFFA0600D28150 /* BalooTamma2-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C70CC9925FFFA0600D28150 /* BalooTamma2-Bold.ttf */; };
+		4C70CC9F25FFFA0600D28150 /* BalooTamma2-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C70CC9A25FFFA0600D28150 /* BalooTamma2-ExtraBold.ttf */; };
+		4C70CCA025FFFA0600D28150 /* BalooTamma2-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C70CC9B25FFFA0600D28150 /* BalooTamma2-SemiBold.ttf */; };
+		4C70CCA526000B1200D28150 /* DetailViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C70CCA426000B1200D28150 /* DetailViewTest.swift */; };
 		4C717AFB25F5C51800657207 /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C717AFA25F5C51800657207 /* UINavigationController.swift */; };
 		4C79B7DE25EEDB1C0074B424 /* CustomSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C79B7DD25EEDB1C0074B424 /* CustomSegmentedControl.swift */; };
 		4C79B7E125EF21850074B424 /* NavBarWithSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C79B7E025EF21850074B424 /* NavBarWithSearchBar.swift */; };
@@ -63,7 +73,6 @@
 		4C3B481025EC1003001D2098 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		4C3F326C25FBEAAA007720DF /* CloudKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitManager.swift; sourceTree = "<group>"; };
 		4C62E59D25FD915B00D58DCF /* TestDiscovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDiscovery.swift; sourceTree = "<group>"; };
-		4C62E5A025FD9E8700D58DCF /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		4C63008025EB3B060054AFE7 /* FoodManChu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoodManChu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C63008325EB3B060054AFE7 /* FoodManChuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodManChuApp.swift; sourceTree = "<group>"; };
 		4C63008725EB3B060054AFE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -81,6 +90,17 @@
 		4C6300AE25EB50B50054AFE7 /* FloatingTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingTabBar.swift; sourceTree = "<group>"; };
 		4C6300B125EB65130054AFE7 /* MenuContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuContent.swift; sourceTree = "<group>"; };
 		4C6300B525EB671A0054AFE7 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		4C70CC8C25FFF47800D28150 /* Comfortaa-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Comfortaa-Light.ttf"; sourceTree = "<group>"; };
+		4C70CC8D25FFF47800D28150 /* Comfortaa-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Comfortaa-Medium.ttf"; sourceTree = "<group>"; };
+		4C70CC8E25FFF47800D28150 /* Comfortaa-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Comfortaa-Bold.ttf"; sourceTree = "<group>"; };
+		4C70CC8F25FFF47800D28150 /* Comfortaa-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Comfortaa-Regular.ttf"; sourceTree = "<group>"; };
+		4C70CC9025FFF47800D28150 /* Comfortaa-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Comfortaa-SemiBold.ttf"; sourceTree = "<group>"; };
+		4C70CC9725FFFA0600D28150 /* BalooTamma2-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BalooTamma2-Regular.ttf"; sourceTree = "<group>"; };
+		4C70CC9825FFFA0600D28150 /* BalooTamma2-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BalooTamma2-Medium.ttf"; sourceTree = "<group>"; };
+		4C70CC9925FFFA0600D28150 /* BalooTamma2-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BalooTamma2-Bold.ttf"; sourceTree = "<group>"; };
+		4C70CC9A25FFFA0600D28150 /* BalooTamma2-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BalooTamma2-ExtraBold.ttf"; sourceTree = "<group>"; };
+		4C70CC9B25FFFA0600D28150 /* BalooTamma2-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BalooTamma2-SemiBold.ttf"; sourceTree = "<group>"; };
+		4C70CCA426000B1200D28150 /* DetailViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewTest.swift; sourceTree = "<group>"; };
 		4C717AFA25F5C51800657207 /* UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationController.swift; sourceTree = "<group>"; };
 		4C79B7DD25EEDB1C0074B424 /* CustomSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSegmentedControl.swift; sourceTree = "<group>"; };
 		4C79B7E025EF21850074B424 /* NavBarWithSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarWithSearchBar.swift; sourceTree = "<group>"; };
@@ -126,7 +146,6 @@
 			children = (
 				4C85409A25EDF3DF0022B3AA /* ModalManager.swift */,
 				4C3F326C25FBEAAA007720DF /* CloudKitManager.swift */,
-				4C62E5A025FD9E8700D58DCF /* NetworkManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -178,14 +197,9 @@
 		4C63009625EB49590054AFE7 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				4C63009D25EB49620054AFE7 /* Typo_Round_Bold_Demo.otf */,
-				4C63009E25EB49620054AFE7 /* Typo_Round_Bold_Italic_Demo.otf */,
-				4C63009725EB49620054AFE7 /* Typo_Round_Italic_Demo.otf */,
-				4C63009C25EB49620054AFE7 /* Typo_Round_Light_Demo.otf */,
-				4C63009925EB49620054AFE7 /* Typo_Round_Light_Italic_Demo.otf */,
-				4C63009825EB49620054AFE7 /* Typo_Round_Regular_Demo.otf */,
-				4C63009A25EB49620054AFE7 /* Typo_Round_Thin_Demo.otf */,
-				4C63009B25EB49620054AFE7 /* Typo_Round_Thin_Italic Demo.otf */,
+				4C70CCA225FFFA0D00D28150 /* BalooTamma */,
+				4C70CC8B25FFF46000D28150 /* Comforta */,
+				4C70CC8A25FFF45100D28150 /* TypoRound */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -219,6 +233,7 @@
 				4C79B7E025EF21850074B424 /* NavBarWithSearchBar.swift */,
 				4C14167525F09FC700512635 /* CategoryPickerView.swift */,
 				4C62E59D25FD915B00D58DCF /* TestDiscovery.swift */,
+				4C70CCA426000B1200D28150 /* DetailViewTest.swift */,
 			);
 			path = TestViews;
 			sourceTree = "<group>";
@@ -231,6 +246,45 @@
 				4C6300B525EB671A0054AFE7 /* Menu.swift */,
 			);
 			path = SlideOutMenu;
+			sourceTree = "<group>";
+		};
+		4C70CC8A25FFF45100D28150 /* TypoRound */ = {
+			isa = PBXGroup;
+			children = (
+				4C63009D25EB49620054AFE7 /* Typo_Round_Bold_Demo.otf */,
+				4C63009E25EB49620054AFE7 /* Typo_Round_Bold_Italic_Demo.otf */,
+				4C63009725EB49620054AFE7 /* Typo_Round_Italic_Demo.otf */,
+				4C63009C25EB49620054AFE7 /* Typo_Round_Light_Demo.otf */,
+				4C63009925EB49620054AFE7 /* Typo_Round_Light_Italic_Demo.otf */,
+				4C63009825EB49620054AFE7 /* Typo_Round_Regular_Demo.otf */,
+				4C63009A25EB49620054AFE7 /* Typo_Round_Thin_Demo.otf */,
+				4C63009B25EB49620054AFE7 /* Typo_Round_Thin_Italic Demo.otf */,
+			);
+			path = TypoRound;
+			sourceTree = "<group>";
+		};
+		4C70CC8B25FFF46000D28150 /* Comforta */ = {
+			isa = PBXGroup;
+			children = (
+				4C70CC8E25FFF47800D28150 /* Comfortaa-Bold.ttf */,
+				4C70CC8C25FFF47800D28150 /* Comfortaa-Light.ttf */,
+				4C70CC8D25FFF47800D28150 /* Comfortaa-Medium.ttf */,
+				4C70CC8F25FFF47800D28150 /* Comfortaa-Regular.ttf */,
+				4C70CC9025FFF47800D28150 /* Comfortaa-SemiBold.ttf */,
+			);
+			path = Comforta;
+			sourceTree = "<group>";
+		};
+		4C70CCA225FFFA0D00D28150 /* BalooTamma */ = {
+			isa = PBXGroup;
+			children = (
+				4C70CC9925FFFA0600D28150 /* BalooTamma2-Bold.ttf */,
+				4C70CC9A25FFFA0600D28150 /* BalooTamma2-ExtraBold.ttf */,
+				4C70CC9825FFFA0600D28150 /* BalooTamma2-Medium.ttf */,
+				4C70CC9725FFFA0600D28150 /* BalooTamma2-Regular.ttf */,
+				4C70CC9B25FFFA0600D28150 /* BalooTamma2-SemiBold.ttf */,
+			);
+			path = BalooTamma;
 			sourceTree = "<group>";
 		};
 		4C717AF925F5C4F600657207 /* Extensions */ = {
@@ -318,16 +372,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C70CC9D25FFFA0600D28150 /* BalooTamma2-Medium.ttf in Resources */,
 				4C6300A225EB49620054AFE7 /* Typo_Round_Thin_Demo.otf in Resources */,
+				4C70CC9C25FFFA0600D28150 /* BalooTamma2-Regular.ttf in Resources */,
 				4C6300A125EB49620054AFE7 /* Typo_Round_Light_Italic_Demo.otf in Resources */,
 				4C63008B25EB3B060054AFE7 /* Preview Assets.xcassets in Resources */,
+				4C70CC9325FFF47800D28150 /* Comfortaa-Bold.ttf in Resources */,
 				4C6300A525EB49620054AFE7 /* Typo_Round_Bold_Demo.otf in Resources */,
+				4C70CC9525FFF47800D28150 /* Comfortaa-SemiBold.ttf in Resources */,
 				4C6300A625EB49620054AFE7 /* Typo_Round_Bold_Italic_Demo.otf in Resources */,
 				4C6300A325EB49620054AFE7 /* Typo_Round_Thin_Italic Demo.otf in Resources */,
 				4C63009F25EB49620054AFE7 /* Typo_Round_Italic_Demo.otf in Resources */,
 				4C6300A025EB49620054AFE7 /* Typo_Round_Regular_Demo.otf in Resources */,
 				4C6300A425EB49620054AFE7 /* Typo_Round_Light_Demo.otf in Resources */,
+				4C70CC9F25FFFA0600D28150 /* BalooTamma2-ExtraBold.ttf in Resources */,
+				4C70CC9E25FFFA0600D28150 /* BalooTamma2-Bold.ttf in Resources */,
+				4C70CC9425FFF47800D28150 /* Comfortaa-Regular.ttf in Resources */,
 				4C63008825EB3B060054AFE7 /* Assets.xcassets in Resources */,
+				4C70CC9225FFF47800D28150 /* Comfortaa-Medium.ttf in Resources */,
+				4C70CC9125FFF47800D28150 /* Comfortaa-Light.ttf in Resources */,
+				4C70CCA025FFFA0600D28150 /* BalooTamma2-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,7 +422,6 @@
 				4C14167625F09FC700512635 /* CategoryPickerView.swift in Sources */,
 				4C63009425EB46E40054AFE7 /* RecipeView.swift in Sources */,
 				4C6300B625EB671A0054AFE7 /* Menu.swift in Sources */,
-				4C62E5A125FD9E8700D58DCF /* NetworkManager.swift in Sources */,
 				4C85409B25EDF3DF0022B3AA /* ModalManager.swift in Sources */,
 				4C6300B225EB65130054AFE7 /* MenuContent.swift in Sources */,
 				4C3B480225EBFC69001D2098 /* DisclosureGroup.swift in Sources */,
@@ -368,6 +431,7 @@
 				4C85407125ED78B60022B3AA /* PopOverButton.swift in Sources */,
 				4C6300AF25EB50B50054AFE7 /* FloatingTabBar.swift in Sources */,
 				4CD174F125F2D193009751C0 /* PersistenceController.swift in Sources */,
+				4C70CCA526000B1200D28150 /* DetailViewTest.swift in Sources */,
 				4CCEA4CC25EC811200490553 /* SearchBar.swift in Sources */,
 				4C63008425EB3B060054AFE7 /* FoodManChuApp.swift in Sources */,
 			);

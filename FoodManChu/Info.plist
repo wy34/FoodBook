@@ -26,14 +26,11 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Typo_Round_Bold_Demo.otf</string>
-		<string>Typo_Round_Bold_Italic_Demo.otf</string>
-		<string>Typo_Round_Italic_Demo.otfc</string>
-		<string>Typo_Round_Light_Demo.otf</string>
-		<string>Typo_Round_Light_Italic_Demo.otf</string>
-		<string>Typo_Round_Regular_Demo.otf</string>
-		<string>Typo_Round_Thin_Demo.otf</string>
-		<string>Typo_Round_Thin_Italic_Demo.otf</string>
+		<string>Comfortaa-Bold.ttf</string>
+		<string>Comfortaa-Light.ttf</string>
+		<string>Comfortaa-Medium.ttf</string>
+		<string>Comfortaa-Regular.ttf</string>
+		<string>Comfortaa-SemiBold.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

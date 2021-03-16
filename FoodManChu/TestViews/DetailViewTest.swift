@@ -1,22 +1,20 @@
 //
-//  RecipeDetailView.swift
+//  DetailViewTest.swift
 //  FoodManChu
 //
-//  Created by William Yeung on 3/1/21.
+//  Created by William Yeung on 3/15/21.
 //
 
 import SwiftUI
 
-// MARK: - RecipeDetailView
-struct RecipeDetailView: View {
+struct DetailViewTest: View {
     let screenSize = UIScreen.main.bounds
-    @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var recipeManager: RecipeManager
-
+    var recipeManager = RecipeManager()
+    
     var body: some View {
         ScrollView {
             VStack {
-                Image(uiImage: self.recipeManager.recipeImage)
+                Image("food")
                     .resizable()
                     .frame(width: screenSize.width * 0.45, height: screenSize.width * 0.45)
                     .aspectRatio(contentMode: .fill)
@@ -27,7 +25,7 @@ struct RecipeDetailView: View {
                             .shadow(color: Color.black, radius: 10)
                     )
                     
-                Text(self.recipeManager.recipeName)
+                Text("Cheesburger")
                     .multilineTextAlignment(.center)
                     .padding(.top, 15)
                     .lineLimit(nil)
@@ -36,7 +34,7 @@ struct RecipeDetailView: View {
                 HStack {
                     Spacer()
                     
-                    Text(self.recipeManager.recipe!.category?.name ?? "")
+                    Text("Meat")
                         .font(.custom("Comfortaa-Medium", size: 16, relativeTo: .body))
                         .padding(.vertical, 5)
                         .padding(.horizontal, 8)
@@ -49,7 +47,7 @@ struct RecipeDetailView: View {
                     
                     HStack {
                         Image(systemName: "clock")
-                        self.recipeManager.formattedPrepTimeText
+                        Text("16h 2m")
                             .font(.custom("Comfortaa-Medium", size: 16, relativeTo: .body))
                     }
                         .padding(.vertical, 5)
@@ -72,22 +70,32 @@ struct RecipeDetailView: View {
                         .underline()
                         .padding(.bottom, 1)
                     
-                    Text(self.recipeManager.recipeDescription)
+                    Text("slkfj 930 2394 3u402o s fisf weiur owieru iowuer 9023490 023 49023480 340 90234093 49 23490923 493 40923hhjhkhj888798789iuioiu")
                         .font(.custom("comfortaa-light", size: 16, relativeTo: .body))
                         .multilineTextAlignment(.leading)
                         .lineLimit(nil)
                 }
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.red)
                     .padding(.top, 10)
-                    .padding(.bottom, 40)
+                    .padding(.bottom, 50)
+//                    .background(Color.green)
                 
                 CustomSegmentedPickerWithMenu(recipeManager: self.recipeManager)
+                    .background(Color.blue)
                 
                 Spacer()
             }
                 .padding(.vertical, 40)
                 .padding(.horizontal, 20)
         }
+    }
+}
+
+
+struct DetailViewTest_Previews: PreviewProvider {
+    static var previews: some View {
+        DetailViewTest()
     }
 }

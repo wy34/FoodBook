@@ -45,10 +45,11 @@ struct CategoriesView: View {
                 .navigationBarItems(trailing:
                     Button(action: { self.categoryManager.isEditOn.toggle() }) {
                         Text(self.categoryManager.isEditOn  ? "Done" : "Edit")
-                            .font(.custom("TypoRoundBoldDemo", size: 18, relativeTo: .body))
+                            .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
                             .foregroundColor(self.categoryManager.isEditOn  ? Color(#colorLiteral(red: 1, green: 0.4903432131, blue: 0.4654182792, alpha: 0.7518001152)) : .black)
                     })
         }
+            .navigationViewStyle(StackNavigationViewStyle())
             .fullScreenCover(isPresented: self.$addingNewCategory) {
                 AddEditCategoryView(categoryManager: CategoryManager())
             }
@@ -81,13 +82,21 @@ struct CategoryGrid: View {
                 .padding(.top, 10)
                 .padding(.horizontal, 5)
             
-            LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
-                ForEach(categories.filter({ $0.name!.lowercased().contains(searchText.lowercased()) || searchText.isEmpty }), id: \.self) { category in
-                    CategoryCell(category: category, isEditing: self.$categoryManager.isEditOn)
-                }
-            })
-                .padding(.top, 15)
-                .padding(.bottom, 15)
+            if categories.isEmpty {
+                Text("No categories. Press the green plus button to start adding one.")
+                    .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
+                    .multilineTextAlignment(.center)
+                    .frame(width: UIScreen.main.bounds.width * 0.8)
+                    .padding(.top, 75)
+            } else {
+                LazyVGrid(columns: gridItems, alignment: .center, spacing: 20, content: {
+                    ForEach(categories.filter({ $0.name!.lowercased().contains(searchText.lowercased()) || searchText.isEmpty }), id: \.self) { category in
+                        CategoryCell(category: category, isEditing: self.$categoryManager.isEditOn)
+                    }
+                })
+                    .padding(.top, 15)
+                    .padding(.bottom, 15)
+            }
         }
     }
 }
@@ -98,7 +107,6 @@ struct CategoryCell: View {
     let screenSize = UIScreen.main.bounds
     @Binding var isEditing: Bool
     @StateObject var categoryManager = CategoryManager()
-    @EnvironmentObject var persistenceController: PersistenceController
     
     var body: some View {
         if let thumbnailData = category.thumbnail {
@@ -118,7 +126,7 @@ struct CategoryCell: View {
                                         Text(category.name ?? "")
                                             .lineLimit(nil)
                                             .multilineTextAlignment(.center)
-                                            .font(.custom("TypoRoundBoldDemo", size: 45, relativeTo: .body))
+                                            .font(.custom("Comfortaa-Bold", size: 40, relativeTo: .body))
                                             .foregroundColor(self.isEditing ? Color(.systemGray2) : .white)
                                             .background(Color.clear)
                                             .padding(.horizontal, 20)
@@ -172,10 +180,10 @@ struct CategoryCell: View {
     
     func delete() {
         for recipe in category.recipe?.allObjects as! [Recipe] {
-            persistenceController.delete(recipe)
+            PersistenceController.shared.delete(recipe)
         }
-        persistenceController.delete(category)
-        persistenceController.save()
+        PersistenceController.shared.delete(category)
+        PersistenceController.shared.save()
     }
 }
 
@@ -189,19 +197,18 @@ struct AddEditCategoryView: View {
 
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) var moc
-    @EnvironmentObject var persistenceController: PersistenceController
 
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
                 Form {
-                    Section(header: Text("Name").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
+                    Section(header: Text("Name").font(.custom("Comfortaa-Medium", size: 10, relativeTo: .body))) {
                         TextField("Category", text: self.$categoryManager.categoryName)
                             .padding(.top, -25)
                     }
                         .padding(.top, 25)
                     
-                    Section(header: Text("Image (Optional)").font(.custom("TypoRoundRegularDemo", size: 12, relativeTo: .body))) {
+                    Section(header: Text("Image (Optional)").font(.custom("Comfortaa-Medium", size: 10, relativeTo: .body))) {
                         Button(action: { self.isPhotoLibraryOpen = true }) {
                             Text("Photo Library")
                                 .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
@@ -219,7 +226,7 @@ struct AddEditCategoryView: View {
                             .padding(.vertical)
                     }
                 }
-                    .font(.custom("TypoRoundRegularDemo", size: 16, relativeTo: .body))
+                    .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
                     .navigationBarTitle(self.categoryManager.isShowingEditingView ? "Edit \(self.category!.name!)" : "New Category", displayMode: .inline)
                     .navigationBarItems(leading:
                         Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
@@ -237,7 +244,7 @@ struct AddEditCategoryView: View {
                     }
                 }) {
                      Text("Save")
-                        .font(.custom("TypoRoundBoldDemo", size: 24, relativeTo: .body))
+                        .font(.custom("Comfortaa-Bold", size: 22, relativeTo: .body))
                         .foregroundColor(self.categoryManager.categoryName.isEmpty ? Color(.systemGray2) :.white)
                         .frame(maxWidth: .infinity)
                         .padding(12)
@@ -250,6 +257,7 @@ struct AddEditCategoryView: View {
                     .disabled(self.categoryManager.categoryName.isEmpty ? true : false)
             }
         }
+            .preferredColorScheme(.light)
             .sheet(isPresented: self.isPhotoLibraryOpen ? $isPhotoLibraryOpen : $isCameraOpen) {
                 ImagePicker(sourceType: self.isPhotoLibraryOpen ? .photoLibrary : .camera, selectedImage: self.$categoryManager.categoryImage, isImagePickerOpen: self.isPhotoLibraryOpen ? $isPhotoLibraryOpen : $isCameraOpen)
             }
@@ -259,14 +267,14 @@ struct AddEditCategoryView: View {
         let category = Category(context: moc)
         category.name = self.categoryManager.categoryName
         category.thumbnail = self.categoryManager.categoryImage.pngData()
-        self.persistenceController.save()
+        PersistenceController.shared.save()
         self.presentationMode.wrappedValue.dismiss()
     }
     
     func updateCategory(category: Category) {
         category.name = self.categoryManager.categoryName
         category.thumbnail = self.categoryManager.categoryImage.pngData()
-        self.persistenceController.save()
+        PersistenceController.shared.save()
         self.presentationMode.wrappedValue.dismiss()
     }
 }
