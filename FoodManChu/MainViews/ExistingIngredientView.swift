@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct ExistingIngredientView: View {
-    @ObservedObject var recipeManager: RecipeManager
-    @FetchRequest(entity: Ingredient.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Ingredient.name, ascending: true)]) var ingredients: FetchedResults<Ingredient>
     @State private var amount = ""
     @State private var tappedIngredient: Ingredient?
     @State private var isShowingDeleteAlert = false
+    @ObservedObject var recipeManager: RecipeManager
+    @FetchRequest(entity: Ingredient.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Ingredient.name, ascending: true)]) var ingredients: FetchedResults<Ingredient>
     @Environment(\.presentationMode) var presentationMode
     
     
@@ -28,6 +28,8 @@ struct ExistingIngredientView: View {
                                     HStack {
                                         Button(action: {
                                             self.tappedIngredient = ingredient
+                                            UIApplication.shared.sendAction(#selector(UIResponder.becomeFirstResponder), to: nil, from: nil, for: nil)
+
                                             // if ingredient is already added, and if we tap on that same ingredient again, show its current amount
                                             if let index = self.recipeManager.ingredients.firstIndex(of: ingredient) {
                                                 self.amount = self.recipeManager.ingredients[index].amount ?? ""
@@ -55,6 +57,7 @@ struct ExistingIngredientView: View {
                                     HStack(spacing: 15) {
                                         TextField("Amount", text: $amount)
                                             .foregroundColor(.gray)
+                                        
                                         HStack(spacing: 5) {
                                             Button(action: {
                                                 if self.amount != "" {
@@ -95,11 +98,11 @@ struct ExistingIngredientView: View {
                                         .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
                                 }
                             }
-                            .animation(.easeInOut)
+                                .animation(.easeInOut)
                         }
-                        .onDelete(perform: { offsets in
-                            self.delete(at: offsets, category: key)
-                        })
+                            .onDelete(perform: { offsets in
+                                self.delete(at: offsets, category: key)
+                            })
                     }
                 }
             }

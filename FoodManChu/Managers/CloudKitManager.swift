@@ -72,17 +72,13 @@ class CloudKitManager: ObservableObject {
                 ingredientRecord["ingredientAmount"] = ingredientAmount as CKRecordValue
             }
             
-            CKContainer.default().publicCloudDatabase.save(ingredientRecord) { [weak self] (record, error) in
+            CKContainer.default().publicCloudDatabase.save(ingredientRecord) { (record, error) in
                 DispatchQueue.main.async {
                     if let error = error {
-//                        self?.successfullySavedIngredients = false
-//                        self?.finishedTask = true
                         print(error.localizedDescription)
                     }
 
                     if let _ = record {
-//                        self?.successfullySavedIngredients = true
-//                        self?.finishedTask = true
                     }
                 }
             }
@@ -91,23 +87,20 @@ class CloudKitManager: ObservableObject {
     
     func createInstructionsRecord(instructions: [String], withRefTo recipeRecord: CKRecord) {
         for instruction in instructions {
+//            print(instruction)
             let instructionRecord = CKRecord(recordType: "Instruction")
             let reference = CKRecord.Reference(record: recipeRecord, action: .deleteSelf)
             
             instructionRecord["parentRecipe"] = reference as CKRecordValue
             instructionRecord["instruction"] = instruction as CKRecordValue
             
-            CKContainer.default().publicCloudDatabase.save(instructionRecord) { [weak self] (record, error) in
+            CKContainer.default().publicCloudDatabase.save(instructionRecord) { (record, error) in
                 DispatchQueue.main.async {
                     if let error = error {
-//                        self?.successfullySavedInstructions = false
-//                        self?.finishedTask = true
                         print(error.localizedDescription)
                     }
                     
                     if let _ = record {
-//                        self?.successfullySavedInstructions = true
-//                        self?.finishedTask = true
                     }
                 }
             }
@@ -286,6 +279,8 @@ class CloudKitManager: ObservableObject {
         let reference = CKRecord.Reference(recordID: recipeRecord.recipeId, action: .deleteSelf)
         let predicate = NSPredicate(format: "parentRecipe == %@", reference)
         let query = CKQuery(recordType: "Instruction", predicate: predicate)
+        let sort = NSSortDescriptor(key: "instruction", ascending: true)
+        query.sortDescriptors = [sort]
         
         CKContainer.default().publicCloudDatabase.perform(query, inZoneWith: nil) { [weak self] (records, error) in
             DispatchQueue.main.async {

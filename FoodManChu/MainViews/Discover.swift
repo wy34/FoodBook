@@ -8,6 +8,7 @@
 import SwiftUI
 import Network
 
+// MARK: - Discover
 struct Discover: View {
     @EnvironmentObject var cloudKitManager: CloudKitManager
     
@@ -91,6 +92,7 @@ struct Discover: View {
 }
 
 
+// MARK: - DiscoverCell
 struct DiscoverCell: View {
     var recipeRecord: RecipeRecord
     
@@ -152,20 +154,5 @@ struct DiscoverCell: View {
             }
                 .padding(.horizontal, 8)
         }
-    }
-}
-
-
-struct LoadingSpinner: UIViewRepresentable {
-    func makeUIView(context: Context) -> UIActivityIndicatorView {
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.color = .white
-        spinner.hidesWhenStopped = true
-        spinner.startAnimating()
-        return spinner
-    }
-    
-    func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
-        
     }
 }

@@ -7,14 +7,6 @@
 
 import SwiftUI
 
-class CategoryManager: ObservableObject {
-    @Published var categoryName = ""
-    @Published var categoryImage = UIImage(named: "placeholder")!
-    
-    @Published var isEditOn = false
-    @Published var isShowingEditingView = false
-    @Published var isShowingDeleteAlert = false
-}
 
 // MARK: - CategoriesView
 struct CategoriesView: View {
@@ -56,15 +48,6 @@ struct CategoriesView: View {
             .onDisappear() {
                 self.categoryManager.isEditOn = false
             }
-    }
-}
-
-// MARK: - Previews
-struct CategoriesView_Previews: PreviewProvider {
-    static var previews: some View {
-        CategoriesView()
-            .environmentObject(ModalManager())
-            .preferredColorScheme(.light)
     }
 }
 
@@ -190,6 +173,7 @@ struct CategoryCell: View {
 // MARK: - AddEditCategoryView
 struct AddEditCategoryView: View {
     var category: Category?
+    
     @ObservedObject var categoryManager: CategoryManager
     
     @State private var isPhotoLibraryOpen = false
@@ -211,7 +195,7 @@ struct AddEditCategoryView: View {
                     Section(header: Text("Image (Optional)").font(.custom("Comfortaa-Medium", size: 10, relativeTo: .body))) {
                         Button(action: { self.isPhotoLibraryOpen = true }) {
                             Text("Photo Library")
-                                .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
+                                .foregroundColor(Color(#colorLiteral(red: 0.5960784314, green: 0.8039215686, blue: 0.5411764706, alpha: 1)))
                         }
                         
                         Button(action: { self.isCameraOpen = true }) {
@@ -231,7 +215,7 @@ struct AddEditCategoryView: View {
                     .navigationBarItems(leading:
                         Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
                             Image(systemName: "xmark")
-                                .imageScale(.large)
+                                .imageScale(.medium)
                                 .foregroundColor(.primary)
                          }
                     )

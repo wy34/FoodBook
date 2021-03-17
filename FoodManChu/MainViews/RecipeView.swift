@@ -8,68 +8,6 @@
 import SwiftUI
 
 
-class RecipeManager: ObservableObject {
-    @Published var recipe: Recipe?
-    @Published var isShowingDeleteRecipeAlert = false
-    @Published var isShowingAddRecipe = false
-    @Published var isShowingEditRecipe = false
-    
-    @Published var selectedImage = UIImage(named: "placeholder")!
-    @Published var isPhotoLibraryOpen = false
-    @Published var isCameraOpen = false
-    @Published var name = ""
-    @Published var description = ""
-    @Published var hours = 0.0
-    @Published var minutes = 0.0
-    @Published var ingredients = [Ingredient]()
-    @Published var instructions = [String]()
-    
-    var recipeName: String {
-        return self.recipe?.recipeName ?? ""
-    }
-    
-    var recipeImage: UIImage {
-        return UIImage(data: self.recipe?.recipeThumbnail ?? Data())!
-    }
-    
-    var recipeDescription: String {
-        return self.recipe?.recipeDescription ?? ""
-    }
-    
-    var formattedPrepTimeText: Text {
-        let hours = self.recipe?.timeHours
-        let minutes = self.recipe?.timeMinutes
-        
-        if hours == 0.0 {
-            return Text("\(minutes ?? 0.0, specifier: "%.0f")m")
-        } else {
-            return Text("\(hours ?? 0.0, specifier: "%.0f")h \(minutes ?? 0.0, specifier: "%.0f")m")
-        }
-    }
-    
-    var recipeIngredients: [Ingredient] {
-        return self.recipe?.ingredients?.allObjects as? [Ingredient] ?? []
-    }
-    
-    var recipeInstructions: [String] {
-        return self.recipe?.instructions ?? []
-    }
-    
-    var isRecipeInputValid: Bool {
-        return !name.isEmpty && (hours != 0.0 || minutes != 0.0) && !ingredients.isEmpty && !instructions.isEmpty
-    }
-    
-    func resetRecipeValuesToEmpty() {
-        self.name = ""
-        self.description = ""
-        self.selectedImage = UIImage(named: "placeholder")!
-        self.hours = 0.0
-        self.minutes = 0.0
-        self.ingredients = [Ingredient]()
-        self.instructions = [String]()
-    }
-}
-
 // MARK: - RecipeView
 struct RecipeView: View {
     var category: Category
@@ -93,20 +31,20 @@ struct RecipeGrid: View {
     var category: Category
     let gridItems = Array(repeating: GridItem(.flexible(minimum: 50, maximum: 200), spacing: 15), count: 2)
     let screenSize = UIScreen.main.bounds
+    let recipes: FetchRequest<Recipe>
+
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var modalManager: ModalManager
     @Binding var isEditing: Bool
     @State private var searchText = ""
-    let recipes: FetchRequest<Recipe>
-    
+    @ObservedObject var recipeManager: RecipeManager
+
     init(category: Category, isEditing: Binding<Bool>, recipeManager: RecipeManager) {
         self.category = category
         _isEditing = isEditing
         self.recipeManager = recipeManager
         self.recipes = FetchRequest(entity: Recipe.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Recipe.recipeName, ascending: true)], predicate: NSPredicate(format: "category.name MATCHES %@",  category.name ?? ""))
     }
-    
-    @ObservedObject var recipeManager: RecipeManager
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -186,8 +124,8 @@ struct RecipeCell: View {
     var category: Category
     
     @Binding var isEditing: Bool
-    @EnvironmentObject var modalManager: ModalManager
     @ObservedObject var recipeManager: RecipeManager
+    @EnvironmentObject var modalManager: ModalManager
     @Environment(\.managedObjectContext) var moc
 
     var body: some View {
@@ -233,27 +171,29 @@ struct RecipeCell: View {
                                         .padding(12)
                                 }
                                     .background(RoundedButtonView(corners: [.layerMinXMinYCorner, .layerMaxXMaxYCorner], bgColor: #colorLiteral(red: 1, green: 0.4903432131, blue: 0.4654182792, alpha: 0.7518001152), cornerRadius: 20))
-                                Spacer()
-                                Button(action: {
-                                    let recipeCopy = Recipe(context: moc)
-                                    recipeCopy.recipeName = self.recipe.recipeName
-                                    recipeCopy.recipeDescription = self.recipe.recipeDescription
-                                    recipeCopy.recipeThumbnail = self.recipe.recipeThumbnail
-                                    recipeCopy.category = self.recipe.category
-                                    recipeCopy.timeHours = self.recipe.timeHours
-                                    recipeCopy.timeMinutes = self.recipe.timeMinutes
-                                    recipeCopy.ingredients = self.recipe.ingredients
-                                    recipeCopy.instructions = self.recipe.instructions
-                                    PersistenceController.shared.save()
-                                }) {
-                                    Image(systemName: "plus.rectangle.on.rectangle")
-                                        .imageScale(.medium)
-                                        .foregroundColor(.white)
-                                        .padding(12)
-                                }
-                                    .background(RoundedButtonView(corners: [.layerMaxXMinYCorner, .layerMinXMaxYCorner], bgColor: #colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1), cornerRadius: 20))
                             }
                             , alignment: .topLeading
+                        )
+                        .overlay(
+                            Button(action: {
+                                let recipeCopy = Recipe(context: moc)
+                                recipeCopy.recipeName = self.recipe.recipeName
+                                recipeCopy.recipeDescription = self.recipe.recipeDescription
+                                recipeCopy.recipeThumbnail = self.recipe.recipeThumbnail
+                                recipeCopy.category = self.recipe.category
+                                recipeCopy.timeHours = self.recipe.timeHours
+                                recipeCopy.timeMinutes = self.recipe.timeMinutes
+                                recipeCopy.ingredients = self.recipe.ingredients
+                                recipeCopy.instructions = self.recipe.instructions
+                                PersistenceController.shared.save()
+                            }) {
+                                Image(systemName: "plus.rectangle.on.rectangle")
+                                    .imageScale(.medium)
+                                    .foregroundColor(.white)
+                                    .padding(12)
+                            }
+                                .background(RoundedButtonView(corners: [.layerMaxXMinYCorner, .layerMinXMaxYCorner], bgColor: #colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1), cornerRadius: 20))
+                            , alignment: .topTrailing
                         )
                 } 
             }
@@ -269,6 +209,7 @@ struct RecipeCell: View {
         }
             .fullScreenCover(isPresented: self.$recipeManager.isShowingAddRecipe, content: {
                 AddEditRecipeView(recipeManager: self.recipeManager)
+                    .environment(\.managedObjectContext, self.moc)
             })
             .alert(isPresented: $recipeManager.isShowingDeleteRecipeAlert) {
                 Alert(title: Text("Delete"), message: Text("Are you sure you want to delete this recipe?"), primaryButton: .cancel(), secondaryButton: .default(Text("Yes")) {

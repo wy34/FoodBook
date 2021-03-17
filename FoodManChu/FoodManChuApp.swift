@@ -28,6 +28,8 @@ struct FoodManChuApp: App {
         UISegmentedControl.appearance().selectedSegmentTintColor = #colorLiteral(red: 0.6970165372, green: 0.7750255466, blue: 0.9293276668, alpha: 1)
         UISegmentedControl.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "Comfortaa-Medium", size: 16)!)], for: .selected)
         UISegmentedControl.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(#colorLiteral(red: 0.7019448876, green: 0.7045716047, blue: 0.7109025717, alpha: 1)), NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "Comfortaa-Medium", size: 16)!)], for: .normal)
+        
+        UITabBar.appearance().barTintColor = UIColor.white
     }
     
     @StateObject var persistenceController = PersistenceController.shared

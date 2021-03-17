@@ -72,6 +72,7 @@ struct PickerMenu: View {
 }
 
 
+// MARK: - IngredientDirectionsCell
 struct IngredientDirectionsCell: View {
     var ingredient: Ingredient?
     var direction: String?
@@ -85,7 +86,7 @@ struct IngredientDirectionsCell: View {
                     Image(systemName: "chevron.right")
                 }
                 
-                Text(ingredient != nil ? ingredient!.name! : "\(index + 1).  " + direction!)
+                Text(ingredient != nil ? ingredient!.name! : direction!)
                     .font(.custom("comfortaa-light", size: 16, relativeTo: .body))
                 Spacer()
                 

@@ -7,20 +7,25 @@
 
 import SwiftUI
 
+// MARK: - RecipesBookView
 struct RecipesBookView: View {
     @FetchRequest(entity: Recipe.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Recipe.recipeName, ascending: true)]) var recipes: FetchedResults<Recipe>
     @StateObject var recipeManager = RecipeManager()
-        
+       
     var body: some View {
         NavigationView {
             Form {
                 if recipes.isEmpty {
-                    Text("No recipes. Add one in the Builder view to enable convenient access here.")
-                        .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
-                        .multilineTextAlignment(.center)
-                        .frame(width: UIScreen.main.bounds.width * 0.8)
-                        .padding(.top, 75)
-                        .listRowBackground(Color(#colorLiteral(red: 0.952141583, green: 0.9497230649, blue: 0.9704508185, alpha: 1)))
+                    HStack {
+                        Spacer()
+                        Text("No recipes. Add one in the Builder view or save one from the Discover page to enable convenient access here.")
+                            .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
+                            .multilineTextAlignment(.center)
+                            .frame(width: UIScreen.main.bounds.width * 0.8)
+                            .padding(.top, 35)
+                        Spacer()
+                    }
+                    .listRowBackground(Color(#colorLiteral(red: 0.952141583, green: 0.9497230649, blue: 0.9704508185, alpha: 1)))
                 } else {
                     ForEach(Array(groupsByFirstLetter().keys.sorted()), id: \.self) { key in
                         Section(header: Text(String(key)).font(.custom("Comfortaa-Bold", size: 12, relativeTo: .body))) {
@@ -85,15 +90,10 @@ struct RecipesBookView: View {
 }
 
 
-struct RecipesBookView_previews: PreviewProvider {
-    static var previews: some View {
-        RecipesBookView()
-    }
-}
-
-
+// MARK: - BookRecipeDetailView
 struct BookRecipeDetailView: View {
     var recipe: Recipe
+    
     @ObservedObject var recipeManager: RecipeManager
     @EnvironmentObject var cloudKitManager: CloudKitManager
     @State private var translationHeight: CGFloat = UIScreen.main.bounds.height * 0.25

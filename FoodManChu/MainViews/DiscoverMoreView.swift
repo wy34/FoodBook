@@ -9,16 +9,15 @@ import SwiftUI
 
 struct DiscoverMoreView: View {
     var recipeRecord: RecipeRecord
+    var selections = ["Ingredients", "Instructions"]
+    
+    @State private var pickerSelection = 0
+    @State private var showSheet = false
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) var moc
     @EnvironmentObject var cloudKitManager: CloudKitManager
     @FetchRequest(entity: Category.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Category.name, ascending: true)]) var categories: FetchedResults<Category>
-    @FetchRequest(entity: Ingredient.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Ingredient.name, ascending: true)]) var ingredients: FetchedResults<Ingredient>
     
-    @State private var saveTapped = false
-    @State private var pickerSelection = 0
-    var selections = ["Ingredients", "Instructions"]
-
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -43,6 +42,7 @@ struct DiscoverMoreView: View {
                         ForEach(self.cloudKitManager.instructions, id: \.self) { instruction in
                             HStack {
                                 Text(instruction)
+                                    .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
                                     .padding(.horizontal)
                                 Spacer()
                             }
@@ -65,9 +65,9 @@ struct DiscoverMoreView: View {
                     },
                     trailing:
                     Button(action: {
-                        saveRecipe()
+                        self.showSheet = true
                     }) {
-                        Image(systemName: saveTapped ? "checkmark" : "icloud.and.arrow.down")
+                        Image(systemName: "icloud.and.arrow.down")
                             .imageScale(.medium)
                     }
                 )
@@ -87,46 +87,14 @@ struct DiscoverMoreView: View {
                 .disabled(self.cloudKitManager.ingredients.isEmpty)
         }
             .redacted(reason: self.cloudKitManager.ingredients.isEmpty ? .placeholder : [])
+            .sheet(isPresented: $showSheet) {
+                CategoryPickerView(recipeRecord: self.recipeRecord)
+                    .environmentObject(self.cloudKitManager)
+                    .environment(\.managedObjectContext, self.moc)
+            }
             .onAppear() {
                 self.cloudKitManager.fetchIngredientsFor(recipeRecord: self.recipeRecord)
                 self.cloudKitManager.fetchInstructionsFor(recipeRecord: self.recipeRecord)
             }
-    }
-    
-    func saveRecipe() {
-        let recipe = Recipe(context: moc)
-        recipe.recipeName = recipeRecord.recipeName
-        recipe.recipeDescription = recipeRecord.recipeDescription
-        recipe.recipeThumbnail = recipeRecord.recipeImage.pngData()
-        recipe.timeHours = recipeRecord.timeHour
-        recipe.timeMinutes = recipeRecord.timeMinute
-        recipe.instructions = self.cloudKitManager.instructions
-        
-        for ingredientRecord in self.cloudKitManager.ingredients {
-            if let index = ingredients.firstIndex(where: { $0.name!.lowercased() == ingredientRecord.ingredientName }) {
-                ingredients[index].addToRecipe(recipe)
-            } else {
-                let ingredient = Ingredient(context: moc)
-                ingredient.name = ingredientRecord.ingredientName
-                ingredient.amount = ingredientRecord.ingredientAmount
-                ingredient.addToRecipe(recipe)
-                PersistenceController.shared.save()
-            }
-        }
-        
-        if let index = categories.firstIndex(where: { $0.name!.lowercased() == recipeRecord.recipeCategory.lowercased() }) {
-            recipe.category = self.categories[index]
-        } else {
-            
-        }
-        
-        PersistenceController.shared.save()
-        
-        // change checkmark back
-        saveTapped = true
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.saveTapped = false
-        }
     }
 }

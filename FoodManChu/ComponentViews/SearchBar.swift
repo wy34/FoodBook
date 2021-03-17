@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SearchBar: View {
     var placeholder: String
-    
     @Binding var searchText: String
     @State private var isSearching = false
     

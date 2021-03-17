@@ -8,11 +8,6 @@
 import SwiftUI
 
 
-enum Steps: String {
-    case Ingredient
-    case Instruction
-}
-
 // MARK: - AddEditRecipeView
 struct AddEditRecipeView: View {
     var category: Category?
@@ -67,10 +62,10 @@ struct AddEditRecipeView: View {
                     }
                     
                     Section(header: Text("Other").font(.custom("Comfortaa-Medium", size: 10, relativeTo: .body))) {
-                        NavigationLink(destination: AddingStepsView(recipeManager: self.recipeManager, stepsType: .Ingredient)) {
+                        NavigationLink(destination: AddingStepsView(stepsType: .Ingredient, recipeManager: self.recipeManager)) {
                             Text("Ingredients")
                         }
-                        NavigationLink(destination: AddingStepsView(recipeManager: self.recipeManager, stepsType: .Instruction)) {
+                        NavigationLink(destination: AddingStepsView(stepsType: .Instruction, recipeManager: self.recipeManager)) {
                             Text("Instructions")
                         }
                     }
@@ -143,14 +138,14 @@ struct AddEditRecipeView: View {
 
 // MARK: - AddingStepsView
 struct AddingStepsView: View {
+    var stepsType: Steps
+    
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var recipeManager: RecipeManager
     @State private var isShowingExistingList = false
-
-    var stepsType: Steps
-
     @State private var showingPopup = false
-    
+
+
     var body: some View {
         ZStack {
             Form {
@@ -182,7 +177,7 @@ struct AddingStepsView: View {
                 } else {
                     ForEach(0..<self.recipeManager.instructions.count, id: \.self) { i in
                         HStack {
-                            Text("\(i + 1). " + self.recipeManager.instructions[i])
+                            Text(self.recipeManager.instructions[i])
                                 .font(.custom("comfortaa-light", size: 14, relativeTo: .body))
                             Spacer()
                         }
@@ -207,6 +202,7 @@ struct AddingStepsView: View {
             .preferredColorScheme(.light)   
             .sheet(isPresented: $isShowingExistingList) {
                 ExistingIngredientView(recipeManager: self.recipeManager)
+                    
             }
     }
     
@@ -243,7 +239,7 @@ struct NewStepPopupView: View {
                 Text("New \(stepsType.rawValue)")
                     .padding(.bottom, 5)
                     .font(.custom("Comfortaa-Bold", size: 16, relativeTo: .body))
-                CustomTextField(text: self.stepsType == .Ingredient ? $ingredientName : $instruction, isFirstResponder: true, placeholder: self.stepsType == .Ingredient ? "Name" : "Instruction")
+                ActiveTextField(text: self.stepsType == .Ingredient ? $ingredientName : $instruction, isFirstResponder: true, placeholder: self.stepsType == .Ingredient ? "Name" : "Instruction")
                     .frame(width: UIScreen.main.bounds.width * 0.6)
                     .padding(.horizontal, 10)
                     .padding(.vertical, -2)
@@ -251,7 +247,7 @@ struct NewStepPopupView: View {
                     .cornerRadius(8)
                     .padding(.bottom, self.stepsType == .Ingredient ? 5 : 8)
                 if self.stepsType == .Ingredient {
-                    CustomTextField(text: $ingredientAmount, isFirstResponder: false, placeholder: "Amount")
+                    ActiveTextField(text: $ingredientAmount, isFirstResponder: false, placeholder: "Amount")
                         .frame(width: UIScreen.main.bounds.width * 0.6)
                         .padding(.horizontal, 10)
                         .padding(.vertical, -2)
@@ -338,20 +334,20 @@ struct NewStepPopupView: View {
             }
         } else {
             let instruction = self.instruction
-            self.recipeManager.instructions.append(instruction)
+            self.recipeManager.instructions.append("\(self.recipeManager.instructions.count + 1).  \(instruction)")
         }
         
         self.showingPopup = false
     }
 }
 
-// MARK: - CustomTextfield
-struct CustomTextField: UIViewRepresentable {
+// MARK: - ActiveTextField
+struct ActiveTextField: UIViewRepresentable {
     @Binding var text: String
     var isFirstResponder: Bool = false
     var placeholder: String
 
-    func makeUIView(context: UIViewRepresentableContext<CustomTextField>) -> UITextField {
+    func makeUIView(context: UIViewRepresentableContext<ActiveTextField>) -> UITextField {
         let textField = UITextField(frame: .zero)
         textField.placeholder = placeholder
         textField.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "Comfortaa-Medium", size: 14)!)
@@ -359,22 +355,22 @@ struct CustomTextField: UIViewRepresentable {
         return textField
     }
 
-    func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<CustomTextField>) {
+    func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<ActiveTextField>) {
         if isFirstResponder && !context.coordinator.hasBecomeFirstResponder {
             uiView.becomeFirstResponder()
             context.coordinator.hasBecomeFirstResponder = true
         }
     }
     
-    func makeCoordinator() -> CustomTextField.Coordinator {
+    func makeCoordinator() -> ActiveTextField.Coordinator {
         return Coordinator(parent: self)
     }
     
     class Coordinator: NSObject, UITextFieldDelegate {
-        var parent: CustomTextField
+        var parent: ActiveTextField
         var hasBecomeFirstResponder = false
 
-        init(parent: CustomTextField) {
+        init(parent: ActiveTextField) {
             self.parent = parent
         }
 
