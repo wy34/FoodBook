@@ -35,6 +35,7 @@
 		4C70CC9525FFF47800D28150 /* Comfortaa-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C70CC9025FFF47800D28150 /* Comfortaa-SemiBold.ttf */; };
 		4C70CCA526000B1200D28150 /* DetailViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C70CCA426000B1200D28150 /* DetailViewTest.swift */; };
 		4C717AFB25F5C51800657207 /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C717AFA25F5C51800657207 /* UINavigationController.swift */; };
+		4C792B1726026A2000182A28 /* DiscoverAlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C792B1626026A2000182A28 /* DiscoverAlertManager.swift */; };
 		4C79B7DE25EEDB1C0074B424 /* CustomSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C79B7DD25EEDB1C0074B424 /* CustomSegmentedControl.swift */; };
 		4C79B7E125EF21850074B424 /* NavBarWithSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C79B7E025EF21850074B424 /* NavBarWithSearchBar.swift */; };
 		4C79B7E425EF379F0074B424 /* CustomNavBarWithSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C79B7E325EF379F0074B424 /* CustomNavBarWithSearch.swift */; };
@@ -85,6 +86,7 @@
 		4C70CC9025FFF47800D28150 /* Comfortaa-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Comfortaa-SemiBold.ttf"; sourceTree = "<group>"; };
 		4C70CCA426000B1200D28150 /* DetailViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewTest.swift; sourceTree = "<group>"; };
 		4C717AFA25F5C51800657207 /* UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationController.swift; sourceTree = "<group>"; };
+		4C792B1626026A2000182A28 /* DiscoverAlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverAlertManager.swift; sourceTree = "<group>"; };
 		4C79B7DD25EEDB1C0074B424 /* CustomSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSegmentedControl.swift; sourceTree = "<group>"; };
 		4C79B7E025EF21850074B424 /* NavBarWithSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarWithSearchBar.swift; sourceTree = "<group>"; };
 		4C79B7E325EF379F0074B424 /* CustomNavBarWithSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBarWithSearch.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				4C3F326C25FBEAAA007720DF /* CloudKitManager.swift */,
 				4C5B26AD2601BC780038B2B8 /* RecipeManager.swift */,
 				4C5B26B02601BCA40038B2B8 /* CategoryManager.swift */,
+				4C792B1626026A2000182A28 /* DiscoverAlertManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -372,6 +375,7 @@
 				4C6300B625EB671A0054AFE7 /* Menu.swift in Sources */,
 				4C85409B25EDF3DF0022B3AA /* ModalManager.swift in Sources */,
 				4C6300B225EB65130054AFE7 /* MenuContent.swift in Sources */,
+				4C792B1726026A2000182A28 /* DiscoverAlertManager.swift in Sources */,
 				4C3B480225EBFC69001D2098 /* DisclosureGroup.swift in Sources */,
 				4CAD685D25F9CFA30063E3DF /* Discover.swift in Sources */,
 				4C717AFB25F5C51800657207 /* UINavigationController.swift in Sources */,

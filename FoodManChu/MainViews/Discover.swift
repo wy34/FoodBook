@@ -14,58 +14,73 @@ struct Discover: View {
     
     var body: some View {
         NavigationView {
-            ScrollView(showsIndicators: false) {
-                ZStack() {
-                    VStack {
-                        Text("Currently empty. Share a recipe or try refreshing!")
-                            .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(cloudKitManager.recipes.isEmpty && !cloudKitManager.isLoading && cloudKitManager.isConnectedToInternet ? .black : .clear)
-                            .frame(width: UIScreen.main.bounds.width * 0.8)
-
-                        if cloudKitManager.isLoading && cloudKitManager.isConnectedToInternet {
-                            VStack {
-                                LoadingSpinner()
-                                Text("Loading...")
-                                    .foregroundColor(.white)
-                                    .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
-                            }
-                                .frame(width: 75, height: 75)
-                                .padding()
-                                .background(Color(.systemGray2))
-                                .cornerRadius(10)
-                        }
-                        
-                        if !cloudKitManager.isConnectedToInternet {
-                            Text("Please enable internet connection in order to view shared recipes.")
+            ZStack {
+                ScrollView(showsIndicators: false) {
+                    ZStack() {
+                        VStack {
+                            Text("Currently empty. Share a recipe or try refreshing!")
                                 .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
                                 .multilineTextAlignment(.center)
-                                .foregroundColor(.black)
+                                .foregroundColor(cloudKitManager.recipes.isEmpty && !cloudKitManager.isLoading && cloudKitManager.isConnectedToInternet ? .black : .clear)
                                 .frame(width: UIScreen.main.bounds.width * 0.8)
+
+                            if cloudKitManager.isLoading && cloudKitManager.isConnectedToInternet {
+                                VStack {
+                                    LoadingSpinner()
+                                    Text("Loading...")
+                                        .foregroundColor(.white)
+                                        .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
+                                }
+                                    .frame(width: 75, height: 75)
+                                    .padding()
+                                    .background(Color(.systemGray2))
+                                    .cornerRadius(10)
+                            }
+                            
+                            if !cloudKitManager.isConnectedToInternet {
+                                Text("Please enable internet connection in order to view shared recipes.")
+                                    .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(.black)
+                                    .frame(width: UIScreen.main.bounds.width * 0.8)
+                            }
                         }
-                    }
-                        .padding(.top, 75)
+                            .padding(.top, 75)
 
-                    
-                    VStack(spacing: 20) {
-                        if cloudKitManager.isConnectedToInternet {
-                            ForEach(0..<self.sortedRecipes().count, id: \.self) { i in
-                                NavigationLink(destination: DiscoverMoreView(recipeRecord: sortedRecipes()[i])) {
-                                    VStack {
-                                        DiscoverCell(recipeRecord: sortedRecipes()[i])
+                        
+                        VStack(spacing: 20) {
+                            if cloudKitManager.isConnectedToInternet {
+                                ForEach(0..<self.sortedRecipes().count, id: \.self) { i in
+                                    NavigationLink(destination: DiscoverMoreView(recipeRecord: sortedRecipes()[i])) {
+                                        VStack {
+                                            DiscoverCell(recipeRecord: sortedRecipes()[i])
 
-                                        if i != cloudKitManager.recipes.count - 1 {
-                                            Divider()
-                                                .background(Color.black)
+                                            if i != cloudKitManager.recipes.count - 1 {
+                                                Divider()
+                                                    .background(Color.black)
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+                            .padding(.horizontal, 18)
+                            .padding(.vertical, 20)
                     }
-                        .padding(.horizontal, 18)
-                        .padding(.vertical, 20)
                 }
+//                ZStack {
+//                    VStack {
+//                        Text("Hello")
+//                            .background(Color.blue)
+//                        Text("World")
+//                            .background(Color.green)
+//                    }
+//                        .padding()
+//                        .background(Color.orange)
+//                }
+//                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+//                    .padding()
+//                    .background(Color.black.opacity(0.5).edgesIgnoringSafeArea(.all))
             }
                 .navigationBarTitle("Discover")
                 .navigationBarItems(trailing:
