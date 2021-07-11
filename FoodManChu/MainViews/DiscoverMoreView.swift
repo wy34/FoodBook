@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct DiscoverMoreView: View {
+    // MARK: - Properties
     var recipeRecord: RecipeRecord
     var selections = ["Ingredients", "Instructions"]
     
@@ -18,7 +19,7 @@ struct DiscoverMoreView: View {
     @EnvironmentObject var cloudKitManager: CloudKitManager
     @FetchRequest(entity: Category.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Category.name, ascending: true)]) var categories: FetchedResults<Category>
     
-    
+    // MARK: - Body
     var body: some View {
         ZStack(alignment: .top) {
             ScrollView(showsIndicators: false) {
@@ -29,10 +30,10 @@ struct DiscoverMoreView: View {
                         ForEach(0..<self.cloudKitManager.ingredients.count, id: \.self) { i in
                             HStack {
                                 Text(self.cloudKitManager.ingredients[i].ingredientName)
-                                    .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
+                                    .font(.custom(FBFont.medium, size: 14, relativeTo: .body))
                                 Spacer()
                                 Text(self.cloudKitManager.ingredients[i].ingredientAmount)
-                                    .font(.custom("Comfortaa-Medium", size: 12, relativeTo: .body))
+                                    .font(.custom(FBFont.medium, size: 12, relativeTo: .body))
                             }
                                 .padding()
                                 .background(Color(#colorLiteral(red: 0.9480282664, green: 0.9499420524, blue: 0.9704909921, alpha: 1)))
@@ -42,7 +43,7 @@ struct DiscoverMoreView: View {
                         ForEach(self.cloudKitManager.instructions, id: \.self) { instruction in
                             HStack {
                                 Text(instruction)
-                                    .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
+                                    .font(.custom(FBFont.medium, size: 14, relativeTo: .body))
                                     .padding(.horizontal)
                                 Spacer()
                             }
@@ -53,21 +54,21 @@ struct DiscoverMoreView: View {
                     }
                 }
                     .frame(width: UIScreen.main.bounds.width * 0.9)
-                    .font(.custom("Comfortaa-Medium", size: 16, relativeTo: .body))
+                    .font(.custom(FBFont.medium, size: 16, relativeTo: .body))
             }
                 .navigationBarTitle(recipeRecord.recipeName, displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
                 .navigationBarItems(
                     leading:
                     Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
-                        Image(systemName: "arrow.left")
+                        Image(systemName: SFSymbols.arrowLeft)
                             .imageScale(.medium)
                     },
                     trailing:
                     Button(action: {
                         self.showSheet = true
                     }) {
-                        Image(systemName: "icloud.and.arrow.down")
+                        Image(systemName: SFSymbols.icloudArrowDown)
                             .imageScale(.medium)
                     }
                 )

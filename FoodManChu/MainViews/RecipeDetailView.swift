@@ -7,12 +7,13 @@
 
 import SwiftUI
 
-// MARK: - RecipeDetailView
 struct RecipeDetailView: View {
+    // MARK: - Properties
     let screenSize = UIScreen.main.bounds
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var recipeManager: RecipeManager
 
+    // MARK: - Body
     var body: some View {
         ScrollView {
             VStack {
@@ -31,16 +32,16 @@ struct RecipeDetailView: View {
                     .multilineTextAlignment(.center)
                     .padding(.top, 15)
                     .lineLimit(nil)
-                    .font(.custom("Comfortaa-Bold", size: 26, relativeTo: .body))
+                    .font(.custom(FBFont.bold, size: 26, relativeTo: .body))
                 
                 HStack {
                     Spacer()
                     
                     Text(self.recipeManager.recipe!.category?.name ?? "")
-                        .font(.custom("Comfortaa-Medium", size: 16, relativeTo: .body))
+                        .font(.custom(FBFont.medium, size: 16, relativeTo: .body))
                         .padding(.vertical, 5)
                         .padding(.horizontal, 8)
-                        .background(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
+                        .background(Color.mainGreen)
                         .cornerRadius(8)
 
                     Divider()
@@ -48,9 +49,9 @@ struct RecipeDetailView: View {
                         .frame(width: 1, height: 15)
                     
                     HStack {
-                        Image(systemName: "clock")
+                        Image(systemName: SFSymbols.clock)
                         self.recipeManager.formattedPrepTimeText
-                            .font(.custom("Comfortaa-Medium", size: 16, relativeTo: .body))
+                            .font(.custom(FBFont.medium, size: 16, relativeTo: .body))
                     }
                         .padding(.vertical, 5)
                         .padding(.horizontal, 8)
@@ -65,15 +66,14 @@ struct RecipeDetailView: View {
                 Divider()
                     .background(Color.black.opacity(0.2))
                 
-                // Description
                 VStack(alignment: .leading) {
                     Text("Description")
-                        .font(.custom("Comfortaa-Medium", size: 20, relativeTo: .body))
+                        .font(.custom(FBFont.medium, size: 20, relativeTo: .body))
                         .underline()
                         .padding(.bottom, 1)
                     
                     Text(self.recipeManager.recipeDescription)
-                        .font(.custom("comfortaa-light", size: 16, relativeTo: .body))
+                        .font(.custom(FBFont.light, size: 16, relativeTo: .body))
                         .multilineTextAlignment(.leading)
                         .lineLimit(nil)
                 }

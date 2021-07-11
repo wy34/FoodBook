@@ -8,5 +8,7 @@
 import SwiftUI
 
 class ModalManager: ObservableObject {
+    // MARK: - Properties
     @Published var isRecipeDetailViewShowing = false
 }
+

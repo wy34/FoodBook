@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CustomSegmentedPickerWithMenu: View {
+    // MARK: - Properties
     @State private var selected = 0
     @ObservedObject var recipeManager: RecipeManager
     
@@ -38,68 +39,9 @@ struct CustomSegmentedPickerWithMenu: View {
     }
 }
 
-
+// MARK: - Previews
 struct CustomSegmentedPickerWithMenu_Previews: PreviewProvider {
     static var previews: some View {
         CustomSegmentedPickerWithMenu(recipeManager: RecipeManager())
-    }
-}
-
-// MARK: - PickerMenu
-struct PickerMenu: View {
-    var ingredients: [Ingredient]?
-    var instructions: [String]?
-    @State private var hide = false
-    
-    var body: some View {
-        VStack {
-            ScrollView(showsIndicators: false) {
-                if self.ingredients != nil {
-                    ForEach(0..<ingredients!.count, id: \.self) { i in
-                        IngredientDirectionsCell(ingredient: ingredients![i], direction: nil, dataSourceCount: ingredients!.count, index: i)
-                    }
-                } else {
-                    ForEach(0..<instructions!.count, id: \.self) { i in
-                        IngredientDirectionsCell(ingredient: nil, direction: instructions![i], dataSourceCount: instructions!.count, index: i)
-                    }
-                }
-            }
-                .padding(.top, 12)
-                .padding(.horizontal, 12)
-                .frame(maxWidth: .infinity, maxHeight: 200)
-        }
-    }
-}
-
-
-// MARK: - IngredientDirectionsCell
-struct IngredientDirectionsCell: View {
-    var ingredient: Ingredient?
-    var direction: String?
-    var dataSourceCount: Int
-    var index: Int
-    
-    var body: some View {
-        VStack {
-            HStack {
-                if ingredient != nil {
-                    Image(systemName: "chevron.right")
-                }
-                
-                Text(ingredient != nil ? ingredient!.name! : direction!)
-                    .font(.custom("comfortaa-light", size: 16, relativeTo: .body))
-                Spacer()
-                
-                if ingredient != nil {
-                    Text(ingredient!.amount!)
-                        .font(.custom("comfortaa-light", size: 14, relativeTo: .body))
-                }
-            }
-            
-            if index != dataSourceCount - 1 {
-                Divider()
-                    .background(Color.black.opacity(0.2))
-            }
-        }
     }
 }

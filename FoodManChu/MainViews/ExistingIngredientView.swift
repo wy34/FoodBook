@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ExistingIngredientView: View {
+    // MARK: - Properties
     @State private var amount = ""
     @State private var tappedIngredient: Ingredient?
     @State private var isShowingDeleteAlert = false
@@ -15,7 +16,7 @@ struct ExistingIngredientView: View {
     @FetchRequest(entity: Ingredient.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Ingredient.name, ascending: true)]) var ingredients: FetchedResults<Ingredient>
     @Environment(\.presentationMode) var presentationMode
     
-    
+    // MARK: - Body
     var body: some View {
         NavigationView {
             Form {
@@ -23,14 +24,12 @@ struct ExistingIngredientView: View {
                     Section(header: Text(String(key))) {
                         ForEach(groupsByFirstLetter()[key]!, id: \.id) { ingredient in
                             HStack {
-                                // only showing default name view if this isn't tapped
                                 if tappedIngredient != ingredient {
                                     HStack {
                                         Button(action: {
                                             self.tappedIngredient = ingredient
                                             UIApplication.shared.sendAction(#selector(UIResponder.becomeFirstResponder), to: nil, from: nil, for: nil)
 
-                                            // if ingredient is already added, and if we tap on that same ingredient again, show its current amount
                                             if let index = self.recipeManager.ingredients.firstIndex(of: ingredient) {
                                                 self.amount = self.recipeManager.ingredients[index].amount ?? ""
                                             } else {
@@ -39,20 +38,20 @@ struct ExistingIngredientView: View {
                                         }) {
                                             HStack {
                                                 Text(ingredient.name ?? "")
-                                                    .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
+                                                    .font(.custom(FBFont.medium, size: 14, relativeTo: .body))
                                                 Spacer()
                                             }
                                                 .foregroundColor(.black)
                                         }
+                                        
                                         Spacer()
                                         
                                         if self.recipeManager.ingredients.contains(ingredient) {
-                                            Image(systemName: "checkmark")
+                                            Image(systemName: SFSymbols.checkmark)
                                         }
                                     }
                                 }
                                 
-                                // showing this if this ingredient is acutally tapped
                                 if self.tappedIngredient == ingredient {
                                     HStack(spacing: 15) {
                                         TextField("Amount", text: $amount)
@@ -61,10 +60,9 @@ struct ExistingIngredientView: View {
                                         HStack(spacing: 5) {
                                             Button(action: {
                                                 if self.amount != "" {
-                                                    // added the ingredient onto the recipe manager so that it shows in the underlying list
                                                     if let index = self.ingredients.firstIndex(of: self.tappedIngredient!) {
                                                         let ing = self.ingredients[index]
-                                                        ing.amount = self.amount // setting it so that changing the amount will be reflected in the list since it techinically wont be added again (next line of code)
+                                                        ing.amount = self.amount
                                                         
                                                         if !self.recipeManager.ingredients.contains(ing) {
                                                             self.recipeManager.ingredients.append(ing)
@@ -95,7 +93,7 @@ struct ExistingIngredientView: View {
                                     }
                                         .buttonStyle(PlainButtonStyle())
                                         .foregroundColor(.white)
-                                        .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
+                                        .font(.custom(FBFont.medium, size: 14, relativeTo: .body))
                                 }
                             }
                                 .animation(.easeInOut)
@@ -110,7 +108,7 @@ struct ExistingIngredientView: View {
                 .navigationBarItems(trailing:
                     Button(action: { self.isShowingDeleteAlert = true }) {
                         Image(systemName: "trash")
-                            .foregroundColor(self.ingredients.isEmpty ? Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)) : Color(#colorLiteral(red: 1, green: 0.4903432131, blue: 0.4654182792, alpha: 0.7518001152)))
+                            .foregroundColor(self.ingredients.isEmpty ? Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)) : .lightRed)
                     }
                         .disabled(self.ingredients.isEmpty ? true : false)
                 )
@@ -125,7 +123,8 @@ struct ExistingIngredientView: View {
             .preferredColorScheme(.light)
     }
     
-    func groupsByFirstLetter() -> [Character: [Ingredient]] {
+    // MARK: - Helpers
+    private func groupsByFirstLetter() -> [Character: [Ingredient]] {
         let alphabet = "abcdefghijklmnopqrstuvwxyz"
         var ingredientListGroupedByFirstLetter = [Character: [Ingredient]]()
         
@@ -147,7 +146,7 @@ struct ExistingIngredientView: View {
         return ingredientListGroupedByFirstLetter
     }
     
-    func delete(at offsets: IndexSet, category: Character) {
+    private func delete(at offsets: IndexSet, category: Character) {
         for offset in offsets {
             let ingredient = groupsByFirstLetter()[category]![offset]
             

@@ -8,10 +8,11 @@
 import SwiftUI
 import Network
 
-// MARK: - Discover
-struct Discover: View {
+struct DiscoverView: View {
+    // MARK: - Properties
     @EnvironmentObject var cloudKitManager: CloudKitManager
     
+    // MARK: - Body
     var body: some View {
         NavigationView {
             ZStack {
@@ -19,7 +20,7 @@ struct Discover: View {
                     ZStack() {
                         VStack {
                             Text("Currently empty. Share a recipe or try refreshing!")
-                                .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
+                                .font(.custom(FBFont.bold, size: 14, relativeTo: .body))
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(cloudKitManager.recipes.isEmpty && !cloudKitManager.isLoading && cloudKitManager.isConnectedToInternet ? .black : .clear)
                                 .frame(width: UIScreen.main.bounds.width * 0.8)
@@ -29,7 +30,7 @@ struct Discover: View {
                                     LoadingSpinner()
                                     Text("Loading...")
                                         .foregroundColor(.white)
-                                        .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
+                                        .font(.custom(FBFont.medium, size: 14, relativeTo: .body))
                                 }
                                     .frame(width: 75, height: 75)
                                     .padding()
@@ -39,7 +40,7 @@ struct Discover: View {
                             
                             if !cloudKitManager.isConnectedToInternet {
                                 Text("Please enable internet connection in order to view shared recipes.")
-                                    .font(.custom("Comfortaa-Bold", size: 14, relativeTo: .body))
+                                    .font(.custom(FBFont.bold, size: 14, relativeTo: .body))
                                     .multilineTextAlignment(.center)
                                     .foregroundColor(.black)
                                     .frame(width: UIScreen.main.bounds.width * 0.8)
@@ -68,26 +69,13 @@ struct Discover: View {
                             .padding(.vertical, 20)
                     }
                 }
-//                ZStack {
-//                    VStack {
-//                        Text("Hello")
-//                            .background(Color.blue)
-//                        Text("World")
-//                            .background(Color.green)
-//                    }
-//                        .padding()
-//                        .background(Color.orange)
-//                }
-//                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-//                    .padding()
-//                    .background(Color.black.opacity(0.5).edgesIgnoringSafeArea(.all))
             }
                 .navigationBarTitle("Discover")
                 .navigationBarItems(trailing:
                     Button(action: {
                         self.cloudKitManager.fetchRecipeRecords()
                     }) {
-                        Image(systemName: "arrow.clockwise")
+                        Image(systemName: SFSymbols.arrowClockwise)
                             .imageScale(.medium)
                     }
                 )
@@ -95,7 +83,8 @@ struct Discover: View {
             .navigationViewStyle(StackNavigationViewStyle())
     }
     
-    func sortedRecipes() -> [RecipeRecord] {
+    // MARK: - Helpers
+    private func sortedRecipes() -> [RecipeRecord] {
         var recipes = [RecipeRecord]()
         
         recipes = self.cloudKitManager.recipes.sorted(by: { (left, right) -> Bool in
@@ -103,71 +92,5 @@ struct Discover: View {
         })
         
         return recipes
-    }
-}
-
-
-// MARK: - DiscoverCell
-struct DiscoverCell: View {
-    var recipeRecord: RecipeRecord
-    
-    var formattedTimeLabel: Text {
-        if recipeRecord.timeHour == 0.0 {
-            return Text("\(recipeRecord.timeMinute, specifier: "%.0f")m")
-        } else {
-            return Text("\(recipeRecord.timeHour, specifier: "%.0f")h \(recipeRecord.timeMinute, specifier: "%.0f")m")
-        }
-    }
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Image(uiImage: recipeRecord.recipeImage)
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity)
-                .cornerRadius(10)
-            VStack(alignment: .leading) {
-                Text(recipeRecord.recipeName)
-                    .lineLimit(nil)
-                    .font(.custom("Comfortaa-Bold", size: 22, relativeTo: .body))
-                    .foregroundColor(.black)
-                    .padding(.top, 12)
-                
-                HStack {
-                    Text(recipeRecord.recipeCategory)
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 8)
-                        .background(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
-                        .cornerRadius(8)
-
-                    Divider()
-                        .background(Color.black)
-                        .frame(width: 1, height: 15)
-                    
-                    HStack {
-                        Image(systemName: "clock")
-                        formattedTimeLabel
-                    }
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 8)
-                        .background(Color.orange)
-                        .cornerRadius(8)
-                    
-                    Spacer()
-                }
-                    .foregroundColor(.white)
-                    .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
-                    .padding(.top, 5)
-                
-                Text(recipeRecord.recipeDescription)
-                    .font(.custom("Comfortaa-Medium", size: 16, relativeTo: .body))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .lineLimit(nil)
-                    .foregroundColor(Color(.darkGray))
-                    .padding(.bottom, 8)
-                    .padding(.top, 8)
-            }
-                .padding(.horizontal, 8)
-        }
     }
 }

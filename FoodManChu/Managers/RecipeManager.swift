@@ -8,12 +8,13 @@
 import SwiftUI
 
 class RecipeManager: ObservableObject {
+    // MARK: - Properties
     @Published var recipe: Recipe?
     @Published var isShowingDeleteRecipeAlert = false
     @Published var isShowingAddRecipe = false
     @Published var isShowingEditRecipe = false
     
-    @Published var selectedImage = UIImage(named: "placeholder")!
+    @Published var selectedImage = Assets.placeholder
     @Published var isPhotoLibraryOpen = false
     @Published var isCameraOpen = false
     @Published var name = ""
@@ -58,10 +59,11 @@ class RecipeManager: ObservableObject {
         return !name.isEmpty && (hours != 0.0 || minutes != 0.0) && !ingredients.isEmpty && !instructions.isEmpty
     }
     
+    // MARK: - Helpers
     func resetRecipeValuesToEmpty() {
         self.name = ""
         self.description = ""
-        self.selectedImage = UIImage(named: "placeholder")!
+        self.selectedImage = Assets.placeholder
         self.hours = 0.0
         self.minutes = 0.0
         self.ingredients = [Ingredient]()

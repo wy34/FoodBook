@@ -8,13 +8,16 @@
 import UIKit
 
 class DiscoverAlertManager {
+    // MARK: - Properties
     static let shared = DiscoverAlertManager()
+    private let key = "firstTimeSeeingDiscover"
     
     var isFirstTimeViewingDiscoverPage: Bool {
-        return !UserDefaults.standard.bool(forKey: "firstTimeSeeingDiscover")
+        return !UserDefaults.standard.bool(forKey: key)
     }
     
+    // MARK: - Helpers
     func setAsOldUser() {
-        UserDefaults.standard.setValue(true, forKey: "firstTimeSeeingDiscover")
+        UserDefaults.standard.setValue(true, forKey: key)
     }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 // MARK: - CategoryPickerView
 struct CategoryPickerView: View {
+    // MARK: - Properties
     var recipeRecord: RecipeRecord
     let screenSize = UIScreen.main.bounds
     @State private var tappedCategory: Category?
@@ -27,6 +28,7 @@ struct CategoryPickerView: View {
 
     @State private var height: CGFloat = 0
     
+    // MARK: - Body
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottom) {
@@ -36,7 +38,7 @@ struct CategoryPickerView: View {
                             Spacer()
                             LazyVGrid(columns: Array(repeating: GridItem(.flexible(minimum: 50, maximum: 100), spacing: 50), count: screenSize.width < 375 ? 2 : 3), alignment: .center, spacing: 15) {
                                 Button(action: { withAnimation { self.tabSelection = 1 } }) {
-                                    Image(systemName: "plus")
+                                    Image(systemName: SFSymbols.plus)
                                         .font(.largeTitle)
                                         .foregroundColor(.white)
                                         .frame(width: 75, height: 75)
@@ -66,11 +68,11 @@ struct CategoryPickerView: View {
                 
                 Button(action: { self.saveRecipe() }) {
                     Text("Save")
-                        .font(.custom("Comfortaa-Bold", size: 22, relativeTo: .body))
+                        .font(.custom(FBFont.bold, size: 22, relativeTo: .body))
                         .foregroundColor(tappedCategory == nil && categoryManager.categoryName.isEmpty ? Color(.systemGray2) : .white)
                         .frame(maxWidth: .infinity)
                         .padding(12)
-                        .background(tappedCategory == nil && categoryManager.categoryName.isEmpty ? Color.gray : Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
+                        .background(tappedCategory == nil && categoryManager.categoryName.isEmpty ? Color.gray : Color.mainGreen)
                         .cornerRadius(15)
                         .padding(.horizontal, 25)
                         .padding(.top, 15)
@@ -101,7 +103,8 @@ struct CategoryPickerView: View {
             .preferredColorScheme(.light)
     }
     
-    func saveRecipe() {
+    // MARK: - Helpers
+    private func saveRecipe() {
         let recipe = Recipe(context: moc)
         recipe.recipeName = recipeRecord.recipeName
         recipe.recipeDescription = recipeRecord.recipeDescription
@@ -141,106 +144,5 @@ struct CategoryPickerView: View {
         
         PersistenceController.shared.save()
         presentationMode.wrappedValue.dismiss()
-    }
-}
-
-// MARK: - CircularCategoryView
-struct CircularCategoryView: View {
-    var category: Category
-    let screenSize = UIScreen.main.bounds
-    @Binding var tappedCategory: Category?
-    @ObservedObject var categoryManager: CategoryManager
-
-    var body: some View {
-        VStack(alignment: .center) {
-            ZStack {
-                Circle()
-                    .stroke(self.tappedCategory == category ? Color.blue : Color.clear, lineWidth: 3)
-                    .frame(width: screenSize.width * 0.3 - 15, height: screenSize.width * 0.3 - 15)
-                Button(action: {
-                    self.categoryManager.categoryName = "" // clears it out if we end up selecting an existing one
-                    self.categoryManager.categoryImage = UIImage(named: "placeholder")!
-                    tappedCategory = self.category
-                }) {
-                    Image(uiImage: UIImage(data: category.thumbnail!)!)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: screenSize.width * 0.3 - 20, height: screenSize.width * 0.3 - 20)
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white, lineWidth: 3)
-                        )
-                }
-                    .overlay(
-                        Image(systemName: "checkmark")
-                            .foregroundColor(self.tappedCategory == category ? .white : .clear)
-                            .frame(width: 28, height: 28)
-                            .background(tappedCategory == category ? Color.blue : Color.white)
-                            .clipShape(Circle())
-                            .overlay(
-                                Circle()
-                                    .stroke(Color.gray, lineWidth: 1)
-                            )
-                        , alignment: .bottomTrailing
-                    )
-            }
-            
-            Text(category.name!)
-                .multilineTextAlignment(.center)
-                .frame(width: screenSize.width < 375 ? screenSize.width * 0.3 : screenSize.width * 0.25)
-        }
-    }
-}
-
-
-// MARK: - AddCategoryForm
-struct AddCategoryForm: View {
-    @ObservedObject var categoryManager: CategoryManager
-    @Binding var isPhotoLibraryOpen: Bool
-    @Binding var isCameraOpen: Bool
-    @Binding var tabSelection: Int
-    @Binding var tappedCategory: Category?
-    
-    var body: some View {
-        let textFieldBinding = Binding<String>(
-            get: { return self.categoryManager.categoryName },
-            set: { self.categoryManager.categoryName = $0; tappedCategory = nil }
-        )
-        
-        VStack(spacing: 0) {
-            Form {
-                Section(header: Text("Name").font(.custom("Comfortaa-Medium", size: 10, relativeTo: .body))) {
-                    TextField("Category", text: textFieldBinding)
-                        .padding(.top, -20)
-                }
-                    .padding(.top, 25)
-                
-                Section(header: Text("Image (Optional)").font(.custom("Comfortaa-Medium", size: 10, relativeTo: .body))) {
-                    Button(action: { self.isPhotoLibraryOpen = true }) {
-                        Text("Photo Library")
-                            .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
-                    }
-                    
-                    Button(action: { self.isCameraOpen = true }) {
-                        Text("Camera")
-                            .foregroundColor(Color(#colorLiteral(red: 0.5965602994, green: 0.8027258515, blue: 0.5414524674, alpha: 1)))
-                    }
-                    
-                    Image(uiImage: self.categoryManager.categoryImage)
-                        .resizable()
-                        .scaledToFill()
-                        .cornerRadius(10)
-                        .padding(.vertical)
-                }
-            }
-                .font(.custom("Comfortaa-Medium", size: 14, relativeTo: .body))
-            
-            Spacer(minLength: 75)
-        }
-            .preferredColorScheme(.light)
-            .sheet(isPresented: self.isPhotoLibraryOpen ? $isPhotoLibraryOpen : $isCameraOpen) {
-                ImagePicker(sourceType: self.isPhotoLibraryOpen ? .photoLibrary : .camera, selectedImage: self.$categoryManager.categoryImage, isImagePickerOpen: self.isPhotoLibraryOpen ? $isPhotoLibraryOpen : $isCameraOpen)
-            }
     }
 }

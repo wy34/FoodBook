@@ -8,8 +8,9 @@
 import SwiftUI
 
 class CategoryManager: ObservableObject {
+    // MARK: - Properties
     @Published var categoryName = ""
-    @Published var categoryImage = UIImage(named: "placeholder")!
+    @Published var categoryImage = Assets.placeholder
     
     @Published var isEditOn = false
     @Published var isShowingEditingView = false

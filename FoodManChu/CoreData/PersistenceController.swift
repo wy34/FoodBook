@@ -10,13 +10,10 @@ import SwiftUI
 import CoreData
 
 class PersistenceController: ObservableObject {
-    // A singleton for our entire app to use
+    // MARK: - Properties
     static let shared = PersistenceController()
-
-    // Storage for Core Data
     let container: NSPersistentContainer
 
-    // A test configuration for SwiftUI previews: passed this in as the managedObjectContext
     static var preview: PersistenceController = {
         let controller = PersistenceController(inMemory: true)
 
@@ -29,7 +26,7 @@ class PersistenceController: ObservableObject {
         return controller
     }()
 
-    // an initializer to load Core Data, optionally able to use an in-memory store
+    // MARK: - Init
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "Main")
 
@@ -44,7 +41,7 @@ class PersistenceController: ObservableObject {
         }
     }
     
-    // creating default categories on first time
+    // MARK: - Helpers
     func createDefaultCategories() {
         if !UserDefaults.standard.bool(forKey: "hasDefaultCategories") {
             let names = ["Meat", "Vegan", "Vegetarian", "Paleo", "Keto"]
@@ -61,7 +58,6 @@ class PersistenceController: ObservableObject {
         }
     }
     
-    // creating default ingredients on first time
     func createDefaultIngredients() {
         if !UserDefaults.standard.bool(forKey: "hasDefaultIngredients") {
             let defaultIngredients = [
@@ -79,7 +75,6 @@ class PersistenceController: ObservableObject {
         }
     }
     
-    // save
     func save() {
         let context = container.viewContext
         
@@ -87,25 +82,23 @@ class PersistenceController: ObservableObject {
             do {
                 try context.save()
             } catch {
-                print(error.localizedDescription)
+                debugPrint(error.localizedDescription)
             }
         }
     }
     
-    // delete
     func delete(_ object: NSManagedObject) {
         let context = container.viewContext
         context.delete(object)
     }
     
-    // batch delete ingredients
     func deleteAllIngredients() {
         let request = NSBatchDeleteRequest(fetchRequest: Ingredient.fetchRequest())
         
         do {
             try container.viewContext.execute(request)
         } catch {
-            print(error.localizedDescription)
+            debugPrint(error.localizedDescription)
         }
     }
 }

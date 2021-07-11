@@ -8,33 +8,34 @@
 import SwiftUI
 
 struct RootView: View {
+    // MARK: - Properties
     @State private var selectedTab = 0
     @State private var scale = false
     
+    // MARK: - Body
     var body: some View {
         ZStack {
             TabView(selection: $selectedTab) {
-            CategoriesView()
-                .tabItem {
-                    Image(systemName: "hammer")
-                    Text("Builder")
-                        
-                }
-                    .tag(0)
-            RecipesBookView()
-                .tabItem {
-                    Image(systemName: "book")
-                    Text("Book")
-                }
-                    .tag(1)
-            Discover()
-                .tabItem {
-                    Image(systemName: "globe")
-                    Text("Discover")
-                }
-                    .tag(2)
+                CategoriesView()
+                    .tabItem {
+                        Image(systemName: SFSymbols.hammer)
+                        Text("Builder")
+                    }
+                        .tag(0)
+                RecipesBookView()
+                    .tabItem {
+                        Image(systemName: SFSymbols.book)
+                        Text("Book")
+                    }
+                        .tag(1)
+                DiscoverView()
+                    .tabItem {
+                        Image(systemName: SFSymbols.globe)
+                        Text("Discover")
+                    }
+                        .tag(2)
         }
-                .accentColor(Color(#colorLiteral(red: 0.4468465447, green: 0.6117238402, blue: 0.4210793078, alpha: 1)))
+                .accentColor(.mainGreen)
                 .overlay(
                     Color.black
                         .edgesIgnoringSafeArea(.all)
@@ -42,24 +43,24 @@ struct RootView: View {
                 )
             
             if selectedTab == 2 {
-                VStack(spacing: 12) {
+                VStack(spacing: 8) {
                     Text("Hello There!")
-                        .font(.custom("Comfortaa-Bold", size: 26, relativeTo: .body))
-                        .foregroundColor(Color(#colorLiteral(red: 0.4468465447, green: 0.6117238402, blue: 0.4210793078, alpha: 1)))
+                        .font(.custom(FBFont.bold, size: 24, relativeTo: .body))
+                        .foregroundColor(.mainGreen)
                     Text("This is where you can see all of your shared recipes, as well as anything other users of the app have shared.")
-                        .font(.custom("Comfortaa-Medium", size: 16, relativeTo: .body))
+                        .font(.custom(FBFont.medium, size: 16, relativeTo: .body))
                         .foregroundColor(.black)
                 }
                     .minimumScaleFactor(0.5)
                     .multilineTextAlignment(.center)
-                    .frame(width: UIScreen.main.bounds.width * 0.6, height: UIScreen.main.bounds.height * 0.18)
+                    .frame(width: UIScreen.main.bounds.width * 0.6, height: UIScreen.main.bounds.height * 0.2)
                     .padding()
                     .padding(.horizontal)
                     .background(Color(#colorLiteral(red: 0.9011624455, green: 0.894621551, blue: 0.9192818403, alpha: 1)))
                     .cornerRadius(15)
                     .overlay(
                         Button(action: { withAnimation { self.scale = false; DiscoverAlertManager.shared.setAsOldUser() } }) {
-                            Image(systemName: "xmark")
+                            Image(systemName: SFSymbols.xmark)
                                 .foregroundColor(.white)
                                 .frame(width: 40, height: 40)
                                 .background(
@@ -82,6 +83,7 @@ struct RootView: View {
     }
 }
 
+// MARK: - Previews
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         RootView()

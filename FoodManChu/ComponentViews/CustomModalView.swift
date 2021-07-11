@@ -44,7 +44,7 @@ struct CustomModalView<Content: View>: View {
                     RoundedButtonView(corners: [.layerMaxXMinYCorner, .layerMinXMaxYCorner], bgColor: #colorLiteral(red: 1, green: 0.4903432131, blue: 0.4654182792, alpha: 1), cornerRadius: 20)
                         .frame(width: 50, height: 50)
                         .overlay(
-                            Image(systemName: "xmark")
+                            Image(systemName: SFSymbols.xmark)
                                 .font(.title)
                                 .foregroundColor(.white)
                         )
@@ -59,7 +59,7 @@ struct CustomModalView<Content: View>: View {
             }
     }
     
-    // MARK: - Helper methods
+    // MARK: - Helpers
     func dismissModal() {
         self.showScaling.toggle()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -68,6 +68,7 @@ struct CustomModalView<Content: View>: View {
     }
 }
 
+// MARK: - Previews
 struct CustomModalView_Previews: PreviewProvider {
     static var previews: some View {
         CustomModalView(content: Color.red)
@@ -75,20 +76,3 @@ struct CustomModalView_Previews: PreviewProvider {
     }
 }
 
-// MARK: - Rounded Cornerz
-struct RoundedButtonView: UIViewRepresentable {
-    var corners: CACornerMask
-    var bgColor: UIColor
-    var cornerRadius: CGFloat
-    
-    func makeUIView(context: Context) -> UIView {
-        let view = UIView()
-        view.backgroundColor = bgColor
-        view.layer.cornerRadius = cornerRadius
-        view.layer.maskedCorners = corners
-        return view
-    }
-    
-    func updateUIView(_ uiView: UIView, context: Context) {
-    }
-}

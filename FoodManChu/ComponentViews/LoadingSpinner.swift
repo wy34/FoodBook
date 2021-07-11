@@ -9,6 +9,7 @@ import UIKit
 import SwiftUI
 
 struct LoadingSpinner: UIViewRepresentable {
+    // MARK: - Helpers
     func makeUIView(context: Context) -> UIActivityIndicatorView {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.color = .white
@@ -18,6 +19,6 @@ struct LoadingSpinner: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
-        
     }
 }
+
