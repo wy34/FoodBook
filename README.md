@@ -26,4 +26,4 @@
 # How to use
 
 * Clone the project and run it on Xcode 12 or above
-* Available on the Apple Appstore -> https://apps.apple.com/us/app/foodbook-recipe-guide/id1558893181
+* (Currently Unavailable due to expired membership) Available on the Apple Appstore -> https://apps.apple.com/us/app/foodbook-recipe-guide/id1558893181
